@@ -9,21 +9,35 @@ import jdk.jfr.consumer.RecordedEvent;
 public class MetricProvider
 {
 	EventRecorder recorder;
-	
-	
+
+	public int asdf;
+
 	void setRecorder(EventRecorder recorder)
 	{
 		this.recorder = recorder;
 	}
-	
+
 	public Stream<RecordedEvent> getEventStream()
 	{
 		return recorder.getEventStream();
 	}
-	
+
 	public void stopRecording()
 	{
 		recorder.stopRecording();
+	}
+
+	public boolean isRecording()
+	{
+		return recorder.isRecording();
+	}
+
+	/**
+	 * Discard all previously recorded content.
+	 */
+	public void reset()
+	{
+		recorder.reset();
 	}
 
 	public double getDoubleAggregate(JfrEvent event, String field)
@@ -57,6 +71,7 @@ public class MetricProvider
 	public long getLongAggregate(JfrEvent event, String field, Predicate<RecordedEvent> pred)
 	{
 		// TODO: Ensure that event has the field
+
 		long aggregate = getEventStream()
 				.filter(e -> e.getEventType().getName().equals(event.getEventString()) && e.hasField(field))
 				.filter(pred).map(e -> e.getLong(field)).reduce(0L, (res, val) -> res + val);

@@ -24,7 +24,7 @@ public class EventRecorder
 	private RecordingStream rs;
 	private List<RecordedEvent> recordedEvents;
 	private Semaphore syncSemaphore;
-	private boolean hasSynced = false;
+	private boolean isRecording;
 	private Recording recording;
 	private RecordingConfig config;
 
@@ -55,18 +55,21 @@ public class EventRecorder
 		{
 			e.printStackTrace();
 		}
+		isRecording = true;
 	}
 	
 	public void stopRecording()
 	{
+		synch();
 		if(config.recordToDisk())
 		{
 			stopDiskRecording();
 		}
 		stopRecordingStream();
+		isRecording = false;
 	}
 	
-	public void startDiskRecording()
+	private void startDiskRecording()
 	{
 		if (config.getJfrConfig() != null)
 		{
@@ -84,7 +87,7 @@ public class EventRecorder
 		recording.start();
 	}
 	
-	public void stopDiskRecording()
+	private void stopDiskRecording()
 	{
 		try
 		{
@@ -98,7 +101,7 @@ public class EventRecorder
 		recording.stop();
 	}
 
-	public void startRecordingStream() throws Exception
+	private void startRecordingStream() throws Exception
 	{
 		recordedEvents.clear();
 		if (config.getJfrConfig() != null)
@@ -133,40 +136,61 @@ public class EventRecorder
 
 	}
 
-	public void stopRecordingStream()
+	private void stopRecordingStream()
 	{
 		rs.close();
 	}
 
 	public Stream<RecordedEvent> getEventStream()
 	{
-		if (!hasSynced)
+		if (isRecording)
 		{
-			try
-			{
-				synch();
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+			synch();
 		}
 		return recordedEvents.stream();
 	}
 	
 	/**
 	 * Commits a synchronization event to the JFR stream and tries to aquire the
-	 * syncSemaphore The JFR stream thread releases the semaphore once the event
-	 * processed is , allowing the syncing thread to proceed
+	 * syncSemaphore. The JFR stream thread releases the semaphore once the event
+	 * processed is , allowing the thread calling synch to proceed
 	 * 
 	 * @throws InterruptedException
 	 */
-	private void synch() throws InterruptedException
+	private void synch()
 	{
 		SynchronizationEvent se = new SynchronizationEvent();
 		se.begin();
 		se.commit();
-		syncSemaphore.acquire(); // Wait until stream thread processes synch event
+		try
+		{
+			syncSemaphore.acquire();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} 
+	}
+	
+	/**
+	 * Clears the events recorded by the stream
+	 * Also restarts the JFR recording if there was one.
+	 */
+	public void reset() 
+	{
+		synch();
+		if(config.recordToDisk())
+		{
+			recording.stop();
+			startDiskRecording();
+		}
+		recordedEvents.clear();		
+
+	}
+	
+	public boolean isRecording()
+	{
+		return isRecording;
 	}
 
 }

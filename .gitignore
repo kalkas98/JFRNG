@@ -26,3 +26,4 @@ replay_pid*
 *.jfr
 
 test-output/
+/target/

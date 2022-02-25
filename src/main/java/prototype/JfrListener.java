@@ -63,7 +63,10 @@ public class JfrListener implements IInvokedMethodListener
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
 			MetricProvider provider = getRecorderInstance(method);
-			provider.stopRecording();
+			if(provider.isRecording())
+			{
+				provider.stopRecording();				
+			}
 		}
 		IInvokedMethodListener.super.afterInvocation(method, testResult);
 	}

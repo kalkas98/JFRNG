@@ -57,8 +57,8 @@ public class NewTest
 
 	}
 
-	@RecordJfrEvents({JfrEvent.JAVA_MONITOR_ENTER, JfrEvent.JAVA_MONITOR_WAIT, JfrEvent.JAVA_MONITOR_INFLATE})
-	//@RecordWithProfile(RecordingProfile.FILE_IO)
+	@RecordJfrEvents
+	@RecordWithProfile(RecordingProfile.FILE_IO)
 	@RecordWithProfile(RecordingProfile.MEMORY)
 	@DumpJfrToDisk
 	@Test
@@ -91,11 +91,14 @@ public class NewTest
 			e.printStackTrace();
 		}
 
-		//recorder.getRecordStream().forEach(System.out::println);
+		provider.reset();
+		provider.stopRecording();
 
 		System.out.println(provider.getFileIORead("filename.txt"));
+		System.out.println(":(");
 		System.out.println(provider.getFileIOWrite("filename.txt"));
 		System.out.println(provider.getTLABAllocationInThread(Thread.currentThread().getName()));
+		provider.getEventStream().forEach(System.out::println);
 
 	}
 

@@ -3,12 +3,25 @@
   <groupId>com.prototype</groupId>
   <artifactId>prototype</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
+<properties>
+	<maven.compiler.source>1.8</maven.compiler.source>
+	<maven.compiler.target>1.8</maven.compiler.target>
+</properties>
+
+
   <dependencies>
 	<dependency>
 	  <groupId>org.testng</groupId>
 	  <artifactId>testng</artifactId>
 	  <version>6.10</version>
 	  <scope>test</scope>
+	</dependency>
+	
+	<dependency>	
+		<groupId>org.jsonschema2pojo</groupId>
+		<artifactId>jsonschema2pojo-core</artifactId>
+		<version>1.1.1</version>
 	</dependency>
   </dependencies>
 </project>
