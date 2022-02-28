@@ -1,11 +1,13 @@
 
 package model;
 
+import model.type.longJfrType;
 
 public class PhysicalMemory {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField TOTAL_SIZE = new JfrField("totalSize", "long");
-    public final static JfrField USED_SIZE = new JfrField("usedSize", "long");
+    public final static String eventName = "jdk.PhysicalMemory";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType TOTAL_SIZE = new longJfrType("totalSize", eventName);
+    public final static longJfrType USED_SIZE = new longJfrType("usedSize", eventName);
 
 }

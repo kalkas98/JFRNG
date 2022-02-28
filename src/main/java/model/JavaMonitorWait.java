@@ -1,17 +1,23 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.longJfrType;
 
 public class JavaMonitorWait {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField MONITOR_CLASS = new JfrField("monitorClass", "Class");
-    public final static JfrField NOTIFIER = new JfrField("notifier", "Thread");
-    public final static JfrField TIMEOUT = new JfrField("timeout", "long");
-    public final static JfrField TIMED_OUT = new JfrField("timedOut", "boolean");
-    public final static JfrField ADDRESS = new JfrField("address", "long");
+    public final static String eventName = "jdk.JavaMonitorWait";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static ClassJfrType MONITOR_CLASS = new ClassJfrType("monitorClass", eventName);
+    public final static ThreadJfrType NOTIFIER = new ThreadJfrType("notifier", eventName);
+    public final static longJfrType TIMEOUT = new longJfrType("timeout", eventName);
+    public final static booleanJfrType TIMED_OUT = new booleanJfrType("timedOut", eventName);
+    public final static longJfrType ADDRESS = new longJfrType("address", eventName);
 
 }

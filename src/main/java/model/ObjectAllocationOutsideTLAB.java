@@ -1,13 +1,18 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ObjectAllocationOutsideTLAB {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField OBJECT_CLASS = new JfrField("objectClass", "Class");
-    public final static JfrField ALLOCATION_SIZE = new JfrField("allocationSize", "long");
+    public final static String eventName = "jdk.ObjectAllocationOutsideTLAB";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static ClassJfrType OBJECT_CLASS = new ClassJfrType("objectClass", eventName);
+    public final static longJfrType ALLOCATION_SIZE = new longJfrType("allocationSize", eventName);
 
 }

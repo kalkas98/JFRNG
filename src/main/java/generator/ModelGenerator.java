@@ -17,20 +17,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class ModelGenerator
 {
 
-	public static final String DIR_PATH = ".target/generatedClasses";
+	public static final String DIR_PATH = "target/generatedModels";
 	private File buildDir;
 
 	public ModelGenerator()
@@ -49,7 +52,6 @@ public class ModelGenerator
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -68,23 +70,28 @@ public class ModelGenerator
 
 		JCodeModel cm = new JCodeModel();
 		JPackage jp = cm._package("model");
+		String jdkEventName = "jdk.".concat(eventName);
+		JExpression nameExpr = JExpr.lit(jdkEventName);
 
 		JDefinedClass dc;
 		try
 		{
 
 			dc = jp._class(eventName);
+			dc.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, String.class, "eventName", nameExpr);
 			// For each attribute in the event
 			for (JsonElement jsonElem : attributeArray)
 			{
 				JsonObject jsonObj = jsonElem.getAsJsonObject();
-				String type = jsonObj.get("type").getAsString();
 				String attributeName = jsonObj.get("name").toString().replace("\"", "");
 				String upperCaseName = toUppercaseWithUnderScore(attributeName);
-				JType fieldType = cm.parseType("JfrField");
 
+				String type = jsonObj.get("type").getAsString();
+				String typeClassName = type.concat("JfrType");
+				JClass typeClass = cm.ref("model.type.".concat(typeClassName));
+				JType fieldType = cm.parseType(typeClass.fullName());
 				dc.field(JMod.PUBLIC | JMod.FINAL | JMod.STATIC, fieldType, upperCaseName,
-						JExpr._new(fieldType).arg(attributeName).arg(type));
+						JExpr._new(fieldType).arg(attributeName).arg(dc.fields().get("eventName")));
 			}
 
 			cm.build(buildDir);
@@ -99,8 +106,8 @@ public class ModelGenerator
 
 	private String toUppercaseWithUnderScore(String str)
 	{
-		if (str.length() < 1)
-			return "";
+		if (str.length() <= 1)
+			return str.toUpperCase();
 		StringBuilder strBuffer = new StringBuilder();
 
 		strBuffer.append(str.charAt(0));

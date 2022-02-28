@@ -1,10 +1,13 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.longJfrType;
 
 public class ThreadDump {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField RESULT = new JfrField("result", "String");
+    public final static String eventName = "jdk.ThreadDump";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType RESULT = new StringJfrType("result", eventName);
 
 }

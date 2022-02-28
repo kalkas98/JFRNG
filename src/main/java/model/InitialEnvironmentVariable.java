@@ -1,11 +1,14 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.longJfrType;
 
 public class InitialEnvironmentVariable {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField KEY = new JfrField("key", "String");
-    public final static JfrField VALUE = new JfrField("value", "String");
+    public final static String eventName = "jdk.InitialEnvironmentVariable";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType KEY = new StringJfrType("key", eventName);
+    public final static StringJfrType VALUE = new StringJfrType("value", eventName);
 
 }

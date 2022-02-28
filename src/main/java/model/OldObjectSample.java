@@ -1,18 +1,25 @@
 
 package model;
 
+import model.type.OldObjectGcRootJfrType;
+import model.type.OldObjectJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class OldObjectSample {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField ALLOCATION_TIME = new JfrField("allocationTime", "long");
-    public final static JfrField OBJECT_AGE = new JfrField("objectAge", "long");
-    public final static JfrField LAST_KNOWN_HEAP_USAGE = new JfrField("lastKnownHeapUsage", "long");
-    public final static JfrField OBJECT = new JfrField("object", "OldObject");
-    public final static JfrField ARRAY_ELEMENTS = new JfrField("arrayElements", "int");
-    public final static JfrField ROOT = new JfrField("root", "OldObjectGcRoot");
+    public final static String eventName = "jdk.OldObjectSample";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static longJfrType ALLOCATION_TIME = new longJfrType("allocationTime", eventName);
+    public final static longJfrType OBJECT_AGE = new longJfrType("objectAge", eventName);
+    public final static longJfrType LAST_KNOWN_HEAP_USAGE = new longJfrType("lastKnownHeapUsage", eventName);
+    public final static OldObjectJfrType OBJECT = new OldObjectJfrType("object", eventName);
+    public final static intJfrType ARRAY_ELEMENTS = new intJfrType("arrayElements", eventName);
+    public final static OldObjectGcRootJfrType ROOT = new OldObjectGcRootJfrType("root", eventName);
 
 }

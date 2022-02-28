@@ -1,15 +1,21 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class PromoteObjectOutsidePLAB {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField OBJECT_CLASS = new JfrField("objectClass", "Class");
-    public final static JfrField OBJECT_SIZE = new JfrField("objectSize", "long");
-    public final static JfrField TENURING_AGE = new JfrField("tenuringAge", "int");
-    public final static JfrField TENURED = new JfrField("tenured", "boolean");
+    public final static String eventName = "jdk.PromoteObjectOutsidePLAB";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static ClassJfrType OBJECT_CLASS = new ClassJfrType("objectClass", eventName);
+    public final static longJfrType OBJECT_SIZE = new longJfrType("objectSize", eventName);
+    public final static intJfrType TENURING_AGE = new intJfrType("tenuringAge", eventName);
+    public final static booleanJfrType TENURED = new booleanJfrType("tenured", eventName);
 
 }

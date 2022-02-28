@@ -14,6 +14,9 @@ public class GeneratorMain
 
 	    FileLoader loader = new FileLoader();
 	    
+	    TypeGenerator tgen = new TypeGenerator();
+	    tgen.generateJfrTypes(loader.getStream());
+	    
 		ModelGenerator gen = new ModelGenerator();
 		gen.parseJfrEvents(loader.getStream());
 

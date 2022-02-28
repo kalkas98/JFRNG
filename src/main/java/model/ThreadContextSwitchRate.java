@@ -1,10 +1,13 @@
 
 package model;
 
+import model.type.floatJfrType;
+import model.type.longJfrType;
 
 public class ThreadContextSwitchRate {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField SWITCH_RATE = new JfrField("switchRate", "float");
+    public final static String eventName = "jdk.ThreadContextSwitchRate";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static floatJfrType SWITCH_RATE = new floatJfrType("switchRate", eventName);
 
 }

@@ -1,15 +1,19 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class G1HeapSummary {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField WHEN = new JfrField("when", "String");
-    public final static JfrField EDEN_USED_SIZE = new JfrField("edenUsedSize", "long");
-    public final static JfrField EDEN_TOTAL_SIZE = new JfrField("edenTotalSize", "long");
-    public final static JfrField SURVIVOR_USED_SIZE = new JfrField("survivorUsedSize", "long");
-    public final static JfrField NUMBER_OF_REGIONS = new JfrField("numberOfRegions", "int");
+    public final static String eventName = "jdk.G1HeapSummary";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static StringJfrType WHEN = new StringJfrType("when", eventName);
+    public final static longJfrType EDEN_USED_SIZE = new longJfrType("edenUsedSize", eventName);
+    public final static longJfrType EDEN_TOTAL_SIZE = new longJfrType("edenTotalSize", eventName);
+    public final static longJfrType SURVIVOR_USED_SIZE = new longJfrType("survivorUsedSize", eventName);
+    public final static intJfrType NUMBER_OF_REGIONS = new intJfrType("numberOfRegions", eventName);
 
 }

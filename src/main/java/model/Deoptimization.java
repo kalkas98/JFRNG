@@ -1,19 +1,26 @@
 
 package model;
 
+import model.type.MethodJfrType;
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class Deoptimization {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField COMPILE_ID = new JfrField("compileId", "int");
-    public final static JfrField COMPILER = new JfrField("compiler", "String");
-    public final static JfrField METHOD = new JfrField("method", "Method");
-    public final static JfrField LINE_NUMBER = new JfrField("lineNumber", "int");
-    public final static JfrField BCI = new JfrField("bci", "int");
-    public final static JfrField INSTRUCTION = new JfrField("instruction", "String");
-    public final static JfrField REASON = new JfrField("reason", "String");
-    public final static JfrField ACTION = new JfrField("action", "String");
+    public final static String eventName = "jdk.Deoptimization";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static intJfrType COMPILE_ID = new intJfrType("compileId", eventName);
+    public final static StringJfrType COMPILER = new StringJfrType("compiler", eventName);
+    public final static MethodJfrType METHOD = new MethodJfrType("method", eventName);
+    public final static intJfrType LINE_NUMBER = new intJfrType("lineNumber", eventName);
+    public final static intJfrType BCI = new intJfrType("bci", eventName);
+    public final static StringJfrType INSTRUCTION = new StringJfrType("instruction", eventName);
+    public final static StringJfrType REASON = new StringJfrType("reason", eventName);
+    public final static StringJfrType ACTION = new StringJfrType("action", eventName);
 
 }

@@ -1,11 +1,14 @@
 
 package model;
 
+import model.type.byteJfrType;
+import model.type.longJfrType;
 
 public class GCSurvivorConfiguration {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField MAX_TENURING_THRESHOLD = new JfrField("maxTenuringThreshold", "byte");
-    public final static JfrField INITIAL_TENURING_THRESHOLD = new JfrField("initialTenuringThreshold", "byte");
+    public final static String eventName = "jdk.GCSurvivorConfiguration";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static byteJfrType MAX_TENURING_THRESHOLD = new byteJfrType("maxTenuringThreshold", eventName);
+    public final static byteJfrType INITIAL_TENURING_THRESHOLD = new byteJfrType("initialTenuringThreshold", eventName);
 
 }

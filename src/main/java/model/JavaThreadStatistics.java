@@ -1,13 +1,15 @@
 
 package model;
 
+import model.type.longJfrType;
 
 public class JavaThreadStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField ACTIVE_COUNT = new JfrField("activeCount", "long");
-    public final static JfrField DAEMON_COUNT = new JfrField("daemonCount", "long");
-    public final static JfrField ACCUMULATED_COUNT = new JfrField("accumulatedCount", "long");
-    public final static JfrField PEAK_COUNT = new JfrField("peakCount", "long");
+    public final static String eventName = "jdk.JavaThreadStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType ACTIVE_COUNT = new longJfrType("activeCount", eventName);
+    public final static longJfrType DAEMON_COUNT = new longJfrType("daemonCount", eventName);
+    public final static longJfrType ACCUMULATED_COUNT = new longJfrType("accumulatedCount", eventName);
+    public final static longJfrType PEAK_COUNT = new longJfrType("peakCount", eventName);
 
 }

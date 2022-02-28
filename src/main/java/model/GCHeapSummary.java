@@ -1,13 +1,18 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.VirtualSpaceJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class GCHeapSummary {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField WHEN = new JfrField("when", "String");
-    public final static JfrField HEAP_SPACE = new JfrField("heapSpace", "VirtualSpace");
-    public final static JfrField HEAP_USED = new JfrField("heapUsed", "long");
+    public final static String eventName = "jdk.GCHeapSummary";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static StringJfrType WHEN = new StringJfrType("when", eventName);
+    public final static VirtualSpaceJfrType HEAP_SPACE = new VirtualSpaceJfrType("heapSpace", eventName);
+    public final static longJfrType HEAP_USED = new longJfrType("heapUsed", eventName);
 
 }

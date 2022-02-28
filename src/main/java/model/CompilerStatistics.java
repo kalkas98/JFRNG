@@ -1,20 +1,23 @@
 
 package model;
 
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class CompilerStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField COMPILE_COUNT = new JfrField("compileCount", "int");
-    public final static JfrField BAILOUT_COUNT = new JfrField("bailoutCount", "int");
-    public final static JfrField INVALIDATED_COUNT = new JfrField("invalidatedCount", "int");
-    public final static JfrField OSR_COMPILE_COUNT = new JfrField("osrCompileCount", "int");
-    public final static JfrField STANDARD_COMPILE_COUNT = new JfrField("standardCompileCount", "int");
-    public final static JfrField OSR_BYTES_COMPILED = new JfrField("osrBytesCompiled", "long");
-    public final static JfrField STANDARD_BYTES_COMPILED = new JfrField("standardBytesCompiled", "long");
-    public final static JfrField NMETHODS_SIZE = new JfrField("nmethodsSize", "long");
-    public final static JfrField NMETHOD_CODE_SIZE = new JfrField("nmethodCodeSize", "long");
-    public final static JfrField PEAK_TIME_SPENT = new JfrField("peakTimeSpent", "long");
-    public final static JfrField TOTAL_TIME_SPENT = new JfrField("totalTimeSpent", "long");
+    public final static String eventName = "jdk.CompilerStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType COMPILE_COUNT = new intJfrType("compileCount", eventName);
+    public final static intJfrType BAILOUT_COUNT = new intJfrType("bailoutCount", eventName);
+    public final static intJfrType INVALIDATED_COUNT = new intJfrType("invalidatedCount", eventName);
+    public final static intJfrType OSR_COMPILE_COUNT = new intJfrType("osrCompileCount", eventName);
+    public final static intJfrType STANDARD_COMPILE_COUNT = new intJfrType("standardCompileCount", eventName);
+    public final static longJfrType OSR_BYTES_COMPILED = new longJfrType("osrBytesCompiled", eventName);
+    public final static longJfrType STANDARD_BYTES_COMPILED = new longJfrType("standardBytesCompiled", eventName);
+    public final static longJfrType NMETHODS_SIZE = new longJfrType("nmethodsSize", eventName);
+    public final static longJfrType NMETHOD_CODE_SIZE = new longJfrType("nmethodCodeSize", eventName);
+    public final static longJfrType PEAK_TIME_SPENT = new longJfrType("peakTimeSpent", eventName);
+    public final static longJfrType TOTAL_TIME_SPENT = new longJfrType("totalTimeSpent", eventName);
 
 }

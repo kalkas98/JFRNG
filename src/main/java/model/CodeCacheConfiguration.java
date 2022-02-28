@@ -1,18 +1,20 @@
 
 package model;
 
+import model.type.longJfrType;
 
 public class CodeCacheConfiguration {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField INITIAL_SIZE = new JfrField("initialSize", "long");
-    public final static JfrField RESERVED_SIZE = new JfrField("reservedSize", "long");
-    public final static JfrField NON_N_METHOD_SIZE = new JfrField("nonNMethodSize", "long");
-    public final static JfrField PROFILED_SIZE = new JfrField("profiledSize", "long");
-    public final static JfrField NON_PROFILED_SIZE = new JfrField("nonProfiledSize", "long");
-    public final static JfrField EXPANSION_SIZE = new JfrField("expansionSize", "long");
-    public final static JfrField MIN_BLOCK_LENGTH = new JfrField("minBlockLength", "long");
-    public final static JfrField START_ADDRESS = new JfrField("startAddress", "long");
-    public final static JfrField RESERVED_TOP_ADDRESS = new JfrField("reservedTopAddress", "long");
+    public final static String eventName = "jdk.CodeCacheConfiguration";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType INITIAL_SIZE = new longJfrType("initialSize", eventName);
+    public final static longJfrType RESERVED_SIZE = new longJfrType("reservedSize", eventName);
+    public final static longJfrType NON_N_METHOD_SIZE = new longJfrType("nonNMethodSize", eventName);
+    public final static longJfrType PROFILED_SIZE = new longJfrType("profiledSize", eventName);
+    public final static longJfrType NON_PROFILED_SIZE = new longJfrType("nonProfiledSize", eventName);
+    public final static longJfrType EXPANSION_SIZE = new longJfrType("expansionSize", eventName);
+    public final static longJfrType MIN_BLOCK_LENGTH = new longJfrType("minBlockLength", eventName);
+    public final static longJfrType START_ADDRESS = new longJfrType("startAddress", eventName);
+    public final static longJfrType RESERVED_TOP_ADDRESS = new longJfrType("reservedTopAddress", eventName);
 
 }

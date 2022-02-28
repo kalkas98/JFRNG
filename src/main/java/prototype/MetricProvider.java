@@ -1,16 +1,18 @@
 package prototype;
 
+import static org.testng.Assert.assertThrows;
+
 import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jdk.jfr.consumer.RecordedEvent;
+import model.FileWrite;
+import model.type.longJfrType;
 
 public class MetricProvider
 {
 	EventRecorder recorder;
-
-	public int asdf;
 
 	void setRecorder(EventRecorder recorder)
 	{
@@ -166,5 +168,18 @@ public class MetricProvider
 	public long getGCPauseSum()
 	{
 		return getLongAggregate(JfrEvent.GARBAGE_COLLECTION, "sumOfPauses");
+	}
+	
+	public long getAgg(longJfrType jfrField, Predicate<RecordedEvent> pred)
+	{
+		long aggregate = getEventStream()
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()))
+				.filter(pred).map(e -> e.getLong(jfrField.getAttribute())).reduce(0L, (res, val) -> res + val);
+		return aggregate;
+	}
+	
+	public long getAgg(longJfrType jfrField)
+	{
+		return getAgg(jfrField, (e) -> true);
 	}
 }

@@ -1,12 +1,17 @@
 
 package model;
 
+import model.type.MethodJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ReservedStackActivation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField METHOD = new JfrField("method", "Method");
+    public final static String eventName = "jdk.ReservedStackActivation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static MethodJfrType METHOD = new MethodJfrType("method", eventName);
 
 }

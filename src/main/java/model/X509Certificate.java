@@ -1,21 +1,27 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class X509Certificate {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField ALGORITHM = new JfrField("algorithm", "String");
-    public final static JfrField SERIAL_NUMBER = new JfrField("serialNumber", "String");
-    public final static JfrField SUBJECT = new JfrField("subject", "String");
-    public final static JfrField ISSUER = new JfrField("issuer", "String");
-    public final static JfrField KEY_TYPE = new JfrField("keyType", "String");
-    public final static JfrField KEY_LENGTH = new JfrField("keyLength", "int");
-    public final static JfrField CERTIFICATE_ID = new JfrField("certificateId", "long");
-    public final static JfrField VALID_FROM = new JfrField("validFrom", "long");
-    public final static JfrField VALID_UNTIL = new JfrField("validUntil", "long");
+    public final static String eventName = "jdk.X509Certificate";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static StringJfrType ALGORITHM = new StringJfrType("algorithm", eventName);
+    public final static StringJfrType SERIAL_NUMBER = new StringJfrType("serialNumber", eventName);
+    public final static StringJfrType SUBJECT = new StringJfrType("subject", eventName);
+    public final static StringJfrType ISSUER = new StringJfrType("issuer", eventName);
+    public final static StringJfrType KEY_TYPE = new StringJfrType("keyType", eventName);
+    public final static intJfrType KEY_LENGTH = new intJfrType("keyLength", eventName);
+    public final static longJfrType CERTIFICATE_ID = new longJfrType("certificateId", eventName);
+    public final static longJfrType VALID_FROM = new longJfrType("validFrom", eventName);
+    public final static longJfrType VALID_UNTIL = new longJfrType("validUntil", eventName);
 
 }

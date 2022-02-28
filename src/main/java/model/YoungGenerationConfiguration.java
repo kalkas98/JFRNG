@@ -1,12 +1,15 @@
 
 package model;
 
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class YoungGenerationConfiguration {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField MIN_SIZE = new JfrField("minSize", "long");
-    public final static JfrField MAX_SIZE = new JfrField("maxSize", "long");
-    public final static JfrField NEW_RATIO = new JfrField("newRatio", "int");
+    public final static String eventName = "jdk.YoungGenerationConfiguration";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType MIN_SIZE = new longJfrType("minSize", eventName);
+    public final static longJfrType MAX_SIZE = new longJfrType("maxSize", eventName);
+    public final static intJfrType NEW_RATIO = new intJfrType("newRatio", eventName);
 
 }

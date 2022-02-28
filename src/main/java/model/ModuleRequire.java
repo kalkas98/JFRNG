@@ -1,11 +1,14 @@
 
 package model;
 
+import model.type.ModuleJfrType;
+import model.type.longJfrType;
 
 public class ModuleRequire {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField SOURCE = new JfrField("source", "Module");
-    public final static JfrField REQUIRED_MODULE = new JfrField("requiredModule", "Module");
+    public final static String eventName = "jdk.ModuleRequire";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ModuleJfrType SOURCE = new ModuleJfrType("source", eventName);
+    public final static ModuleJfrType REQUIRED_MODULE = new ModuleJfrType("requiredModule", eventName);
 
 }

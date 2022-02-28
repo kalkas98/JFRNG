@@ -1,12 +1,15 @@
 
 package model;
 
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ZUnmap {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField UNMAPPED = new JfrField("unmapped", "long");
+    public final static String eventName = "jdk.ZUnmap";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static longJfrType UNMAPPED = new longJfrType("unmapped", eventName);
 
 }

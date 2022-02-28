@@ -1,18 +1,24 @@
 
 package model;
 
+import model.type.booleanJfrType;
+import model.type.doubleJfrType;
+import model.type.floatJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class G1AdaptiveIHOP {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField THRESHOLD = new JfrField("threshold", "long");
-    public final static JfrField THRESHOLD_PERCENTAGE = new JfrField("thresholdPercentage", "float");
-    public final static JfrField IHOP_TARGET_OCCUPANCY = new JfrField("ihopTargetOccupancy", "long");
-    public final static JfrField CURRENT_OCCUPANCY = new JfrField("currentOccupancy", "long");
-    public final static JfrField ADDITIONAL_BUFFER_SIZE = new JfrField("additionalBufferSize", "long");
-    public final static JfrField PREDICTED_ALLOCATION_RATE = new JfrField("predictedAllocationRate", "double");
-    public final static JfrField PREDICTED_MARKING_DURATION = new JfrField("predictedMarkingDuration", "long");
-    public final static JfrField PREDICTION_ACTIVE = new JfrField("predictionActive", "boolean");
+    public final static String eventName = "jdk.G1AdaptiveIHOP";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static longJfrType THRESHOLD = new longJfrType("threshold", eventName);
+    public final static floatJfrType THRESHOLD_PERCENTAGE = new floatJfrType("thresholdPercentage", eventName);
+    public final static longJfrType IHOP_TARGET_OCCUPANCY = new longJfrType("ihopTargetOccupancy", eventName);
+    public final static longJfrType CURRENT_OCCUPANCY = new longJfrType("currentOccupancy", eventName);
+    public final static longJfrType ADDITIONAL_BUFFER_SIZE = new longJfrType("additionalBufferSize", eventName);
+    public final static doubleJfrType PREDICTED_ALLOCATION_RATE = new doubleJfrType("predictedAllocationRate", eventName);
+    public final static longJfrType PREDICTED_MARKING_DURATION = new longJfrType("predictedMarkingDuration", eventName);
+    public final static booleanJfrType PREDICTION_ACTIVE = new booleanJfrType("predictionActive", eventName);
 
 }

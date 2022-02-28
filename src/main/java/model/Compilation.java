@@ -1,19 +1,27 @@
 
 package model;
 
+import model.type.MethodJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
+import model.type.shortJfrType;
 
 public class Compilation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField COMPILE_ID = new JfrField("compileId", "int");
-    public final static JfrField COMPILER = new JfrField("compiler", "String");
-    public final static JfrField METHOD = new JfrField("method", "Method");
-    public final static JfrField COMPILE_LEVEL = new JfrField("compileLevel", "short");
-    public final static JfrField SUCCEDED = new JfrField("succeded", "boolean");
-    public final static JfrField IS_OSR = new JfrField("isOsr", "boolean");
-    public final static JfrField CODE_SIZE = new JfrField("codeSize", "long");
-    public final static JfrField INLINED_BYTES = new JfrField("inlinedBytes", "long");
+    public final static String eventName = "jdk.Compilation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static intJfrType COMPILE_ID = new intJfrType("compileId", eventName);
+    public final static StringJfrType COMPILER = new StringJfrType("compiler", eventName);
+    public final static MethodJfrType METHOD = new MethodJfrType("method", eventName);
+    public final static shortJfrType COMPILE_LEVEL = new shortJfrType("compileLevel", eventName);
+    public final static booleanJfrType SUCCEDED = new booleanJfrType("succeded", eventName);
+    public final static booleanJfrType IS_OSR = new booleanJfrType("isOsr", eventName);
+    public final static longJfrType CODE_SIZE = new longJfrType("codeSize", eventName);
+    public final static longJfrType INLINED_BYTES = new longJfrType("inlinedBytes", eventName);
 
 }

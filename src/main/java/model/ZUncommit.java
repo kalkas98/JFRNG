@@ -1,12 +1,15 @@
 
 package model;
 
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ZUncommit {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField UNCOMMITTED = new JfrField("uncommitted", "long");
+    public final static String eventName = "jdk.ZUncommit";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static longJfrType UNCOMMITTED = new longJfrType("uncommitted", eventName);
 
 }

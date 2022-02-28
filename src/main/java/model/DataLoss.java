@@ -1,11 +1,13 @@
 
 package model;
 
+import model.type.longJfrType;
 
 public class DataLoss {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField AMOUNT = new JfrField("amount", "long");
-    public final static JfrField TOTAL = new JfrField("total", "long");
+    public final static String eventName = "jdk.DataLoss";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType AMOUNT = new longJfrType("amount", eventName);
+    public final static longJfrType TOTAL = new longJfrType("total", eventName);
 
 }

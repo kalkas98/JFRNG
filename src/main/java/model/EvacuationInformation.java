@@ -1,18 +1,21 @@
 
 package model;
 
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class EvacuationInformation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField C_SET_REGIONS = new JfrField("cSetRegions", "int");
-    public final static JfrField C_SET_USED_BEFORE = new JfrField("cSetUsedBefore", "long");
-    public final static JfrField C_SET_USED_AFTER = new JfrField("cSetUsedAfter", "long");
-    public final static JfrField ALLOCATION_REGIONS = new JfrField("allocationRegions", "int");
-    public final static JfrField ALLOCATION_REGIONS_USED_BEFORE = new JfrField("allocationRegionsUsedBefore", "long");
-    public final static JfrField ALLOCATION_REGIONS_USED_AFTER = new JfrField("allocationRegionsUsedAfter", "long");
-    public final static JfrField BYTES_COPIED = new JfrField("bytesCopied", "long");
-    public final static JfrField REGIONS_FREED = new JfrField("regionsFreed", "int");
+    public final static String eventName = "jdk.EvacuationInformation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static intJfrType C_SET_REGIONS = new intJfrType("cSetRegions", eventName);
+    public final static longJfrType C_SET_USED_BEFORE = new longJfrType("cSetUsedBefore", eventName);
+    public final static longJfrType C_SET_USED_AFTER = new longJfrType("cSetUsedAfter", eventName);
+    public final static intJfrType ALLOCATION_REGIONS = new intJfrType("allocationRegions", eventName);
+    public final static longJfrType ALLOCATION_REGIONS_USED_BEFORE = new longJfrType("allocationRegionsUsedBefore", eventName);
+    public final static longJfrType ALLOCATION_REGIONS_USED_AFTER = new longJfrType("allocationRegionsUsedAfter", eventName);
+    public final static longJfrType BYTES_COPIED = new longJfrType("bytesCopied", eventName);
+    public final static intJfrType REGIONS_FREED = new intJfrType("regionsFreed", eventName);
 
 }

@@ -1,15 +1,19 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ContainerCPUUsage {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField CPU_TIME = new JfrField("cpuTime", "long");
-    public final static JfrField CPU_USER_TIME = new JfrField("cpuUserTime", "long");
-    public final static JfrField CPU_SYSTEM_TIME = new JfrField("cpuSystemTime", "long");
+    public final static String eventName = "jdk.ContainerCPUUsage";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static longJfrType CPU_TIME = new longJfrType("cpuTime", eventName);
+    public final static longJfrType CPU_USER_TIME = new longJfrType("cpuUserTime", eventName);
+    public final static longJfrType CPU_SYSTEM_TIME = new longJfrType("cpuSystemTime", eventName);
 
 }

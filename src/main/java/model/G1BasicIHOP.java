@@ -1,18 +1,23 @@
 
 package model;
 
+import model.type.doubleJfrType;
+import model.type.floatJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class G1BasicIHOP {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField THRESHOLD = new JfrField("threshold", "long");
-    public final static JfrField THRESHOLD_PERCENTAGE = new JfrField("thresholdPercentage", "float");
-    public final static JfrField TARGET_OCCUPANCY = new JfrField("targetOccupancy", "long");
-    public final static JfrField CURRENT_OCCUPANCY = new JfrField("currentOccupancy", "long");
-    public final static JfrField RECENT_MUTATOR_ALLOCATION_SIZE = new JfrField("recentMutatorAllocationSize", "long");
-    public final static JfrField RECENT_MUTATOR_DURATION = new JfrField("recentMutatorDuration", "long");
-    public final static JfrField RECENT_ALLOCATION_RATE = new JfrField("recentAllocationRate", "double");
-    public final static JfrField LAST_MARKING_DURATION = new JfrField("lastMarkingDuration", "long");
+    public final static String eventName = "jdk.G1BasicIHOP";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static longJfrType THRESHOLD = new longJfrType("threshold", eventName);
+    public final static floatJfrType THRESHOLD_PERCENTAGE = new floatJfrType("thresholdPercentage", eventName);
+    public final static longJfrType TARGET_OCCUPANCY = new longJfrType("targetOccupancy", eventName);
+    public final static longJfrType CURRENT_OCCUPANCY = new longJfrType("currentOccupancy", eventName);
+    public final static longJfrType RECENT_MUTATOR_ALLOCATION_SIZE = new longJfrType("recentMutatorAllocationSize", eventName);
+    public final static longJfrType RECENT_MUTATOR_DURATION = new longJfrType("recentMutatorDuration", eventName);
+    public final static doubleJfrType RECENT_ALLOCATION_RATE = new doubleJfrType("recentAllocationRate", eventName);
+    public final static longJfrType LAST_MARKING_DURATION = new longJfrType("lastMarkingDuration", eventName);
 
 }

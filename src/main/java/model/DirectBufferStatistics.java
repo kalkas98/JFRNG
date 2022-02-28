@@ -1,16 +1,20 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class DirectBufferStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField MAX_CAPACITY = new JfrField("maxCapacity", "long");
-    public final static JfrField COUNT = new JfrField("count", "long");
-    public final static JfrField TOTAL_CAPACITY = new JfrField("totalCapacity", "long");
-    public final static JfrField MEMORY_USED = new JfrField("memoryUsed", "long");
+    public final static String eventName = "jdk.DirectBufferStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static longJfrType MAX_CAPACITY = new longJfrType("maxCapacity", eventName);
+    public final static longJfrType COUNT = new longJfrType("count", eventName);
+    public final static longJfrType TOTAL_CAPACITY = new longJfrType("totalCapacity", eventName);
+    public final static longJfrType MEMORY_USED = new longJfrType("memoryUsed", eventName);
 
 }

@@ -1,16 +1,21 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.booleanJfrType;
+import model.type.byteJfrType;
+import model.type.longJfrType;
 
 public class GCHeapConfiguration {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField MIN_SIZE = new JfrField("minSize", "long");
-    public final static JfrField MAX_SIZE = new JfrField("maxSize", "long");
-    public final static JfrField INITIAL_SIZE = new JfrField("initialSize", "long");
-    public final static JfrField USES_COMPRESSED_OOPS = new JfrField("usesCompressedOops", "boolean");
-    public final static JfrField COMPRESSED_OOPS_MODE = new JfrField("compressedOopsMode", "String");
-    public final static JfrField OBJECT_ALIGNMENT = new JfrField("objectAlignment", "long");
-    public final static JfrField HEAP_ADDRESS_BITS = new JfrField("heapAddressBits", "byte");
+    public final static String eventName = "jdk.GCHeapConfiguration";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType MIN_SIZE = new longJfrType("minSize", eventName);
+    public final static longJfrType MAX_SIZE = new longJfrType("maxSize", eventName);
+    public final static longJfrType INITIAL_SIZE = new longJfrType("initialSize", eventName);
+    public final static booleanJfrType USES_COMPRESSED_OOPS = new booleanJfrType("usesCompressedOops", eventName);
+    public final static StringJfrType COMPRESSED_OOPS_MODE = new StringJfrType("compressedOopsMode", eventName);
+    public final static longJfrType OBJECT_ALIGNMENT = new longJfrType("objectAlignment", eventName);
+    public final static byteJfrType HEAP_ADDRESS_BITS = new byteJfrType("heapAddressBits", eventName);
 
 }

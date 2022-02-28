@@ -1,17 +1,23 @@
 
 package model;
 
+import model.type.ObjectSpaceJfrType;
+import model.type.StringJfrType;
+import model.type.VirtualSpaceJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class PSHeapSummary {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField WHEN = new JfrField("when", "String");
-    public final static JfrField OLD_SPACE = new JfrField("oldSpace", "VirtualSpace");
-    public final static JfrField OLD_OBJECT_SPACE = new JfrField("oldObjectSpace", "ObjectSpace");
-    public final static JfrField YOUNG_SPACE = new JfrField("youngSpace", "VirtualSpace");
-    public final static JfrField EDEN_SPACE = new JfrField("edenSpace", "ObjectSpace");
-    public final static JfrField FROM_SPACE = new JfrField("fromSpace", "ObjectSpace");
-    public final static JfrField TO_SPACE = new JfrField("toSpace", "ObjectSpace");
+    public final static String eventName = "jdk.PSHeapSummary";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static StringJfrType WHEN = new StringJfrType("when", eventName);
+    public final static VirtualSpaceJfrType OLD_SPACE = new VirtualSpaceJfrType("oldSpace", eventName);
+    public final static ObjectSpaceJfrType OLD_OBJECT_SPACE = new ObjectSpaceJfrType("oldObjectSpace", eventName);
+    public final static VirtualSpaceJfrType YOUNG_SPACE = new VirtualSpaceJfrType("youngSpace", eventName);
+    public final static ObjectSpaceJfrType EDEN_SPACE = new ObjectSpaceJfrType("edenSpace", eventName);
+    public final static ObjectSpaceJfrType FROM_SPACE = new ObjectSpaceJfrType("fromSpace", eventName);
+    public final static ObjectSpaceJfrType TO_SPACE = new ObjectSpaceJfrType("toSpace", eventName);
 
 }

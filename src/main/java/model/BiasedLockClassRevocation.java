@@ -1,15 +1,21 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.longJfrType;
 
 public class BiasedLockClassRevocation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField REVOKED_CLASS = new JfrField("revokedClass", "Class");
-    public final static JfrField DISABLE_BIASING = new JfrField("disableBiasing", "boolean");
-    public final static JfrField SAFEPOINT_ID = new JfrField("safepointId", "long");
+    public final static String eventName = "jdk.BiasedLockClassRevocation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static ClassJfrType REVOKED_CLASS = new ClassJfrType("revokedClass", eventName);
+    public final static booleanJfrType DISABLE_BIASING = new booleanJfrType("disableBiasing", eventName);
+    public final static longJfrType SAFEPOINT_ID = new longJfrType("safepointId", eventName);
 
 }

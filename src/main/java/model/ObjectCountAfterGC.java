@@ -1,13 +1,17 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class ObjectCountAfterGC {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField OBJECT_CLASS = new JfrField("objectClass", "Class");
-    public final static JfrField COUNT = new JfrField("count", "long");
-    public final static JfrField TOTAL_SIZE = new JfrField("totalSize", "long");
+    public final static String eventName = "jdk.ObjectCountAfterGC";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static ClassJfrType OBJECT_CLASS = new ClassJfrType("objectClass", eventName);
+    public final static longJfrType COUNT = new longJfrType("count", eventName);
+    public final static longJfrType TOTAL_SIZE = new longJfrType("totalSize", eventName);
 
 }

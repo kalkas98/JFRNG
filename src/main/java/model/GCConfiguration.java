@@ -1,18 +1,23 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.booleanJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class GCConfiguration {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField YOUNG_COLLECTOR = new JfrField("youngCollector", "String");
-    public final static JfrField OLD_COLLECTOR = new JfrField("oldCollector", "String");
-    public final static JfrField PARALLEL_G_C_THREADS = new JfrField("parallelGCThreads", "int");
-    public final static JfrField CONCURRENT_G_C_THREADS = new JfrField("concurrentGCThreads", "int");
-    public final static JfrField USES_DYNAMIC_G_C_THREADS = new JfrField("usesDynamicGCThreads", "boolean");
-    public final static JfrField IS_EXPLICIT_G_C_CONCURRENT = new JfrField("isExplicitGCConcurrent", "boolean");
-    public final static JfrField IS_EXPLICIT_G_C_DISABLED = new JfrField("isExplicitGCDisabled", "boolean");
-    public final static JfrField PAUSE_TARGET = new JfrField("pauseTarget", "long");
-    public final static JfrField GC_TIME_RATIO = new JfrField("gcTimeRatio", "int");
+    public final static String eventName = "jdk.GCConfiguration";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType YOUNG_COLLECTOR = new StringJfrType("youngCollector", eventName);
+    public final static StringJfrType OLD_COLLECTOR = new StringJfrType("oldCollector", eventName);
+    public final static intJfrType PARALLEL_G_C_THREADS = new intJfrType("parallelGCThreads", eventName);
+    public final static intJfrType CONCURRENT_G_C_THREADS = new intJfrType("concurrentGCThreads", eventName);
+    public final static booleanJfrType USES_DYNAMIC_G_C_THREADS = new booleanJfrType("usesDynamicGCThreads", eventName);
+    public final static booleanJfrType IS_EXPLICIT_G_C_CONCURRENT = new booleanJfrType("isExplicitGCConcurrent", eventName);
+    public final static booleanJfrType IS_EXPLICIT_G_C_DISABLED = new booleanJfrType("isExplicitGCDisabled", eventName);
+    public final static longJfrType PAUSE_TARGET = new longJfrType("pauseTarget", eventName);
+    public final static intJfrType GC_TIME_RATIO = new intJfrType("gcTimeRatio", eventName);
 
 }

@@ -1,10 +1,13 @@
 
 package model;
 
+import model.type.G1EvacuationStatisticsJfrType;
+import model.type.longJfrType;
 
 public class G1EvacuationYoungStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField STATISTICS = new JfrField("statistics", "G1EvacuationStatistics");
+    public final static String eventName = "jdk.G1EvacuationYoungStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static G1EvacuationStatisticsJfrType STATISTICS = new G1EvacuationStatisticsJfrType("statistics", eventName);
 
 }

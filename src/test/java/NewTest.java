@@ -25,6 +25,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import jdk.jfr.consumer.RecordedEvent;
+import model.FileWrite;
 import prototype.Bar;
 import prototype.DumpJfrToDisk;
 import prototype.EventRecorder;
@@ -91,14 +92,15 @@ public class NewTest
 			e.printStackTrace();
 		}
 
-		provider.reset();
+		//provider.reset();
 		provider.stopRecording();
+		System.out.println("Bytes written: " + provider.getAgg(FileWrite.BYTES_WRITTEN));
 
 		System.out.println(provider.getFileIORead("filename.txt"));
 		System.out.println(":(");
-		System.out.println(provider.getFileIOWrite("filename.txt"));
+		System.out.println(provider.getFileIOWrite());
 		System.out.println(provider.getTLABAllocationInThread(Thread.currentThread().getName()));
-		provider.getEventStream().forEach(System.out::println);
+		//provider.getEventStream().forEach(System.out::println);
 
 	}
 

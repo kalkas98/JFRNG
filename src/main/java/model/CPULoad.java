@@ -1,12 +1,15 @@
 
 package model;
 
+import model.type.floatJfrType;
+import model.type.longJfrType;
 
 public class CPULoad {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField JVM_USER = new JfrField("jvmUser", "float");
-    public final static JfrField JVM_SYSTEM = new JfrField("jvmSystem", "float");
-    public final static JfrField MACHINE_TOTAL = new JfrField("machineTotal", "float");
+    public final static String eventName = "jdk.CPULoad";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static floatJfrType JVM_USER = new floatJfrType("jvmUser", eventName);
+    public final static floatJfrType JVM_SYSTEM = new floatJfrType("jvmSystem", eventName);
+    public final static floatJfrType MACHINE_TOTAL = new floatJfrType("machineTotal", eventName);
 
 }

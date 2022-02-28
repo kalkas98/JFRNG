@@ -1,18 +1,21 @@
 
 package model;
 
+import model.type.ClassLoaderJfrType;
+import model.type.longJfrType;
 
 public class ClassLoaderStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField CLASS_LOADER = new JfrField("classLoader", "ClassLoader");
-    public final static JfrField PARENT_CLASS_LOADER = new JfrField("parentClassLoader", "ClassLoader");
-    public final static JfrField CLASS_LOADER_DATA = new JfrField("classLoaderData", "long");
-    public final static JfrField CLASS_COUNT = new JfrField("classCount", "long");
-    public final static JfrField CHUNK_SIZE = new JfrField("chunkSize", "long");
-    public final static JfrField BLOCK_SIZE = new JfrField("blockSize", "long");
-    public final static JfrField HIDDEN_CLASS_COUNT = new JfrField("hiddenClassCount", "long");
-    public final static JfrField HIDDEN_CHUNK_SIZE = new JfrField("hiddenChunkSize", "long");
-    public final static JfrField HIDDEN_BLOCK_SIZE = new JfrField("hiddenBlockSize", "long");
+    public final static String eventName = "jdk.ClassLoaderStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ClassLoaderJfrType CLASS_LOADER = new ClassLoaderJfrType("classLoader", eventName);
+    public final static ClassLoaderJfrType PARENT_CLASS_LOADER = new ClassLoaderJfrType("parentClassLoader", eventName);
+    public final static longJfrType CLASS_LOADER_DATA = new longJfrType("classLoaderData", eventName);
+    public final static longJfrType CLASS_COUNT = new longJfrType("classCount", eventName);
+    public final static longJfrType CHUNK_SIZE = new longJfrType("chunkSize", eventName);
+    public final static longJfrType BLOCK_SIZE = new longJfrType("blockSize", eventName);
+    public final static longJfrType HIDDEN_CLASS_COUNT = new longJfrType("hiddenClassCount", eventName);
+    public final static longJfrType HIDDEN_CHUNK_SIZE = new longJfrType("hiddenChunkSize", eventName);
+    public final static longJfrType HIDDEN_BLOCK_SIZE = new longJfrType("hiddenBlockSize", eventName);
 
 }

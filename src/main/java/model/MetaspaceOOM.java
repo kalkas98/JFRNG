@@ -1,15 +1,21 @@
 
 package model;
 
+import model.type.ClassLoaderJfrType;
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.booleanJfrType;
+import model.type.longJfrType;
 
 public class MetaspaceOOM {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField CLASS_LOADER = new JfrField("classLoader", "ClassLoader");
-    public final static JfrField HIDDEN_CLASS_LOADER = new JfrField("hiddenClassLoader", "boolean");
-    public final static JfrField SIZE = new JfrField("size", "long");
-    public final static JfrField METADATA_TYPE = new JfrField("metadataType", "String");
-    public final static JfrField METASPACE_OBJECT_TYPE = new JfrField("metaspaceObjectType", "String");
+    public final static String eventName = "jdk.MetaspaceOOM";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static ClassLoaderJfrType CLASS_LOADER = new ClassLoaderJfrType("classLoader", eventName);
+    public final static booleanJfrType HIDDEN_CLASS_LOADER = new booleanJfrType("hiddenClassLoader", eventName);
+    public final static longJfrType SIZE = new longJfrType("size", eventName);
+    public final static StringJfrType METADATA_TYPE = new StringJfrType("metadataType", eventName);
+    public final static StringJfrType METASPACE_OBJECT_TYPE = new StringJfrType("metaspaceObjectType", eventName);
 
 }

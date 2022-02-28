@@ -1,13 +1,17 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.booleanJfrType;
+import model.type.longJfrType;
 
 public class BooleanFlagChanged {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField NAME = new JfrField("name", "String");
-    public final static JfrField OLD_VALUE = new JfrField("oldValue", "boolean");
-    public final static JfrField NEW_VALUE = new JfrField("newValue", "boolean");
-    public final static JfrField ORIGIN = new JfrField("origin", "String");
+    public final static String eventName = "jdk.BooleanFlagChanged";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType NAME = new StringJfrType("name", eventName);
+    public final static booleanJfrType OLD_VALUE = new booleanJfrType("oldValue", eventName);
+    public final static booleanJfrType NEW_VALUE = new booleanJfrType("newValue", eventName);
+    public final static StringJfrType ORIGIN = new StringJfrType("origin", eventName);
 
 }

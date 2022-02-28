@@ -1,12 +1,17 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ExecutionSample {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField SAMPLED_THREAD = new JfrField("sampledThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField STATE = new JfrField("state", "String");
+    public final static String eventName = "jdk.ExecutionSample";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType SAMPLED_THREAD = new ThreadJfrType("sampledThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static StringJfrType STATE = new StringJfrType("state", eventName);
 
 }

@@ -1,16 +1,21 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class ThreadPark {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField PARKED_CLASS = new JfrField("parkedClass", "Class");
-    public final static JfrField TIMEOUT = new JfrField("timeout", "long");
-    public final static JfrField UNTIL = new JfrField("until", "long");
-    public final static JfrField ADDRESS = new JfrField("address", "long");
+    public final static String eventName = "jdk.ThreadPark";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static ClassJfrType PARKED_CLASS = new ClassJfrType("parkedClass", eventName);
+    public final static longJfrType TIMEOUT = new longJfrType("timeout", eventName);
+    public final static longJfrType UNTIL = new longJfrType("until", eventName);
+    public final static longJfrType ADDRESS = new longJfrType("address", eventName);
 
 }

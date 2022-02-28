@@ -1,17 +1,21 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class CodeCacheStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField CODE_BLOB_TYPE = new JfrField("codeBlobType", "String");
-    public final static JfrField START_ADDRESS = new JfrField("startAddress", "long");
-    public final static JfrField RESERVED_TOP_ADDRESS = new JfrField("reservedTopAddress", "long");
-    public final static JfrField ENTRY_COUNT = new JfrField("entryCount", "int");
-    public final static JfrField METHOD_COUNT = new JfrField("methodCount", "int");
-    public final static JfrField ADAPTOR_COUNT = new JfrField("adaptorCount", "int");
-    public final static JfrField UNALLOCATED_CAPACITY = new JfrField("unallocatedCapacity", "long");
-    public final static JfrField FULL_COUNT = new JfrField("fullCount", "int");
+    public final static String eventName = "jdk.CodeCacheStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType CODE_BLOB_TYPE = new StringJfrType("codeBlobType", eventName);
+    public final static longJfrType START_ADDRESS = new longJfrType("startAddress", eventName);
+    public final static longJfrType RESERVED_TOP_ADDRESS = new longJfrType("reservedTopAddress", eventName);
+    public final static intJfrType ENTRY_COUNT = new intJfrType("entryCount", eventName);
+    public final static intJfrType METHOD_COUNT = new intJfrType("methodCount", eventName);
+    public final static intJfrType ADAPTOR_COUNT = new intJfrType("adaptorCount", eventName);
+    public final static longJfrType UNALLOCATED_CAPACITY = new longJfrType("unallocatedCapacity", eventName);
+    public final static intJfrType FULL_COUNT = new intJfrType("fullCount", eventName);
 
 }

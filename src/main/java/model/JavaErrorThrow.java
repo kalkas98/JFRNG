@@ -1,14 +1,20 @@
 
 package model;
 
+import model.type.ClassJfrType;
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.longJfrType;
 
 public class JavaErrorThrow {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField MESSAGE = new JfrField("message", "String");
-    public final static JfrField THROWN_CLASS = new JfrField("thrownClass", "Class");
+    public final static String eventName = "jdk.JavaErrorThrow";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static StringJfrType MESSAGE = new StringJfrType("message", eventName);
+    public final static ClassJfrType THROWN_CLASS = new ClassJfrType("thrownClass", eventName);
 
 }

@@ -1,16 +1,24 @@
 
 package model;
 
+import model.type.CalleeMethodJfrType;
+import model.type.MethodJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class CompilerInlining {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField COMPILE_ID = new JfrField("compileId", "int");
-    public final static JfrField CALLER = new JfrField("caller", "Method");
-    public final static JfrField CALLEE = new JfrField("callee", "CalleeMethod");
-    public final static JfrField SUCCEEDED = new JfrField("succeeded", "boolean");
-    public final static JfrField MESSAGE = new JfrField("message", "String");
-    public final static JfrField BCI = new JfrField("bci", "int");
+    public final static String eventName = "jdk.CompilerInlining";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static intJfrType COMPILE_ID = new intJfrType("compileId", eventName);
+    public final static MethodJfrType CALLER = new MethodJfrType("caller", eventName);
+    public final static CalleeMethodJfrType CALLEE = new CalleeMethodJfrType("callee", eventName);
+    public final static booleanJfrType SUCCEEDED = new booleanJfrType("succeeded", eventName);
+    public final static StringJfrType MESSAGE = new StringJfrType("message", eventName);
+    public final static intJfrType BCI = new intJfrType("bci", eventName);
 
 }

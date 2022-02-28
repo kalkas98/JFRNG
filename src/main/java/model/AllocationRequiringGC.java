@@ -1,13 +1,18 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.ThreadJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class AllocationRequiringGC {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField SIZE = new JfrField("size", "long");
+    public final static String eventName = "jdk.AllocationRequiringGC";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static longJfrType SIZE = new longJfrType("size", eventName);
 
 }

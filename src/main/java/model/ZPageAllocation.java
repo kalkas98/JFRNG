@@ -1,18 +1,25 @@
 
 package model;
 
+import model.type.StackTraceJfrType;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.booleanJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class ZPageAllocation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField EVENT_THREAD = new JfrField("eventThread", "Thread");
-    public final static JfrField STACK_TRACE = new JfrField("stackTrace", "StackTrace");
-    public final static JfrField TYPE = new JfrField("type", "String");
-    public final static JfrField SIZE = new JfrField("size", "long");
-    public final static JfrField FLUSHED = new JfrField("flushed", "long");
-    public final static JfrField COMMITTED = new JfrField("committed", "long");
-    public final static JfrField SEGMENTS = new JfrField("segments", "int");
-    public final static JfrField NON_BLOCKING = new JfrField("nonBlocking", "boolean");
+    public final static String eventName = "jdk.ZPageAllocation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
+    public final static StringJfrType TYPE = new StringJfrType("type", eventName);
+    public final static longJfrType SIZE = new longJfrType("size", eventName);
+    public final static longJfrType FLUSHED = new longJfrType("flushed", eventName);
+    public final static longJfrType COMMITTED = new longJfrType("committed", eventName);
+    public final static intJfrType SEGMENTS = new intJfrType("segments", eventName);
+    public final static booleanJfrType NON_BLOCKING = new booleanJfrType("nonBlocking", eventName);
 
 }

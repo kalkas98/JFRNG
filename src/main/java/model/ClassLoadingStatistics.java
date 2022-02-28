@@ -1,11 +1,13 @@
 
 package model;
 
+import model.type.longJfrType;
 
 public class ClassLoadingStatistics {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField LOADED_CLASS_COUNT = new JfrField("loadedClassCount", "long");
-    public final static JfrField UNLOADED_CLASS_COUNT = new JfrField("unloadedClassCount", "long");
+    public final static String eventName = "jdk.ClassLoadingStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType LOADED_CLASS_COUNT = new longJfrType("loadedClassCount", eventName);
+    public final static longJfrType UNLOADED_CLASS_COUNT = new longJfrType("unloadedClassCount", eventName);
 
 }

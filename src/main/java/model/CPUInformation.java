@@ -1,14 +1,18 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class CPUInformation {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField CPU = new JfrField("cpu", "String");
-    public final static JfrField DESCRIPTION = new JfrField("description", "String");
-    public final static JfrField SOCKETS = new JfrField("sockets", "int");
-    public final static JfrField CORES = new JfrField("cores", "int");
-    public final static JfrField HW_THREADS = new JfrField("hwThreads", "int");
+    public final static String eventName = "jdk.CPUInformation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static StringJfrType CPU = new StringJfrType("cpu", eventName);
+    public final static StringJfrType DESCRIPTION = new StringJfrType("description", eventName);
+    public final static intJfrType SOCKETS = new intJfrType("sockets", eventName);
+    public final static intJfrType CORES = new intJfrType("cores", eventName);
+    public final static intJfrType HW_THREADS = new intJfrType("hwThreads", eventName);
 
 }

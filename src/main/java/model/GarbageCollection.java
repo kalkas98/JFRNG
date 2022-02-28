@@ -1,15 +1,19 @@
 
 package model;
 
+import model.type.StringJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
 
 public class GarbageCollection {
 
-    public final static JfrField START_TIME = new JfrField("startTime", "long");
-    public final static JfrField DURATION = new JfrField("duration", "long");
-    public final static JfrField GC_ID = new JfrField("gcId", "int");
-    public final static JfrField NAME = new JfrField("name", "String");
-    public final static JfrField CAUSE = new JfrField("cause", "String");
-    public final static JfrField SUM_OF_PAUSES = new JfrField("sumOfPauses", "long");
-    public final static JfrField LONGEST_PAUSE = new JfrField("longestPause", "long");
+    public final static String eventName = "jdk.GarbageCollection";
+    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
+    public final static longJfrType DURATION = new longJfrType("duration", eventName);
+    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
+    public final static StringJfrType NAME = new StringJfrType("name", eventName);
+    public final static StringJfrType CAUSE = new StringJfrType("cause", eventName);
+    public final static longJfrType SUM_OF_PAUSES = new longJfrType("sumOfPauses", eventName);
+    public final static longJfrType LONGEST_PAUSE = new longJfrType("longestPause", eventName);
 
 }
