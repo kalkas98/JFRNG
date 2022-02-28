@@ -8,6 +8,16 @@ public class JfrField
 		this.name = name;
 		this.type = type;
 	}
-	public String type;
-	public String name;
+	private String type;
+	private String name;
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public String getType()
+	{
+		return type;
+	}
 }
