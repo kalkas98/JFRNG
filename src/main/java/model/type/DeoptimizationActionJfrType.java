@@ -3,7 +3,7 @@ package model.type;
 
 
 public class DeoptimizationActionJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

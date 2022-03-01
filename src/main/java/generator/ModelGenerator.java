@@ -1,17 +1,10 @@
 package generator;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,12 +16,9 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
 
 public class ModelGenerator
 {
@@ -78,7 +68,7 @@ public class ModelGenerator
 		{
 
 			dc = jp._class(eventName);
-			dc.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, String.class, "eventName", nameExpr);
+			dc.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, String.class, "EVENT", nameExpr);
 			// For each attribute in the event
 			for (JsonElement jsonElem : attributeArray)
 			{
@@ -91,7 +81,7 @@ public class ModelGenerator
 				JClass typeClass = cm.ref("model.type.".concat(typeClassName));
 				JType fieldType = cm.parseType(typeClass.fullName());
 				dc.field(JMod.PUBLIC | JMod.FINAL | JMod.STATIC, fieldType, upperCaseName,
-						JExpr._new(fieldType).arg(attributeName).arg(dc.fields().get("eventName")));
+						JExpr._new(fieldType).arg(attributeName).arg(dc.fields().get("EVENT")));
 			}
 
 			cm.build(buildDir);

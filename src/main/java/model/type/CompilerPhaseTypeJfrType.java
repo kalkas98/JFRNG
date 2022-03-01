@@ -3,7 +3,7 @@ package model.type;
 
 
 public class CompilerPhaseTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface RecordJfrEvents {
-	public JfrEvent[] value() default {};
+	public String[] value() default {};
 }

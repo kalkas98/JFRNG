@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ObjectSpaceJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

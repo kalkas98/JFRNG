@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ThreadStateJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

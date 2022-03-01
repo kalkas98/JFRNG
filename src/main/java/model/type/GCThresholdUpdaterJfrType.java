@@ -3,7 +3,7 @@ package model.type;
 
 
 public class GCThresholdUpdaterJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

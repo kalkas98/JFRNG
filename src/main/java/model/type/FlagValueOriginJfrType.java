@@ -3,7 +3,7 @@ package model.type;
 
 
 public class FlagValueOriginJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

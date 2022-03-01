@@ -10,16 +10,16 @@ import model.type.longJfrType;
 
 public class ZPageAllocation {
 
-    public final static String eventName = "jdk.ZPageAllocation";
-    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
-    public final static longJfrType DURATION = new longJfrType("duration", eventName);
-    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
-    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", eventName);
-    public final static StringJfrType TYPE = new StringJfrType("type", eventName);
-    public final static longJfrType SIZE = new longJfrType("size", eventName);
-    public final static longJfrType FLUSHED = new longJfrType("flushed", eventName);
-    public final static longJfrType COMMITTED = new longJfrType("committed", eventName);
-    public final static intJfrType SEGMENTS = new intJfrType("segments", eventName);
-    public final static booleanJfrType NON_BLOCKING = new booleanJfrType("nonBlocking", eventName);
+    public final static String EVENT = "jdk.ZPageAllocation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static longJfrType DURATION = new longJfrType("duration", EVENT);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", EVENT);
+    public final static StackTraceJfrType STACK_TRACE = new StackTraceJfrType("stackTrace", EVENT);
+    public final static StringJfrType TYPE = new StringJfrType("type", EVENT);
+    public final static longJfrType SIZE = new longJfrType("size", EVENT);
+    public final static longJfrType FLUSHED = new longJfrType("flushed", EVENT);
+    public final static longJfrType COMMITTED = new longJfrType("committed", EVENT);
+    public final static intJfrType SEGMENTS = new intJfrType("segments", EVENT);
+    public final static booleanJfrType NON_BLOCKING = new booleanJfrType("nonBlocking", EVENT);
 
 }

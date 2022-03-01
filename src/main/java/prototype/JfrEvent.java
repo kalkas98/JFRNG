@@ -1,5 +1,8 @@
 package prototype;
 
+/*
+ * Deprecated
+ */
 public enum JfrEvent {
 	THREAD_START("jdk.ThreadStart"),
 	SOCKET_WRITE("jdk.SocketWrite"),

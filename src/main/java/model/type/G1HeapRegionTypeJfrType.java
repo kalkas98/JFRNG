@@ -3,7 +3,7 @@ package model.type;
 
 
 public class G1HeapRegionTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

@@ -1,7 +1,6 @@
 package prototype;
 
 import jdk.jfr.Event;
-import jdk.jfr.Label;
 import jdk.jfr.Name;
 
 

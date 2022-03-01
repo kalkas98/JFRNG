@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ZPageTypeTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

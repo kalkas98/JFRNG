@@ -3,7 +3,7 @@ package model.type;
 
 
 public class CalleeMethodJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

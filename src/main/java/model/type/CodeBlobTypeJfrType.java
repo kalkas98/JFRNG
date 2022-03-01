@@ -3,7 +3,7 @@ package model.type;
 
 
 public class CodeBlobTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

@@ -3,7 +3,7 @@ package model.type;
 
 
 public class BytecodeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

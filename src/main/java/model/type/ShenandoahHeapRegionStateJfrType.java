@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ShenandoahHeapRegionStateJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

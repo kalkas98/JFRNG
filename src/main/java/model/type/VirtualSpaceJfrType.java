@@ -3,7 +3,7 @@ package model.type;
 
 
 public class VirtualSpaceJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

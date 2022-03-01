@@ -26,6 +26,10 @@ import org.testng.annotations.Test;
 
 import jdk.jfr.consumer.RecordedEvent;
 import model.FileWrite;
+import model.GarbageCollection;
+import model.SocketRead;
+import model.SystemGC;
+import model.ThreadStart;
 import prototype.Bar;
 import prototype.DumpJfrToDisk;
 import prototype.EventRecorder;
@@ -41,7 +45,10 @@ public class NewTest
 	
 	public MetricProvider provider = new MetricProvider();
 
-	@RecordJfrEvents({ JfrEvent.THREAD_START })
+	@RecordJfrEvents({ 
+		ThreadStart.EVENT, //TODO: Rename to .EVENT
+		SocketRead.EVENT
+	})
 	@RecordWithProfile(RecordingProfile.MEMORY)
 	@Test
 	public void a()
@@ -50,9 +57,11 @@ public class NewTest
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
+		provider.filterOnField(SystemGC.EVENT_THREAD, Thread.currentThread().getName());
 
-		provider.getEventStream().forEach(System.out::println);
+		//provider.getEventStream().forEach(System.out::println);
 		System.out.println("Allocated: " + provider.getTLABAllocationInThread(Thread.currentThread().getName()));
+		
 		// System.out.println("asdf " +
 		// recorder.getDurationAggregate(JfrEvent.GARBAGE_COLLECTION, "duration"));
 
@@ -94,13 +103,13 @@ public class NewTest
 
 		//provider.reset();
 		provider.stopRecording();
-		System.out.println("Bytes written: " + provider.getAgg(FileWrite.BYTES_WRITTEN));
+		System.out.println("Bytes written: " + provider.getLongAggregate(FileWrite.BYTES_WRITTEN));
 
 		System.out.println(provider.getFileIORead("filename.txt"));
 		System.out.println(":(");
 		System.out.println(provider.getFileIOWrite());
 		System.out.println(provider.getTLABAllocationInThread(Thread.currentThread().getName()));
-		//provider.getEventStream().forEach(System.out::println);
+		provider.getEventStream().forEach(System.out::println);
 
 	}
 
@@ -128,7 +137,7 @@ public class NewTest
 	}
 
 
-	@RecordJfrEvents({ JfrEvent.GARBAGE_COLLECTION })
+	@RecordJfrEvents({ GarbageCollection.EVENT })
 	@DumpJfrToDisk("gc.jfr")
 	@Test
 	public void c() throws InterruptedException

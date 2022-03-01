@@ -1,13 +1,24 @@
 package prototype;
 
-import static org.testng.Assert.assertThrows;
 
 import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jdk.jfr.consumer.RecordedEvent;
+import model.FileRead;
 import model.FileWrite;
+import model.GarbageCollection;
+import model.ObjectAllocationInNewTLAB;
+import model.ObjectAllocationOutsideTLAB;
+import model.SocketRead;
+import model.SocketWrite;
+import model.ThreadStart;
+import model.type.JfrField;
+import model.type.StringJfrType;
+import model.type.ThreadJfrType;
+import model.type.doubleJfrType;
+import model.type.intJfrType;
 import model.type.longJfrType;
 
 public class MetricProvider
@@ -42,144 +53,184 @@ public class MetricProvider
 		recorder.reset();
 	}
 
-	public double getDoubleAggregate(JfrEvent event, String field)
+	public long getLongAggregate(longJfrType jfrField, Predicate<RecordedEvent> pred)
 	{
-		// TODO: Ensure that event has the field
-		Double aggregate = getEventStream()
-				.filter(e -> e.getEventType().getName().equals(event.getEventString()) && e.hasField(field))
-				.map(e -> e.getDouble(field)).reduce(0.0, (res, val) -> res + val);
-		return aggregate;
-	}
-
-	public double getDoubleAggregate(JfrEvent event, String field, Predicate<RecordedEvent> pred)
-	{
-		return getDoubleAggregate(event, field, (e) -> true);
-	}
-
-	public int getIntAggregate(JfrEvent event, String field, Predicate<RecordedEvent> pred)
-	{
-		// TODO: Ensure that event has the field
-		int aggregate = getEventStream()
-				.filter(e -> e.getEventType().getName().equals(event.getEventString()) && e.hasField(field))
-				.map(e -> e.getInt(field)).reduce(0, (res, val) -> res + val);
-		return aggregate;
-	}
-
-	public int getIntAggregate(JfrEvent event, String field)
-	{
-		return getIntAggregate(event, field, (e) -> true);
-	}
-
-	public long getLongAggregate(JfrEvent event, String field, Predicate<RecordedEvent> pred)
-	{
-		// TODO: Ensure that event has the field
-
 		long aggregate = getEventStream()
-				.filter(e -> e.getEventType().getName().equals(event.getEventString()) && e.hasField(field))
-				.filter(pred).map(e -> e.getLong(field)).reduce(0L, (res, val) -> res + val);
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()))
+				.filter(pred)
+				.map(e -> e.getLong(jfrField.name()))
+				.reduce(0L, Long::sum);
 		return aggregate;
 	}
 
-	public long getLongAggregate(JfrEvent event, String field)
+	public long getLongAggregate(longJfrType jfrField)
 	{
-		return getLongAggregate(event, field, (e) -> true);
+		return getLongAggregate(jfrField, (e) -> true);
 	}
 
-	public Duration getDurationAggregate(JfrEvent event, String field, Predicate<RecordedEvent> pred)
+	public double getDoubleAggregate(doubleJfrType jfrField, Predicate<RecordedEvent> pred)
 	{
-		// TODO: Ensure that event has the field
+		Double aggregate = getEventStream()
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
+				.filter(pred)
+				.map(e -> e.getDouble(jfrField.name()))
+				.reduce(0.0, Double::sum);
+		return aggregate;
+	}
+
+	public double getDoubleAggregate(doubleJfrType jfrField)
+	{
+		return getDoubleAggregate(jfrField, (e) -> true);
+	}
+
+	public int getIntAggregate(intJfrType jfrField, Predicate<RecordedEvent> pred)
+	{
+
+		int aggregate = getEventStream()
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
+				.filter(pred).map(e -> e.getInt(jfrField.name()))
+				.reduce(0, (res, val) -> res + val);
+		return aggregate;
+	}
+
+	public int getIntAggregate(intJfrType field)
+	{
+		return getIntAggregate(field, (e) -> true);
+	}
+
+	public Duration getDurationAggregate(longJfrType jfrField, Predicate<RecordedEvent> pred)
+	{
 		Duration durationSum = getEventStream()
-				.filter(e -> e.getEventType().getName().equals(event.getEventString()) && e.hasField(field))
-				.map(e -> e.getDuration(field)).reduce(Duration.ZERO, (res, d) -> res.plus(d));
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
+				.filter(pred)
+				.map(e -> e.getDuration(jfrField.name()))
+				.reduce(Duration.ZERO, (res, d) -> res.plus(d));
 		return durationSum;
 	}
 
-	public Duration getDurationAggregate(JfrEvent event, String field)
+	public Duration getDurationAggregate(longJfrType jfrField)
 	{
-		return getDurationAggregate(event, field, (e) -> true);
+		return getDurationAggregate(jfrField, (e) -> true);
 	}
 
 	public long getTLABAllocation()
 	{
-		return getLongAggregate(JfrEvent.OBJECT_ALLOCATION_OUTSIDE_TLAB, "allocationSize")
-				+ getLongAggregate(JfrEvent.OBJECT_ALLOCATION_IN_NEW_TLAB, "tlabSize");
+		return getLongAggregate(ObjectAllocationOutsideTLAB.ALLOCATION_SIZE)
+				+ getLongAggregate(ObjectAllocationInNewTLAB.TLAB_SIZE);
 	}
 
 	public long getTLABAllocationInThread(String threadName)
 	{
 		Predicate<RecordedEvent> pred = e -> e.getThread().getJavaName().equals(threadName);
-		return getLongAggregate(JfrEvent.OBJECT_ALLOCATION_OUTSIDE_TLAB, "allocationSize", pred)
-				+ getLongAggregate(JfrEvent.OBJECT_ALLOCATION_IN_NEW_TLAB, "tlabSize", pred);
+		return getLongAggregate(ObjectAllocationOutsideTLAB.ALLOCATION_SIZE, pred)
+				+ getLongAggregate(ObjectAllocationInNewTLAB.TLAB_SIZE, pred);
 	}
 
 	public long getFileIORead()
 	{
-		return getLongAggregate(JfrEvent.FILE_READ, "bytesRead");
+		return getLongAggregate(FileRead.BYTES_READ);
 	}
 
 	public long getFileIORead(String path)
 	{
-		Predicate<RecordedEvent> pred = (e) -> e.hasField("path") && e.getString("path").equals(path);
-		return getLongAggregate(JfrEvent.FILE_READ, "bytesRead");
+		String pathFieldName = FileRead.PATH.name();
+		Predicate<RecordedEvent> pred = (e) -> e.hasField(pathFieldName) && e.getString(pathFieldName).equals(path);
+		return getLongAggregate(FileRead.BYTES_READ, pred);
 	}
 
 	public long getFileIOWrite()
 	{
-		return getLongAggregate(JfrEvent.FILE_WRITE, "bytesWritten");
+		return getLongAggregate(FileWrite.BYTES_WRITTEN);
 	}
 
 	public long getFileIOWrite(String path)
 	{
-		Predicate<RecordedEvent> pred = (e) -> e.hasField("path") && e.getString("path") != null
-				&& e.getString("path").equals(path);
-		return getLongAggregate(JfrEvent.FILE_WRITE, "bytesWritten", pred);
+		String pathFieldName = FileWrite.PATH.name();
+		Predicate<RecordedEvent> pred = (e) -> e.hasField(pathFieldName) && e.getString(pathFieldName) != null
+				&& e.getString(pathFieldName).equals(path);
+		return getLongAggregate(FileWrite.BYTES_WRITTEN, pred);
 	}
 
 	public long getSocketIORead()
 	{
-		return getLongAggregate(JfrEvent.SOCKET_READ, "bytesRead");
+		return getLongAggregate(SocketRead.BYTES_READ);
 	}
 
 	public long getSocketIORead(int port)
 	{
-		Predicate<RecordedEvent> pred = (e) -> e.hasField("port") && e.getString("port") != null
-				&& e.getString("port").equals(port);
-		return getLongAggregate(JfrEvent.SOCKET_READ, "bytesRead");
+		String portFieldName = SocketRead.PORT.name();
+		Predicate<RecordedEvent> pred = (e) -> e.hasField(portFieldName) && e.getString(portFieldName) != null
+				&& e.getString(portFieldName).equals(port);
+		return getLongAggregate(SocketRead.BYTES_READ, pred);
 	}
 
 	public long getSocketIOWrite()
 	{
-		return getLongAggregate(JfrEvent.SOCKET_WRITE, "bytesWritten");
+		return getLongAggregate(SocketWrite.BYTES_WRITTEN);
 	}
 
 	public long getSocketIOWrite(int port)
 	{
-		Predicate<RecordedEvent> pred = (e) -> e.hasField("port") && e.getString("port") != null
-				&& e.getString("port").equals(port);
-		return getLongAggregate(JfrEvent.SOCKET_WRITE, "bytesWritten", pred);
+		String portFieldName = SocketWrite.PORT.name();
+		Predicate<RecordedEvent> pred = (e) -> e.hasField(portFieldName) && e.getString(portFieldName) != null
+				&& e.getString(portFieldName).equals(port);
+		return getLongAggregate(SocketWrite.BYTES_WRITTEN, pred);
 	}
 
 	public long getThreadsStarted()
 	{
-		return getEventStream().filter(e -> e.getEventType().getName().equals(JfrEvent.THREAD_START.getEventString()))
+		return getEventStream()
+				.filter(e -> e.getEventType().getName().equals(ThreadStart.EVENT))
 				.count();
 	}
 
 	public long getGCPauseSum()
 	{
-		return getLongAggregate(JfrEvent.GARBAGE_COLLECTION, "sumOfPauses");
+		return getLongAggregate(GarbageCollection.SUM_OF_PAUSES);
 	}
 	
-	public long getAgg(longJfrType jfrField, Predicate<RecordedEvent> pred)
+	/**
+	 * Returns a stream containing events containing a value on the given field that fulfills the given predicate
+	 * @param field
+	 * @param pred
+	 * @return
+	 */
+	public Stream filterOnField(longJfrType field, Predicate<Long> pred)
 	{
-		long aggregate = getEventStream()
-				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()))
-				.filter(pred).map(e -> e.getLong(jfrField.getAttribute())).reduce(0L, (res, val) -> res + val);
-		return aggregate;
+		return getEventStream()
+				.filter(e -> e.hasField(field.name()) && pred.test(e.getLong(field.name())) );
 	}
 	
-	public long getAgg(longJfrType jfrField)
+	public Stream filterOnField(doubleJfrType field, Predicate<Double> pred)
 	{
-		return getAgg(jfrField, (e) -> true);
+		return getEventStream()
+				.filter(e -> e.hasField(field.name()) && pred.test(e.getDouble(field.name())) );
 	}
+
+	public Stream filterOnField(StringJfrType field, String str)
+	{
+		return getEventStream()
+				.filter(e -> e.hasField(field.name()) && e.getString(field.name()).equals(str) );
+	}
+
+	public Stream filterOnField(ThreadJfrType field, String threadName)
+	{
+
+		return getEventStream()
+				.filter(e -> e.hasField(field.name()) && 
+						e.getThread(field.name()).getJavaName().equals(threadName));
+	}
+
+	/**
+	 * Returns a stream only containing the given event
+	 * @param event e.g. jdk.ThreadStart
+	 * @return
+	 */
+	public Stream filterOnEvent(String event)
+	{
+
+		return getEventStream()
+				.filter(e -> e.getEventType().getName().equals(event));
+	}
+
 }

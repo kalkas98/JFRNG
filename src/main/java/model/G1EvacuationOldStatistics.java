@@ -6,8 +6,8 @@ import model.type.longJfrType;
 
 public class G1EvacuationOldStatistics {
 
-    public final static String eventName = "jdk.G1EvacuationOldStatistics";
-    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
-    public final static G1EvacuationStatisticsJfrType STATISTICS = new G1EvacuationStatisticsJfrType("statistics", eventName);
+    public final static String EVENT = "jdk.G1EvacuationOldStatistics";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static G1EvacuationStatisticsJfrType STATISTICS = new G1EvacuationStatisticsJfrType("statistics", EVENT);
 
 }

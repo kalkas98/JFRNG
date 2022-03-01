@@ -3,7 +3,7 @@ package model.type;
 
 
 public class StackFrameJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

@@ -3,7 +3,7 @@ package model.type;
 
 
 public class StackTraceJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

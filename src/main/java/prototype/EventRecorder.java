@@ -2,19 +2,10 @@ package prototype;
 
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
-import jdk.jfr.Configuration;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import jdk.jfr.consumer.RecordedEvent;
@@ -78,10 +69,10 @@ public class EventRecorder
 		else
 		{
 			recording = new Recording();
-			List<JfrEvent> enabledEvents = config.getEnabledEvents();
-			for (JfrEvent e : enabledEvents)
+			List<String> enabledEvents = config.getEnabledEvents();
+			for (String e : enabledEvents)
 			{
-				recording.enable(e.getEventString());
+				recording.enable(e);
 			}
 		}
 		recording.start();
@@ -111,10 +102,10 @@ public class EventRecorder
 		else
 		{
 			rs = new RecordingStream();
-			List<JfrEvent> enabledEvents = config.getEnabledEvents();
-			for (JfrEvent e : enabledEvents)
+			List<String> enabledEvents = config.getEnabledEvents();
+			for (String e : enabledEvents)
 			{
-				rs.enable(e.getEventString());
+				rs.enable(e);
 			}
 		}
 		rs.enable(SynchronizationEvent.SYNCH_EVENT_NAME);

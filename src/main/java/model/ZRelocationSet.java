@@ -6,12 +6,12 @@ import model.type.longJfrType;
 
 public class ZRelocationSet {
 
-    public final static String eventName = "jdk.ZRelocationSet";
-    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
-    public final static longJfrType DURATION = new longJfrType("duration", eventName);
-    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", eventName);
-    public final static longJfrType TOTAL = new longJfrType("total", eventName);
-    public final static longJfrType EMPTY = new longJfrType("empty", eventName);
-    public final static longJfrType RELOCATE = new longJfrType("relocate", eventName);
+    public final static String EVENT = "jdk.ZRelocationSet";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static longJfrType DURATION = new longJfrType("duration", EVENT);
+    public final static ThreadJfrType EVENT_THREAD = new ThreadJfrType("eventThread", EVENT);
+    public final static longJfrType TOTAL = new longJfrType("total", EVENT);
+    public final static longJfrType EMPTY = new longJfrType("empty", EVENT);
+    public final static longJfrType RELOCATE = new longJfrType("relocate", EVENT);
 
 }

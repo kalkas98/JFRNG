@@ -3,7 +3,7 @@ package model.type;
 
 
 public class booleanJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

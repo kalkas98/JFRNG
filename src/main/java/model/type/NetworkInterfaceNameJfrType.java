@@ -3,7 +3,7 @@ package model.type;
 
 
 public class NetworkInterfaceNameJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

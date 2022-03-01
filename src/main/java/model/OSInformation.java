@@ -6,8 +6,8 @@ import model.type.longJfrType;
 
 public class OSInformation {
 
-    public final static String eventName = "jdk.OSInformation";
-    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
-    public final static StringJfrType OS_VERSION = new StringJfrType("osVersion", eventName);
+    public final static String EVENT = "jdk.OSInformation";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static StringJfrType OS_VERSION = new StringJfrType("osVersion", EVENT);
 
 }

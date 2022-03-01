@@ -3,7 +3,7 @@ package model.type;
 
 
 public class VMOperationTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

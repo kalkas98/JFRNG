@@ -1,6 +1,5 @@
 package prototype;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -9,8 +8,6 @@ import java.util.List;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
-
-import jdk.jfr.consumer.RecordingStream;
 
 public class JfrListener implements IInvokedMethodListener
 {
@@ -24,7 +21,7 @@ public class JfrListener implements IInvokedMethodListener
 		
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
-			JfrEvent[] enabledEvents = m.getAnnotation(RecordJfrEvents.class).value();
+			String[] enabledEvents = m.getAnnotation(RecordJfrEvents.class).value();
 
 			try
 			{

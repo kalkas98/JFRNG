@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ZStatisticsSamplerTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

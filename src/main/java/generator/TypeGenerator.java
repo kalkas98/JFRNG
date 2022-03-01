@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -15,14 +14,12 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
-import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-import model.type.JfrType;
+import model.type.JfrField;
 
 public class TypeGenerator
 {
@@ -61,8 +58,6 @@ public class TypeGenerator
 	{
 		String typeName = typeObj.getAsJsonPrimitive("name").getAsString();
 		typeName = typeName.concat("JfrType");
-		//Right now we ignore the attributes of the types and only generate the name of the type for the class
-		JsonArray attributeArray = typeObj.getAsJsonArray("attributes");
 
 		JCodeModel cm = new JCodeModel();
 		JPackage jp = cm._package("model.type");
@@ -72,7 +67,7 @@ public class TypeGenerator
 		{
 
 			dc = jp._class(typeName);
-			JClass jClassExtends = cm.ref(JfrType.class);
+			JClass jClassExtends = cm.ref(JfrField.class);
 			dc._extends(jClassExtends);
 			
 			JMethod constructor = dc.constructor(JMod.PUBLIC);

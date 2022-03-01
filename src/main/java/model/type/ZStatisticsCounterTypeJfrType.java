@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ZStatisticsCounterTypeJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

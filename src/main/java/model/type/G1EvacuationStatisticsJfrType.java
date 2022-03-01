@@ -3,7 +3,7 @@ package model.type;
 
 
 public class G1EvacuationStatisticsJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

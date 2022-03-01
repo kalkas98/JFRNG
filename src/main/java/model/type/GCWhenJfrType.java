@@ -3,7 +3,7 @@ package model.type;
 
 
 public class GCWhenJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

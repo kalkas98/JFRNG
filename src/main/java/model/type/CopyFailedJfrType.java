@@ -3,7 +3,7 @@ package model.type;
 
 
 public class CopyFailedJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

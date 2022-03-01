@@ -3,7 +3,7 @@ package model.type;
 
 
 public class InflateCauseJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

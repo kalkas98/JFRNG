@@ -3,7 +3,7 @@ package model.type;
 
 
 public class floatJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

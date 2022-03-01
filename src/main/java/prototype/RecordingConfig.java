@@ -1,17 +1,21 @@
 package prototype;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import jdk.jfr.Configuration;
+import model.FileRead;
+import model.FileWrite;
+import model.ObjectAllocationInNewTLAB;
+import model.ObjectAllocationOutsideTLAB;
+import model.SocketRead;
+import model.SocketWrite;
 
 public class RecordingConfig
 {
-	private List<JfrEvent> enabledEvents;
+	private List<String> enabledEvents;
 	private List<RecordingProfile> profiles;
 	private Configuration jfrConfig;
 	private boolean shouldRecordToDisk;
@@ -22,9 +26,9 @@ public class RecordingConfig
 
 	}
 
-	public RecordingConfig(JfrEvent[] enabledEvents) throws Exception
+	public RecordingConfig(String[] enabledEvents) throws Exception
 	{
-		this.enabledEvents = new ArrayList<JfrEvent>(Arrays.asList(enabledEvents));
+		this.enabledEvents = new ArrayList<String>(Arrays.asList(enabledEvents));
 	}
 
 	public void EnableProfile(RecordingProfile profile) throws Exception
@@ -32,16 +36,16 @@ public class RecordingConfig
 		switch (profile)
 		{
 		case MEMORY:
-			enabledEvents.add(JfrEvent.OBJECT_ALLOCATION_IN_NEW_TLAB);
-			enabledEvents.add(JfrEvent.OBJECT_ALLOCATION_OUTSIDE_TLAB);
+			enabledEvents.add(ObjectAllocationInNewTLAB.EVENT);
+			enabledEvents.add(ObjectAllocationOutsideTLAB.EVENT);
 			break;
 		case FILE_IO:
-			enabledEvents.add(JfrEvent.FILE_READ);
-			enabledEvents.add(JfrEvent.FILE_WRITE);
+			enabledEvents.add(FileRead.EVENT);
+			enabledEvents.add(FileWrite.EVENT);
 			break;
 		case SOCKET_IO:
-			enabledEvents.add(JfrEvent.SOCKET_WRITE);
-			enabledEvents.add(JfrEvent.SOCKET_READ);
+			enabledEvents.add(SocketWrite.EVENT);
+			enabledEvents.add(SocketRead.EVENT);
 			break;
 		case DEFAULT:
 			this.jfrConfig = Configuration.getConfiguration("default");
@@ -54,7 +58,7 @@ public class RecordingConfig
 		}
 	}
 
-	public List<JfrEvent> getEnabledEvents()
+	public List<String> getEnabledEvents()
 	{
 		return enabledEvents;
 	}

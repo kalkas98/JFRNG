@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ChunkHeaderJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

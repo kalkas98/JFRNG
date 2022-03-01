@@ -3,7 +3,7 @@ package model.type;
 
 
 public class ReferenceJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

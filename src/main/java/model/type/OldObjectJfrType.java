@@ -3,7 +3,7 @@ package model.type;
 
 
 public class OldObjectJfrType
-    extends JfrType
+    extends JfrField
 {
 
 

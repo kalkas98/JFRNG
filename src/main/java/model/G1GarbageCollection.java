@@ -7,10 +7,10 @@ import model.type.longJfrType;
 
 public class G1GarbageCollection {
 
-    public final static String eventName = "jdk.G1GarbageCollection";
-    public final static longJfrType START_TIME = new longJfrType("startTime", eventName);
-    public final static longJfrType DURATION = new longJfrType("duration", eventName);
-    public final static intJfrType GC_ID = new intJfrType("gcId", eventName);
-    public final static StringJfrType TYPE = new StringJfrType("type", eventName);
+    public final static String EVENT = "jdk.G1GarbageCollection";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static longJfrType DURATION = new longJfrType("duration", EVENT);
+    public final static intJfrType GC_ID = new intJfrType("gcId", EVENT);
+    public final static StringJfrType TYPE = new StringJfrType("type", EVENT);
 
 }
