@@ -8,13 +8,13 @@ public class GeneratorMain
 	public static void main(String[] args) throws FileNotFoundException
 	{
 
-	    FileLoader loader = new FileLoader();
+	    JfrFileLoader loader = new JfrFileLoader();
 	    
 	    TypeGenerator tgen = new TypeGenerator();
 	    tgen.generateJfrTypes(loader.getStream());
 	    
-		ModelGenerator gen = new ModelGenerator();
-		gen.parseJfrEvents(loader.getStream());
+		EventModelGenerator gen = new EventModelGenerator();
+		gen.generateEventModels(loader.getStream());
 
 	}
 

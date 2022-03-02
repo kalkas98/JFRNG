@@ -10,6 +10,10 @@ import java.util.stream.Stream;
 
 import jdk.jfr.consumer.RecordedEvent;
 
+/**
+ * Class for starting, stopping and handling JFR recordings
+ *
+ */
 public class EventRecorder
 {
 	private RecordingStream rs;
@@ -115,6 +119,10 @@ public class EventRecorder
 			{
 				syncSemaphore.release();
 			}
+			else if(e.getEventType().getName().equals(ClearEvent.CLEAR_EVENT_NAME))
+			{
+				recordedEvents.clear();
+			}
 			else
 			{
 				recordedEvents.add(e);
@@ -163,9 +171,17 @@ public class EventRecorder
 		} 
 	}
 	
+	//Sends an event that clears the recorded event list
+	public void clear()
+	{
+		ClearEvent ce = new ClearEvent();
+		ce.begin();
+		ce.commit();
+	}
+	
 	/**
 	 * Clears the events recorded by the stream
-	 * Also restarts the JFR recording if there was one.
+	 * Also restarts the JFR disk recording if there was one.
 	 */
 	public void reset() 
 	{

@@ -1,19 +1,21 @@
 package prototype;
 
 
+import java.sql.Time;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jdk.jfr.consumer.RecordedEvent;
-import model.FileRead;
-import model.FileWrite;
-import model.GarbageCollection;
-import model.ObjectAllocationInNewTLAB;
-import model.ObjectAllocationOutsideTLAB;
-import model.SocketRead;
-import model.SocketWrite;
-import model.ThreadStart;
+import model.event.FileRead;
+import model.event.FileWrite;
+import model.event.GarbageCollection;
+import model.event.ObjectAllocationInNewTLAB;
+import model.event.ObjectAllocationOutsideTLAB;
+import model.event.SocketRead;
+import model.event.SocketWrite;
+import model.event.ThreadStart;
 import model.type.JfrField;
 import model.type.StringJfrType;
 import model.type.ThreadJfrType;
@@ -21,9 +23,13 @@ import model.type.doubleJfrType;
 import model.type.intJfrType;
 import model.type.longJfrType;
 
+/**
+ * Class that exposes methods that can be used in TestNG unit tests
+ * in order to access JFR metrics that were recorded during the executed unit test
+ */
 public class MetricProvider
 {
-	EventRecorder recorder;
+	private EventRecorder recorder;
 
 	void setRecorder(EventRecorder recorder)
 	{
@@ -98,19 +104,19 @@ public class MetricProvider
 		return getIntAggregate(field, (e) -> true);
 	}
 
-	public Duration getDurationAggregate(longJfrType jfrField, Predicate<RecordedEvent> pred)
+	public long getDurationAggregate(longJfrType jfrField, TimeUnit timeunit, Predicate<RecordedEvent> pred)
 	{
 		Duration durationSum = getEventStream()
 				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
 				.filter(pred)
 				.map(e -> e.getDuration(jfrField.name()))
 				.reduce(Duration.ZERO, (res, d) -> res.plus(d));
-		return durationSum;
+		return timeunit.convert(durationSum);
 	}
 
-	public Duration getDurationAggregate(longJfrType jfrField)
+	public long getDurationAggregate(longJfrType jfrField, TimeUnit timeunit)
 	{
-		return getDurationAggregate(jfrField, (e) -> true);
+		return getDurationAggregate(jfrField, timeunit, (e) -> true);
 	}
 
 	public long getTLABAllocation()
@@ -183,10 +189,22 @@ public class MetricProvider
 				.filter(e -> e.getEventType().getName().equals(ThreadStart.EVENT))
 				.count();
 	}
-
-	public long getGCPauseSum()
+	
+	public long getThreadsStarted(String parent)
 	{
-		return getLongAggregate(GarbageCollection.SUM_OF_PAUSES);
+		return getEventStream()
+				.filter(e -> e.getEventType().getName().equals(ThreadStart.EVENT))
+				.filter(e -> e.getThread(ThreadStart.PARENT_THREAD.name()).getJavaName().equals(parent))
+				.count();
+	}
+
+	/**
+	 * Returns the sum of the garbage collection pauses in the given timeunit
+	 */
+	public long getGCPauseSum(TimeUnit timeunit)
+	{
+
+		return getDurationAggregate(GarbageCollection.SUM_OF_PAUSES, timeunit);
 	}
 	
 	/**
@@ -195,30 +213,44 @@ public class MetricProvider
 	 * @param pred
 	 * @return
 	 */
-	public Stream filterOnField(longJfrType field, Predicate<Long> pred)
+	public Stream<RecordedEvent> filterOnField(longJfrType field, Predicate<Long> pred)
 	{
 		return getEventStream()
-				.filter(e -> e.hasField(field.name()) && pred.test(e.getLong(field.name())) );
+				.filter(e -> e.hasField(field.name()) &&
+						e.getEventType().getName().equals(field.getEvent()) &&
+						pred.test(e.getLong(field.name())) );
+	}
+	public Stream<RecordedEvent> filterOnField(intJfrType field, Predicate<Integer> pred)
+	{
+		return getEventStream()
+				.filter(e -> e.hasField(field.name()) &&
+						e.getEventType().getName().equals(field.getEvent()) &&
+						pred.test(e.getInt(field.name())) ); 
 	}
 	
-	public Stream filterOnField(doubleJfrType field, Predicate<Double> pred)
+	public Stream<RecordedEvent> filterOnField(doubleJfrType field, Predicate<Double> pred)
 	{
 		return getEventStream()
-				.filter(e -> e.hasField(field.name()) && pred.test(e.getDouble(field.name())) );
+				.filter(e -> e.hasField(field.name()) &&
+						e.getEventType().getName().equals(field.getEvent()) &&
+						pred.test(e.getDouble(field.name())) );
 	}
 
-	public Stream filterOnField(StringJfrType field, String str)
+	public Stream<RecordedEvent> filterOnField(StringJfrType field, String str)
 	{
 		return getEventStream()
-				.filter(e -> e.hasField(field.name()) && e.getString(field.name()).equals(str) );
+				.filter(e -> e.hasField(field.name()) &&
+						e.getEventType().getName().equals(field.getEvent()) &&
+						e.getString(field.name()).equals(str) );
 	}
 
-	public Stream filterOnField(ThreadJfrType field, String threadName)
+	public Stream<RecordedEvent> filterOnField(ThreadJfrType field, String threadName)
 	{
 
 		return getEventStream()
 				.filter(e -> e.hasField(field.name()) && 
-						e.getThread(field.name()).getJavaName().equals(threadName));
+						e.getThread(field.name()).getJavaName().equals(threadName) &&
+						e.getEventType().getName().equals(field.getEvent()));
 	}
 
 	/**
@@ -226,7 +258,7 @@ public class MetricProvider
 	 * @param event e.g. jdk.ThreadStart
 	 * @return
 	 */
-	public Stream filterOnEvent(String event)
+	public Stream<RecordedEvent> filterOnEvent(String event)
 	{
 
 		return getEventStream()

@@ -6,10 +6,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Enables a profile for the JFR recording.
+ * Profiles enables the recording of a set of events.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Repeatable(RecordingProfiles.class)
 public @interface RecordWithProfile
 {
-	public RecordingProfile value(); 
+	public RecordingProfile[] value(); 
 }

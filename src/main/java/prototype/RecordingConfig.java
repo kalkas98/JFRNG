@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import jdk.jfr.Configuration;
-import model.FileRead;
-import model.FileWrite;
-import model.ObjectAllocationInNewTLAB;
-import model.ObjectAllocationOutsideTLAB;
-import model.SocketRead;
-import model.SocketWrite;
+import model.event.FileRead;
+import model.event.FileWrite;
+import model.event.ObjectAllocationInNewTLAB;
+import model.event.ObjectAllocationOutsideTLAB;
+import model.event.SocketRead;
+import model.event.SocketWrite;
 
 public class RecordingConfig
 {

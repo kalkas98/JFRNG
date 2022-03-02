@@ -1,0 +1,17 @@
+
+package model.event;
+
+import model.type.StringJfrType;
+import model.type.intJfrType;
+import model.type.longJfrType;
+
+public class IntFlagChanged {
+
+    public final static String EVENT = "jdk.IntFlagChanged";
+    public final static longJfrType START_TIME = new longJfrType("startTime", EVENT);
+    public final static StringJfrType NAME = new StringJfrType("name", EVENT);
+    public final static intJfrType OLD_VALUE = new intJfrType("oldValue", EVENT);
+    public final static intJfrType NEW_VALUE = new intJfrType("newValue", EVENT);
+    public final static StringJfrType ORIGIN = new StringJfrType("origin", EVENT);
+
+}

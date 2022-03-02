@@ -32,6 +32,12 @@ public class TypeGenerator
 		buildDir.mkdirs();
 	}
 
+	
+	/**
+	 * Takes an input stream for a JSON file describing jfr types and generates model classes for them
+	 * Such JSON files are found here: https://github.com/BestSolution-at/jfr-doc
+	 * @param jsonString
+	 */
 	public void generateJfrTypes(InputStream jsonString)
 	{
 		JsonReader reader = null;
@@ -42,7 +48,6 @@ public class TypeGenerator
 		}
 		catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -54,6 +59,10 @@ public class TypeGenerator
 
 	}
 
+	/**
+	 * Takes a JsonObject representing a JFR-type and generates its model
+	 * @param typeObj
+	 */
 	public void generateType(JsonObject typeObj)
 	{
 		String typeName = typeObj.getAsJsonPrimitive("name").getAsString();
@@ -68,11 +77,11 @@ public class TypeGenerator
 
 			dc = jp._class(typeName);
 			JClass jClassExtends = cm.ref(JfrField.class);
-			dc._extends(jClassExtends);
+			dc._extends(jClassExtends); //Extend JfrField
 			
-			JMethod constructor = dc.constructor(JMod.PUBLIC);
-			JVar nameParam = constructor.param(0, String.class, "name"); //Add param
-			JVar eventParam = constructor.param(0, String.class, "event"); //Add param
+			JMethod constructor = dc.constructor(JMod.PUBLIC); //Add constructor
+			JVar nameParam = constructor.param(0, String.class, "name"); //Add name param
+			JVar eventParam = constructor.param(0, String.class, "event"); //Add event param
 			constructor.body().invoke("super").arg(nameParam).arg(eventParam) ; //Invoke parent constructor
 
 			
@@ -80,7 +89,6 @@ public class TypeGenerator
 		}
 		catch (JClassAlreadyExistsException | IOException e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

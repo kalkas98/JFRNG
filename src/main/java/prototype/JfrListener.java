@@ -2,6 +2,7 @@ package prototype;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,11 +13,13 @@ import org.testng.ITestResult;
 public class JfrListener implements IInvokedMethodListener
 {
 
+
 	@Override
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult)
 	{
 		
 		RecordingConfig rc;
+		//Get test method object that contains annotations
 		Method m = method.getTestMethod().getConstructorOrMethod().getMethod();
 		
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
@@ -26,23 +29,28 @@ public class JfrListener implements IInvokedMethodListener
 			try
 			{
 				rc = new RecordingConfig(enabledEvents);
-				if (m.isAnnotationPresent(RecordWithProfile.class) || m.isAnnotationPresent(RecordingProfiles.class))
+				
+				//Enable recording profile if annotaion is present
+				if (m.isAnnotationPresent(RecordWithProfile.class))
 				{
-					List<RecordWithProfile> profiles = Arrays.asList(m.getAnnotationsByType(RecordWithProfile.class));
-					for (RecordWithProfile profile : profiles) {
-						rc.EnableProfile(profile.value());
+					List<RecordingProfile> profiles = Arrays.asList(m.getAnnotation(RecordWithProfile.class).value());
+					for (RecordingProfile profile : profiles) {
+						rc.EnableProfile(profile);
 					}
 				}
+				
+				//Enable jfr disk recording if annotation is present
 				if(m.isAnnotationPresent(DumpJfrToDisk.class))
 				{
-					System.out.println("Here");
 					rc.setPath(m.getAnnotation(DumpJfrToDisk.class).value());
 					rc.setRecordToDisk(true);
 				}
+				
 				MetricProvider provider = getRecorderInstance(method);
 				EventRecorder recorder = new EventRecorder(rc);
 				provider.setRecorder(recorder);
 				recorder.startRecording();
+				recorder.clear();//Clear events recorded during startup
 			}
 			catch (Exception e)
 			{
