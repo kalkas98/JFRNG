@@ -24,7 +24,6 @@ import prototype.MetricProvider;
 import prototype.RecordJfrEvents;
 import prototype.RecordWithProfile;
 import prototype.RecordingProfile;
-import util.Bar;
 
 @Listeners({ prototype.JfrListener.class })
 public class MetricProviderTest
@@ -47,7 +46,8 @@ public class MetricProviderTest
 		
 		assertTrue(provider.getTLABAllocationInThread(currentThread) > 0);
 		assertTrue(provider.filterOnEvent(GarbageCollection.EVENT).count() > 0);
-
+		//provider.getEventStream().forEach((e) -> System.out.println(e.getStackTrace().getFrames()));
+		//provider.getEventStream().forEach(System.out::println);
 	}
 
 	@RecordJfrEvents
@@ -92,7 +92,7 @@ public class MetricProviderTest
 		/*
 		System.out.println("Bytes read from filename.txt: " + provider.getFileIORead("filename.txt"));
 		System.out.println("Bytes written to filename.txt: " + provider.getFileIOWrite("filename.txt"));
-		System.out.println("Allocated bytes in main: " + provider.getTLABAllocationInThread(Thread.currentThread().getName()));
+		System.out.println("Allocated) bytes in main: " + provider.getTLABAllocationInThread(Thread.currentThread().getName()));
 		*/
 	}
 
@@ -129,9 +129,12 @@ public class MetricProviderTest
 	public void TestMultipleEventsNoProfileAndDiskRecordingWithPath() throws InterruptedException
 	{
 		Bar b = new Bar();
+		Thread t = new Thread();
+		t.start();
 		b.foo();
 		System.gc();
 		provider.stopRecording();
+
 		assertTrue(provider.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
 		assertTrue(provider.getThreadsStarted() > 0);
 	}

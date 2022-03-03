@@ -16,7 +16,6 @@ import prototype.MetricProvider;
 import prototype.RecordJfrEvents;
 import prototype.RecordWithProfile;
 import prototype.RecordingProfile;
-import util.Bar;
 @Listeners({ prototype.JfrListener.class })
 public class Examples
 {
@@ -28,14 +27,14 @@ public class Examples
 	@Test
 	public void MemoryTest()
 	{
+		
 		Bar b = new Bar();
-		b.foo();
+		b.mem();
 		provider.stopRecording();
-		
 		String currentThread = Thread.currentThread().getName();
-		long allocatedMb = provider.getTLABAllocationInThread(currentThread) / 1_000_000;
-		
-		assertTrue(allocatedMb < 200);
+		long allocatedMb = provider.getTLABAllocationInThread(currentThread) / 1_000_000;	
+
+		assertTrue(allocatedMb < 500);
 	}
 	
 	
@@ -104,6 +103,19 @@ public class Examples
 		long threadsStarted = provider.getThreadsStarted(thisThread);
 		
 		assertTrue(threadsStarted == NR_THREADS);
+	}
+	
+	@RecordJfrEvents(FooEvent.EVENT)
+	@Test
+	public void CustomEvent() 
+	{
+		Bar b = new Bar();
+		b.foo(); //foo() commits the custom FooEvent event to JFR
+		provider.stopRecording();
+		
+		long customEventCount = provider.filterOnEvent(FooEvent.EVENT).count();
+		
+		assertTrue(customEventCount == 1);
 	}
 	
 	

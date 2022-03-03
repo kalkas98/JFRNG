@@ -4,11 +4,14 @@ import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
 
+import jdk.jfr.consumer.RecordedClass;
 import jdk.jfr.consumer.RecordedEvent;
+import jdk.jfr.consumer.RecordedFrame;
 
 /**
  * Class for starting, stopping and handling JFR recordings
@@ -55,12 +58,14 @@ public class EventRecorder
 	
 	public void stopRecording()
 	{
+		
 		synch();
 		if(config.recordToDisk())
 		{
 			stopDiskRecording();
 		}
 		stopRecordingStream();
+		RemoveRecordingOverheadEvents();
 		isRecording = false;
 	}
 	
@@ -129,6 +134,7 @@ public class EventRecorder
 			}
 
 		});
+		
 		rs.startAsync();
 
 		synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
@@ -193,6 +199,28 @@ public class EventRecorder
 		}
 		recordedEvents.clear();		
 
+	}
+	
+	private void RemoveRecordingOverheadEvents()
+	{
+		List<RecordedEvent> toBeRemoved = new ArrayList<>();
+		for (RecordedEvent event : recordedEvents)
+		{
+			if(event.getStackTrace() != null)
+			{
+				List<RecordedFrame> frames = event.getStackTrace().getFrames();
+				for (RecordedFrame frame : frames)
+				{
+					RecordedClass cls = frame.getMethod().getType();
+					if(cls.getName().equals("prototype.EventRecorder") || cls.getName().equals("prototype.MetricProvider"))
+					{
+						//Clear events caused by recording
+						toBeRemoved.add(event);
+					}
+				}
+			}
+		}
+		recordedEvents.removeAll(toBeRemoved);
 	}
 	
 	public boolean isRecording()
