@@ -11,12 +11,12 @@ import org.testng.annotations.Test;
 
 import model.event.GarbageCollection;
 import model.event.ThreadStart;
-import prototype.DumpJfrToDisk;
-import prototype.MetricProvider;
-import prototype.RecordJfrEvents;
-import prototype.RecordWithProfile;
-import prototype.RecordingProfile;
-@Listeners({ prototype.JfrListener.class })
+import recording.DumpJfrToDisk;
+import recording.MetricProvider;
+import recording.RecordJfrEvents;
+import recording.RecordWithProfile;
+import recording.RecordingProfile;
+
 public class Examples
 {
 	
@@ -33,7 +33,7 @@ public class Examples
 		provider.stopRecording();
 		String currentThread = Thread.currentThread().getName();
 		long allocatedMb = provider.getTLABAllocationInThread(currentThread) / 1_000_000;	
-
+		System.out.println("Allocated: " + allocatedMb);
 		assertTrue(allocatedMb < 500);
 	}
 	

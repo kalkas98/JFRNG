@@ -1,4 +1,4 @@
-package prototype;
+package recording;
 
 /**
  * Enum for profiles supported by the RecordingConfig.EnableProfile method

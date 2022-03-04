@@ -19,13 +19,12 @@ import model.event.GarbageCollection;
 import model.event.SystemGC;
 import model.event.ThreadSleep;
 import model.event.ThreadStart;
-import prototype.DumpJfrToDisk;
-import prototype.MetricProvider;
-import prototype.RecordJfrEvents;
-import prototype.RecordWithProfile;
-import prototype.RecordingProfile;
+import recording.DumpJfrToDisk;
+import recording.MetricProvider;
+import recording.RecordJfrEvents;
+import recording.RecordWithProfile;
+import recording.RecordingProfile;
 
-@Listeners({ prototype.JfrListener.class })
 public class MetricProviderTest
 {
 	

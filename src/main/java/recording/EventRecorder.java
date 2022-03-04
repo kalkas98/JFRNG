@@ -1,4 +1,4 @@
-package prototype;
+package recording;
 
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
@@ -201,6 +201,7 @@ public class EventRecorder
 
 	}
 	
+	//TODO: Check that this works
 	private void RemoveRecordingOverheadEvents()
 	{
 		List<RecordedEvent> toBeRemoved = new ArrayList<>();
@@ -212,8 +213,9 @@ public class EventRecorder
 				for (RecordedFrame frame : frames)
 				{
 					RecordedClass cls = frame.getMethod().getType();
-					if(cls.getName().equals("prototype.EventRecorder") || cls.getName().equals("prototype.MetricProvider"))
+					if(cls.getName().equals(EventRecorder.class.getName()))
 					{
+						
 						//Clear events caused by recording
 						toBeRemoved.add(event);
 					}

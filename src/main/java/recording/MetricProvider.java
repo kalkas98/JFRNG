@@ -1,4 +1,4 @@
-package prototype;
+package recording;
 
 
 import java.sql.Time;
@@ -31,7 +31,7 @@ public class MetricProvider
 {
 	private EventRecorder recorder;
 
-	void setRecorder(EventRecorder recorder)
+	public void setRecorder(EventRecorder recorder)
 	{
 		this.recorder = recorder;
 	}

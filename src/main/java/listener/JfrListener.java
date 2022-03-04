@@ -1,8 +1,7 @@
-package prototype;
+package listener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,8 +9,17 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 
+import recording.DumpJfrToDisk;
+import recording.EventRecorder;
+import recording.MetricProvider;
+import recording.RecordJfrEvents;
+import recording.RecordWithProfile;
+import recording.RecordingConfig;
+import recording.RecordingProfile;
+
 public class JfrListener implements IInvokedMethodListener
 {
+
 
 
 	@Override
@@ -21,6 +29,7 @@ public class JfrListener implements IInvokedMethodListener
 		RecordingConfig rc;
 		//Get test method object that contains annotations
 		Method m = method.getTestMethod().getConstructorOrMethod().getMethod();
+		
 		
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
@@ -45,6 +54,7 @@ public class JfrListener implements IInvokedMethodListener
 					rc.setPath(m.getAnnotation(DumpJfrToDisk.class).value());
 					rc.setRecordToDisk(true);
 				}
+				
 				
 				MetricProvider provider = getRecorderInstance(method);
 				EventRecorder recorder = new EventRecorder(rc);

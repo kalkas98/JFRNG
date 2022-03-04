@@ -1,4 +1,4 @@
-package prototype;
+package recording;
 
 import jdk.jfr.Event;
 import jdk.jfr.Name;

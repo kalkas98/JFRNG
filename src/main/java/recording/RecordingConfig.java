@@ -1,4 +1,4 @@
-package prototype;
+package recording;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
