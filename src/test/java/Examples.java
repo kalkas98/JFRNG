@@ -9,13 +9,13 @@ import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import model.event.GarbageCollection;
-import model.event.ThreadStart;
-import recording.DumpJfrToDisk;
-import recording.MetricProvider;
-import recording.RecordJfrEvents;
-import recording.RecordWithProfile;
-import recording.RecordingProfile;
+import jfrng.model.event.GarbageCollection;
+import jfrng.model.event.ThreadStart;
+import jfrng.recording.DumpJfrToDisk;
+import jfrng.recording.MetricProvider;
+import jfrng.recording.RecordJfrEvents;
+import jfrng.recording.RecordWithProfile;
+import jfrng.recording.RecordingProfile;
 
 public class Examples
 {
