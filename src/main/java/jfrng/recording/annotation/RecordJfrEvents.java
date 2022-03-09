@@ -1,4 +1,4 @@
-package jfrng.recording;
+package jfrng.recording.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

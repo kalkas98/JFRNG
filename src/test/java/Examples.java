@@ -11,11 +11,11 @@ import org.testng.annotations.Test;
 
 import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.ThreadStart;
-import jfrng.recording.DumpJfrToDisk;
 import jfrng.recording.MetricProvider;
-import jfrng.recording.RecordJfrEvents;
-import jfrng.recording.RecordWithProfile;
 import jfrng.recording.RecordingProfile;
+import jfrng.recording.annotation.DumpJfrToDisk;
+import jfrng.recording.annotation.RecordJfrEvents;
+import jfrng.recording.annotation.RecordWithProfile;
 
 public class Examples
 {

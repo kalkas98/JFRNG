@@ -2,13 +2,26 @@ package jfrng.recording;
 
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
+import jdk.management.jfr.RemoteRecordingStream;
+import jfrng.recording.event.ClearEvent;
+import jfrng.recording.event.SynchronizationEvent;
+
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Stream;
 
+import javax.management.MBeanServerConnection;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+
+import jdk.jfr.consumer.EventStream;
 import jdk.jfr.consumer.RecordedClass;
 import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordedFrame;
@@ -19,7 +32,8 @@ import jdk.jfr.consumer.RecordedFrame;
  */
 public class EventRecorder
 {
-	private RecordingStream rs;
+	private RecordingStream localStream;
+	private RemoteRecordingStream remoteStream;
 	private List<RecordedEvent> recordedEvents;
 	private Semaphore syncSemaphore;
 	private boolean isRecording;
@@ -29,7 +43,8 @@ public class EventRecorder
 
 	public EventRecorder(RecordingConfig rc)
 	{
-		recordedEvents = new ArrayList<RecordedEvent>();
+		List<RecordedEvent> tmpList = new ArrayList<RecordedEvent>();
+		recordedEvents =  Collections.synchronizedList(tmpList);
 		syncSemaphore = new Semaphore(0);
 		config = rc;
 	}
@@ -48,6 +63,10 @@ public class EventRecorder
 		try
 		{
 			startRecordingStream();
+			if(config.isRemoteRecordingEnabled())
+			{
+				startRemoteRecorderStream(config.getRemoteUrl());
+			}
 		}
 		catch (Exception e)
 		{
@@ -64,6 +83,11 @@ public class EventRecorder
 		{
 			stopDiskRecording();
 		}
+		if(config.isRemoteRecordingEnabled())
+		{
+			stopRemoteRecordingStream();
+		}
+		
 		stopRecordingStream();
 		RemoveRecordingOverheadEvents();
 		isRecording = false;
@@ -103,23 +127,24 @@ public class EventRecorder
 
 	private void startRecordingStream() throws Exception
 	{
-		recordedEvents.clear();
 		if (config.getJfrConfig() != null)
 		{
-			rs = new RecordingStream(config.getJfrConfig());
+			//Use a predifined JFR configuration if one is assigned to this recording config
+			localStream = new RecordingStream(config.getJfrConfig());
 		}
 		else
 		{
-			rs = new RecordingStream();
+			localStream = new RecordingStream();
 			List<String> enabledEvents = config.getEnabledEvents();
 			for (String e : enabledEvents)
 			{
-				rs.enable(e);
+				localStream.enable(e);
 			}
 		}
-		rs.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
-		rs.setReuse(false); // Since we keep references to Events.
-		rs.onEvent(e -> {
+		localStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
+		localStream.setReuse(false); // Since we keep references to Events.
+		localStream.onEvent(e -> {
+			
 			if (e.getEventType().getName().equals(SynchronizationEvent.SYNCH_EVENT_NAME))
 			{
 				syncSemaphore.release();
@@ -135,15 +160,17 @@ public class EventRecorder
 
 		});
 		
-		rs.startAsync();
+		localStream.startAsync();
 
 		synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
 
 	}
 
+
+
 	private void stopRecordingStream()
 	{
-		rs.close();
+		localStream.close();
 	}
 
 	public Stream<RecordedEvent> getEventStream()
@@ -158,7 +185,10 @@ public class EventRecorder
 	/**
 	 * Commits a synchronization event to the JFR stream and tries to aquire the
 	 * syncSemaphore. The JFR stream thread releases the semaphore once the event
-	 * processed is , allowing the thread calling synch to proceed
+	 *  is processed, allowing the thread calling synch to proceed.
+	 *  
+	 *  Call this method when you want to make sure the JFR stream thread has processed 
+	 *  emitted events.
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -204,30 +234,84 @@ public class EventRecorder
 	//TODO: Check that this works
 	private void RemoveRecordingOverheadEvents()
 	{
-		List<RecordedEvent> toBeRemoved = new ArrayList<>();
-		for (RecordedEvent event : recordedEvents)
+		synchronized(recordedEvents)
 		{
-			if(event.getStackTrace() != null)
+			List<RecordedEvent> toBeRemoved = new ArrayList<>();
+			for (RecordedEvent event : recordedEvents)
 			{
-				List<RecordedFrame> frames = event.getStackTrace().getFrames();
-				for (RecordedFrame frame : frames)
+				if(event.getStackTrace() != null)
 				{
-					RecordedClass cls = frame.getMethod().getType();
-					if(cls.getName().equals(EventRecorder.class.getName()))
+					List<RecordedFrame> frames = event.getStackTrace().getFrames();
+					for (RecordedFrame frame : frames)
 					{
-						
-						//Clear events caused by recording
-						toBeRemoved.add(event);
+						RecordedClass cls = frame.getMethod().getType();
+						if(cls.getName().equals(EventRecorder.class.getName()))
+						{
+							toBeRemoved.add(event);
+						}
 					}
 				}
 			}
+			recordedEvents.removeAll(toBeRemoved);
 		}
-		recordedEvents.removeAll(toBeRemoved);
 	}
 	
 	public boolean isRecording()
 	{
 		return isRecording;
+	}
+	
+	/**
+	 * Starts recording JFR events on a remote JVM located at the given url
+	 * Events are recorded via a RemoteRecordingStream.
+	 * Events are added to the same list as the local JFR events.
+	 * @param url - JMX service url of the host. 
+	 * 		with the format: "service:jmx:rmi:///jndi/rmi://" + JMX_HOST + ":" + JMX_PORT + "/jmxrmi"
+	 */
+	private void startRemoteRecorderStream(String url)
+	{
+		remoteStream = initRemoteRecordingStream(url);
+		
+		if (config.getJfrConfig() != null)
+		{
+			Map<String,String> settings = config.getJfrConfig().getSettings();
+			remoteStream.setSettings(settings);
+		}
+	
+		List<String> enabledEvents = config.getEnabledEvents();
+		for (String e : enabledEvents)
+		{
+			remoteStream.enable(e);
+		}
+		
+		//TODO: Add synchronization event?
+		//remoteStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
+		remoteStream.setReuse(false); // Since we keep references to Events.
+		remoteStream.onEvent(e -> {
+				recordedEvents.add(e);
+		});
+		remoteStream.startAsync();
+	}
+	
+	private RemoteRecordingStream initRemoteRecordingStream(String url)
+	{
+		try
+		{
+			JMXServiceURL u = new JMXServiceURL(url);
+			JMXConnector c = JMXConnectorFactory.connect(u);
+			MBeanServerConnection conn = c.getMBeanServerConnection();
+			return new RemoteRecordingStream(conn);	
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private void stopRemoteRecordingStream()
+	{
+		remoteStream.close();
 	}
 
 }

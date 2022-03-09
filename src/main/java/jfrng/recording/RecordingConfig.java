@@ -19,7 +19,9 @@ public class RecordingConfig
 	private List<RecordingProfile> profiles;
 	private Configuration jfrConfig;
 	private boolean shouldRecordToDisk;
+	private boolean remoteRecordingEnabled;
 	private Path diskRecordingPath;
+	private String remoteUrl;
 
 	public RecordingConfig() throws Exception
 	{
@@ -63,6 +65,9 @@ public class RecordingConfig
 		return enabledEvents;
 	}
 
+	/**
+	 * Get the assigned Java flight Recorder configuration 
+	 */
 	public Configuration getJfrConfig()
 	{
 		return jfrConfig;
@@ -91,6 +96,26 @@ public class RecordingConfig
 	public Path getPath()
 	{
 		return diskRecordingPath;
+	}
+
+	public boolean isRemoteRecordingEnabled()
+	{
+		return remoteRecordingEnabled;
+	}
+
+	public void setRemoteRecordingEnabled(boolean remoteRecordingEnabled)
+	{
+		this.remoteRecordingEnabled = remoteRecordingEnabled;
+	}
+
+	public String getRemoteUrl()
+	{
+		return remoteUrl;
+	}
+
+	public void setRemoteUrl(String remoteUrl)
+	{
+		this.remoteUrl = remoteUrl;
 	}
 
 }

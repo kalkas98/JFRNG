@@ -9,13 +9,14 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 
-import jfrng.recording.DumpJfrToDisk;
 import jfrng.recording.EventRecorder;
 import jfrng.recording.MetricProvider;
-import jfrng.recording.RecordJfrEvents;
-import jfrng.recording.RecordWithProfile;
 import jfrng.recording.RecordingConfig;
 import jfrng.recording.RecordingProfile;
+import jfrng.recording.annotation.DumpJfrToDisk;
+import jfrng.recording.annotation.RecordJfrEvents;
+import jfrng.recording.annotation.RecordRemote;
+import jfrng.recording.annotation.RecordWithProfile;
 
 public class JfrListener implements IInvokedMethodListener
 {
@@ -53,6 +54,13 @@ public class JfrListener implements IInvokedMethodListener
 				{
 					rc.setPath(m.getAnnotation(DumpJfrToDisk.class).value());
 					rc.setRecordToDisk(true);
+				}
+				
+				if(m.isAnnotationPresent(RecordRemote.class))
+				{
+					rc.setRemoteRecordingEnabled(true);
+					String url = m.getAnnotation(RecordRemote.class).value();
+					rc.setRemoteUrl(url);
 				}
 				
 				

@@ -1,4 +1,4 @@
-package jfrng.recording;
+package jfrng.recording.event;
 
 import jdk.jfr.Event;
 import jdk.jfr.Name;

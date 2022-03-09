@@ -1,7 +1,6 @@
 package jfrng.recording;
 
 
-import java.sql.Time;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -16,7 +15,6 @@ import jfrng.model.event.ObjectAllocationOutsideTLAB;
 import jfrng.model.event.SocketRead;
 import jfrng.model.event.SocketWrite;
 import jfrng.model.event.ThreadStart;
-import jfrng.model.type.JfrField;
 import jfrng.model.type.StringJfrType;
 import jfrng.model.type.ThreadJfrType;
 import jfrng.model.type.doubleJfrType;
