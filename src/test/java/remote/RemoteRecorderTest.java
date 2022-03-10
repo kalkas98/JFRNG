@@ -1,3 +1,4 @@
+package remote;
 import static org.testng.Assert.assertTrue;
 
 import java.rmi.registry.LocateRegistry;
@@ -20,21 +21,21 @@ import remote.IGreeter;
 public class RemoteRecorderTest
 {
 	public MetricProvider provider = new MetricProvider();
-	private static final int port = 1919;
-	private static final String host = "localhost";
-	// A JMXConnectorServer at this url is required for this test to work
-	private static final String url = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi";
 	
 	@RecordJfrEvents(ThreadStart.EVENT)
-	@RecordRemote(url)
-	@Test(enabled = false)
+	@RecordRemote(Server.URL)
+	@RecordRemote(AltServer.URL)
+	@Test(enabled = true)
 	public void testRemoteRecording()
 	{
 		try
 		{
 			Registry registry = LocateRegistry.getRegistry();
+			
 			IGreeter stub = (IGreeter) registry.lookup("Greeter");
+			IGreeter stub2 = (IGreeter) registry.lookup("Greeter2");
 			System.out.println(stub.Greet());
+			System.out.println(stub2.Greet());
 			Thread.sleep(2000); //To ensure the remote events are processed before we stop recording
 								//Should find some way to sync if possible
 		}
@@ -43,7 +44,7 @@ public class RemoteRecorderTest
 			e.printStackTrace();
 		}
 		provider.stopRecording();
-		provider.getEventStream().forEach(System.out::println);
+
 		Predicate<RecordedEvent> pred = event -> event.hasField("parentThread") && 
 				event.getThread("parentThread").getJavaName().startsWith("RMI");
 		assertTrue(provider.getEventStream().filter(pred).count() > 0);

@@ -21,7 +21,7 @@ public class RecordingConfig
 	private boolean shouldRecordToDisk;
 	private boolean remoteRecordingEnabled;
 	private Path diskRecordingPath;
-	private String remoteUrl;
+	private List<String> remoteUrls;
 
 	public RecordingConfig() throws Exception
 	{
@@ -31,6 +31,7 @@ public class RecordingConfig
 	public RecordingConfig(String[] enabledEvents) throws Exception
 	{
 		this.enabledEvents = new ArrayList<String>(Arrays.asList(enabledEvents));
+		this.remoteUrls = new ArrayList<String>();
 	}
 
 	public void EnableProfile(RecordingProfile profile) throws Exception
@@ -108,14 +109,14 @@ public class RecordingConfig
 		this.remoteRecordingEnabled = remoteRecordingEnabled;
 	}
 
-	public String getRemoteUrl()
+	public List<String> getRemoteUrls()
 	{
-		return remoteUrl;
+		return remoteUrls;
 	}
 
-	public void setRemoteUrl(String remoteUrl)
+	public void addRemoteUrl(String remoteUrl)
 	{
-		this.remoteUrl = remoteUrl;
+		this.remoteUrls.add(remoteUrl);
 	}
 
 }

@@ -33,7 +33,7 @@ import jdk.jfr.consumer.RecordedFrame;
 public class EventRecorder
 {
 	private RecordingStream localStream;
-	private RemoteRecordingStream remoteStream;
+	private List<RemoteRecordingStream> remoteStreams;
 	private List<RecordedEvent> recordedEvents;
 	private Semaphore syncSemaphore;
 	private boolean isRecording;
@@ -47,6 +47,7 @@ public class EventRecorder
 		recordedEvents =  Collections.synchronizedList(tmpList);
 		syncSemaphore = new Semaphore(0);
 		config = rc;
+		remoteStreams = new ArrayList<RemoteRecordingStream>();
 	}
 	
 	public void setConfig(RecordingConfig rc)
@@ -65,7 +66,13 @@ public class EventRecorder
 			startRecordingStream();
 			if(config.isRemoteRecordingEnabled())
 			{
-				startRemoteRecorderStream(config.getRemoteUrl());
+				List<String> urls = config.getRemoteUrls();
+				for(String url: urls)
+				{
+					System.out.println(url);
+					startRemoteRecorderStream(url);
+				}
+				
 			}
 		}
 		catch (Exception e)
@@ -85,7 +92,10 @@ public class EventRecorder
 		}
 		if(config.isRemoteRecordingEnabled())
 		{
-			stopRemoteRecordingStream();
+			for(RemoteRecordingStream stream: remoteStreams)
+			{
+				stopRemoteRecordingStream(stream);
+			}
 		}
 		
 		stopRecordingStream();
@@ -270,7 +280,7 @@ public class EventRecorder
 	 */
 	private void startRemoteRecorderStream(String url)
 	{
-		remoteStream = initRemoteRecordingStream(url);
+		RemoteRecordingStream remoteStream = initRemoteRecordingStream(url);
 		
 		if (config.getJfrConfig() != null)
 		{
@@ -291,6 +301,7 @@ public class EventRecorder
 				recordedEvents.add(e);
 		});
 		remoteStream.startAsync();
+		remoteStreams.add(remoteStream);
 	}
 	
 	private RemoteRecordingStream initRemoteRecordingStream(String url)
@@ -309,9 +320,9 @@ public class EventRecorder
 		return null;
 	}
 	
-	private void stopRemoteRecordingStream()
+	private void stopRemoteRecordingStream(RemoteRecordingStream rs)
 	{
-		remoteStream.close();
+		rs.close();
 	}
 
 }

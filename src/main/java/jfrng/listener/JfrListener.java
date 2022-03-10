@@ -17,6 +17,7 @@ import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordRemote;
 import jfrng.recording.annotation.RecordWithProfile;
+import jfrng.recording.annotation.RemoteRecorders;
 
 public class JfrListener implements IInvokedMethodListener
 {
@@ -56,11 +57,15 @@ public class JfrListener implements IInvokedMethodListener
 					rc.setRecordToDisk(true);
 				}
 				
-				if(m.isAnnotationPresent(RecordRemote.class))
+				if(m.isAnnotationPresent(RecordRemote.class) || m.isAnnotationPresent(RemoteRecorders.class))
 				{
 					rc.setRemoteRecordingEnabled(true);
-					String url = m.getAnnotation(RecordRemote.class).value();
-					rc.setRemoteUrl(url);
+					//String url = m.getAnnotation(RecordRemote.class).value();
+					RecordRemote[] remoteAnnotations =  m.getAnnotationsByType(RecordRemote.class);
+					for (RecordRemote annotation : remoteAnnotations)
+					{	System.out.println("listener:  " + annotation.value());
+						rc.addRemoteUrl(annotation.value());
+					}
 				}
 				
 				
