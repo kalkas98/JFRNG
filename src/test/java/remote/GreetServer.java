@@ -19,13 +19,14 @@ import javax.management.remote.JMXServiceURL;
 
 import jdk.management.jfr.FlightRecorderMXBean;
 
-public class AltServer implements IGreeter
+public class GreetServer implements IGreeter
 {
-	public final static int JMX_PORT = 1920;
+	public final static int JMX_PORT = 1919;
 	public final static String JMX_HOST = "localhost";
 	public final static String URL = "service:jmx:rmi:///jndi/rmi://" + JMX_HOST + ":" + JMX_PORT + "/jmxrmi";
+	public final static String BINDING_NAME = "greeter";
 
-	public AltServer()
+	public GreetServer()
 	{
 	}
 
@@ -33,7 +34,7 @@ public class AltServer implements IGreeter
 	{
 		Thread t1 = new Thread();
 		t1.start(); // Start a thread to trigger a jfr event
-		return "Welcome Traveler!";
+		return "Greetings Traveler!";
 	}
 
 	private static void echo(String str)
@@ -49,6 +50,15 @@ public class AltServer implements IGreeter
 
 		initJMXConnectorServer();
 		echo("JMX connector server started...");
+		
+		for (;;)
+		{
+			Thread t1 = new Thread();
+			t1.start();
+			Thread.sleep(500);
+			t1.stop();
+		}
+
 	}
 
 	private static void initJMXConnectorServer() throws Exception
@@ -63,9 +73,9 @@ public class AltServer implements IGreeter
 
 	private static void initRMIServer() throws Exception
 	{
-		AltServer s1 = new AltServer();
+		GreetServer s1 = new GreetServer();
 		IGreeter remoteObj = (IGreeter) UnicastRemoteObject.exportObject(s1, 0);
 		Registry registry = LocateRegistry.getRegistry();
-		registry.bind("Greeter2", remoteObj);
+		registry.bind(BINDING_NAME, remoteObj);
 	}
 }

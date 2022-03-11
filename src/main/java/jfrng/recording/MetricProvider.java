@@ -262,5 +262,15 @@ public class MetricProvider
 		return getEventStream()
 				.filter(e -> e.getEventType().getName().equals(event));
 	}
+	
+	public Stream<RecordedEvent> filterOnClass(Class<?> cls)
+	{
+		return recorder.filterOnClass(cls);
+	}
+	
+	public Stream<RecordedEvent> filterOnMethod(String method)
+	{
+		return recorder.filterOnMethod(method);
+	}
 
 }

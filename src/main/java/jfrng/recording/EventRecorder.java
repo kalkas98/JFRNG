@@ -25,6 +25,7 @@ import jdk.jfr.consumer.EventStream;
 import jdk.jfr.consumer.RecordedClass;
 import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordedFrame;
+import jdk.jfr.consumer.RecordedMethod;
 
 /**
  * Class for starting, stopping and handling JFR recordings
@@ -69,7 +70,6 @@ public class EventRecorder
 				List<String> urls = config.getRemoteUrls();
 				for(String url: urls)
 				{
-					System.out.println(url);
 					startRemoteRecorderStream(url);
 				}
 				
@@ -176,8 +176,6 @@ public class EventRecorder
 
 	}
 
-
-
 	private void stopRecordingStream()
 	{
 		localStream.close();
@@ -266,22 +264,84 @@ public class EventRecorder
 		}
 	}
 	
+	/***
+	 * Returns a stream containing only events where the given class is found in 
+	 * the stacktrace of the event
+	 * @param cls - class to filter on
+	 * @return stream containing events where given class is in the stacktrace
+	 */
+	public Stream<RecordedEvent> filterOnClass(Class cls)
+	{
+		synchronized(recordedEvents)
+		{
+			List<RecordedEvent> newList = new ArrayList<>();
+			for (RecordedEvent event : recordedEvents)
+			{
+				if(event.getStackTrace() != null)
+				{
+					List<RecordedFrame> frames = event.getStackTrace().getFrames();
+					for (RecordedFrame frame : frames)
+					{
+						RecordedClass recordedClass = frame.getMethod().getType();
+						if(recordedClass.getName().equals(cls.getName()))
+						{
+							newList.add(event);
+						}
+					}
+				}
+			}
+			return newList.stream();
+		}
+	}
+	
+	/***
+	 * Returns a stream containing only events where the given method is found in 
+	 * the stacktrace of the event
+	 * @param methodName - method to filter on
+	 * @return stream containing events where given method is in the stacktrace
+	 */
+	public Stream<RecordedEvent> filterOnMethod(String methodName)
+	{
+		synchronized(recordedEvents)
+		{
+			List<RecordedEvent> newList = new ArrayList<>();
+			for (RecordedEvent event : recordedEvents)
+			{
+				if(event.getStackTrace() != null)
+				{
+					List<RecordedFrame> frames = event.getStackTrace().getFrames();
+					for (RecordedFrame frame : frames)
+					{
+						RecordedMethod recordedMethod = frame.getMethod();
+						if(recordedMethod.getName().equals(methodName))
+						{
+							newList.add(event);
+						}
+					}
+				}
+			}
+			return newList.stream();
+		}
+	}
+	
 	public boolean isRecording()
 	{
 		return isRecording;
 	}
 	
 	/**
-	 * Starts recording JFR events on a remote JVM located at the given url
+	 * Starts recording JFR events on a remote JVM.
+	 * Connects to a remote MBean server by connecting a
+	 * JMXConnector to a JMXConenctorServer at the given url that
+	 * is attached to the MBean server
 	 * Events are recorded via a RemoteRecordingStream.
 	 * Events are added to the same list as the local JFR events.
 	 * @param url - JMX service url of the host. 
-	 * 		with the format: "service:jmx:rmi:///jndi/rmi://" + JMX_HOST + ":" + JMX_PORT + "/jmxrmi"
+	 * 		format of the url: "service:jmx:rmi:///jndi/rmi://" + JMX_HOST + ":" + JMX_PORT + "/jmxrmi"
 	 */
 	private void startRemoteRecorderStream(String url)
 	{
-		RemoteRecordingStream remoteStream = initRemoteRecordingStream(url);
-		
+		RemoteRecordingStream remoteStream = getRemoteRecordingStream(url);
 		if (config.getJfrConfig() != null)
 		{
 			Map<String,String> settings = config.getJfrConfig().getSettings();
@@ -294,8 +354,6 @@ public class EventRecorder
 			remoteStream.enable(e);
 		}
 		
-		//TODO: Add synchronization event?
-		//remoteStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
 		remoteStream.setReuse(false); // Since we keep references to Events.
 		remoteStream.onEvent(e -> {
 				recordedEvents.add(e);
@@ -304,7 +362,7 @@ public class EventRecorder
 		remoteStreams.add(remoteStream);
 	}
 	
-	private RemoteRecordingStream initRemoteRecordingStream(String url)
+	private RemoteRecordingStream getRemoteRecordingStream(String url)
 	{
 		try
 		{

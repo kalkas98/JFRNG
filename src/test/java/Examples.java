@@ -85,6 +85,12 @@ public class Examples
 	}
 	
 	
+	private void cool()
+	{
+		Thread t = new Thread();
+		t.start();
+	}
+	
 	@RecordJfrEvents(ThreadStart.EVENT)
 	@Test
 	public void ThreadsStarted() 
@@ -97,10 +103,14 @@ public class Examples
 			thread[i] = new Thread();
 			thread[i].start();
 		}
+		//cool();
 		provider.stopRecording();
 		
 		String thisThread = Thread.currentThread().getName();
+
 		long threadsStarted = provider.getThreadsStarted(thisThread);
+		//provider.filterOnMethod("cool").forEach(System.out::println);;
+		//provider.filterOnClass(this.getClass()).forEach(System.out::println);;
 		
 		assertTrue(threadsStarted == NR_THREADS);
 	}

@@ -60,10 +60,9 @@ public class JfrListener implements IInvokedMethodListener
 				if(m.isAnnotationPresent(RecordRemote.class) || m.isAnnotationPresent(RemoteRecorders.class))
 				{
 					rc.setRemoteRecordingEnabled(true);
-					//String url = m.getAnnotation(RecordRemote.class).value();
 					RecordRemote[] remoteAnnotations =  m.getAnnotationsByType(RecordRemote.class);
 					for (RecordRemote annotation : remoteAnnotations)
-					{	System.out.println("listener:  " + annotation.value());
+					{
 						rc.addRemoteUrl(annotation.value());
 					}
 				}
