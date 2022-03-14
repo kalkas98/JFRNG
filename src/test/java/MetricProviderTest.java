@@ -19,7 +19,8 @@ import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.SystemGC;
 import jfrng.model.event.ThreadSleep;
 import jfrng.model.event.ThreadStart;
-import jfrng.recording.MetricProvider;
+import jfrng.recording.JfrController;
+import jfrng.recording.JfrResult;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
@@ -28,7 +29,7 @@ import jfrng.recording.annotation.RecordWithProfile;
 public class MetricProviderTest
 {
 	
-	public MetricProvider provider = new MetricProvider();
+	public JfrController provider = new JfrController();
 
 	@RecordJfrEvents(GarbageCollection.EVENT)
 	@RecordWithProfile(RecordingProfile.MEMORY)
@@ -39,12 +40,12 @@ public class MetricProviderTest
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 		
 		String currentThread  = Thread.currentThread().getName();
 		
-		assertTrue(provider.getTLABAllocationInThread(currentThread) > 0);
-		assertTrue(provider.filterOnEvent(GarbageCollection.EVENT).count() > 0);
+		assertTrue(result.getTLABAllocationInThread(currentThread) > 0);
+		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
 		//provider.getEventStream().forEach((e) -> System.out.println(e.getStackTrace().getFrames()));
 		//provider.getEventStream().forEach(System.out::println);
 	}
@@ -83,11 +84,11 @@ public class MetricProviderTest
 			e.printStackTrace();
 		}
 
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 		
-		assertTrue(provider.getFileIORead("filename.txt") > 0);
-		assertTrue(provider.getFileIOWrite("filename.txt") > 0);
-		assertTrue(provider.getTLABAllocationInThread(Thread.currentThread().getName()) > 0);
+		assertTrue(result.getFileIORead("filename.txt") > 0);
+		assertTrue(result.getFileIOWrite("filename.txt") > 0);
+		assertTrue(result.getTLABAllocationInThread(Thread.currentThread().getName()) > 0);
 		/*
 		System.out.println("Bytes read from filename.txt: " + provider.getFileIORead("filename.txt"));
 		System.out.println("Bytes written to filename.txt: " + provider.getFileIOWrite("filename.txt"));
@@ -113,8 +114,12 @@ public class MetricProviderTest
 		dout.flush();
 		dout.close();
 		s.close();
-		System.out.println(provider.getSocketIOWrite());
-		System.out.println(provider.getSocketIORead());
+		
+		JfrResult result = provider.stopRecording();
+
+		
+		System.out.println(result.getSocketIOWrite());
+		System.out.println(result.getSocketIORead());
 
 	}
 
@@ -132,10 +137,10 @@ public class MetricProviderTest
 		t.start();
 		b.foo();
 		System.gc();
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 
-		assertTrue(provider.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
-		assertTrue(provider.getThreadsStarted() > 0);
+		assertTrue(result.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
+		assertTrue(result.getThreadsStarted() > 0);
 	}
 	
 	@RecordJfrEvents({
@@ -151,25 +156,19 @@ public class MetricProviderTest
 		b.foo();
 		System.gc();
 		Thread.sleep(100);
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
+
 		String currentThread  = Thread.currentThread().getName();
 
 		
-		assertTrue(provider.filterOnEvent(GarbageCollection.EVENT).count() > 0);
-		assertTrue(provider.filterOnField(GarbageCollection.DURATION, val -> val > 0 ).count() > 0);
-		assertTrue(provider.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
-		assertTrue(provider.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
-		assertTrue(provider.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
+		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
+		assertTrue(result.filterOnField(GarbageCollection.DURATION, val -> val > 0 ).count() > 0);
+		assertTrue(result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
+		assertTrue(result.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
+		assertTrue(result.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
 
 
 	}
 	
-	@RecordJfrEvents
-	@RecordWithProfile(RecordingProfile.MEMORY)
-	@Test
-	public void test()
-	{
-		System.out.println(provider.getTLABAllocation());
-	}
 	
 }

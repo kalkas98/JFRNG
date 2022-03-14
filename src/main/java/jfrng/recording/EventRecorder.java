@@ -21,6 +21,8 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
+import com.sun.jdi.event.Event;
+
 import jdk.jfr.consumer.EventStream;
 import jdk.jfr.consumer.RecordedClass;
 import jdk.jfr.consumer.RecordedEvent;
@@ -33,30 +35,32 @@ import jdk.jfr.consumer.RecordedMethod;
  */
 public class EventRecorder
 {
+	protected static final String LOCAL_HOST_NAME = "local";
+	
 	private RecordingStream localStream;
 	private List<RemoteRecordingStream> remoteStreams;
-	private List<RecordedEvent> recordedEvents;
+	private List<RecordedJfrEvent> recordedEvents;
 	private Semaphore syncSemaphore;
 	private boolean isRecording;
 	private Recording recording;
 	private RecordingConfig config;
 
 
-	public EventRecorder(RecordingConfig rc)
+	protected EventRecorder(RecordingConfig rc)
 	{
-		List<RecordedEvent> tmpList = new ArrayList<RecordedEvent>();
+		List<RecordedJfrEvent> tmpList = new ArrayList<RecordedJfrEvent>();
 		recordedEvents =  Collections.synchronizedList(tmpList);
 		syncSemaphore = new Semaphore(0);
 		config = rc;
 		remoteStreams = new ArrayList<RemoteRecordingStream>();
 	}
 	
-	public void setConfig(RecordingConfig rc)
+	protected void setConfig(RecordingConfig rc)
 	{
 		config = rc;
 	}
 	
-	public void startRecording()
+	protected void startRecording()
 	{
 		if(config.recordToDisk())
 		{
@@ -82,7 +86,7 @@ public class EventRecorder
 		isRecording = true;
 	}
 	
-	public void stopRecording()
+	protected void stopRecording()
 	{
 		
 		synch();
@@ -165,7 +169,9 @@ public class EventRecorder
 			}
 			else
 			{
-				recordedEvents.add(e);
+				RecordedJfrEvent event = new RecordedJfrEvent(e);
+				event.setHost(LOCAL_HOST_NAME);
+				recordedEvents.add(new RecordedJfrEvent(e));
 			}
 
 		});
@@ -181,13 +187,18 @@ public class EventRecorder
 		localStream.close();
 	}
 
-	public Stream<RecordedEvent> getEventStream()
+	protected Stream<RecordedJfrEvent> getEventStream()
 	{
 		if (isRecording)
 		{
 			synch();
 		}
 		return recordedEvents.stream();
+	}
+	
+	protected List<RecordedJfrEvent> getEventList()
+	{
+		return recordedEvents;
 	}
 	
 	/**
@@ -216,7 +227,7 @@ public class EventRecorder
 	}
 	
 	//Sends an event that clears the recorded event list
-	public void clear()
+	protected void clear()
 	{
 		ClearEvent ce = new ClearEvent();
 		ce.begin();
@@ -227,7 +238,7 @@ public class EventRecorder
 	 * Clears the events recorded by the stream
 	 * Also restarts the JFR disk recording if there was one.
 	 */
-	public void reset() 
+	protected void reset() 
 	{
 		synch();
 		if(config.recordToDisk())
@@ -244,8 +255,8 @@ public class EventRecorder
 	{
 		synchronized(recordedEvents)
 		{
-			List<RecordedEvent> toBeRemoved = new ArrayList<>();
-			for (RecordedEvent event : recordedEvents)
+			List<RecordedJfrEvent> toBeRemoved = new ArrayList<>();
+			for (RecordedJfrEvent event : recordedEvents)
 			{
 				if(event.getStackTrace() != null)
 				{
@@ -264,67 +275,9 @@ public class EventRecorder
 		}
 	}
 	
-	/***
-	 * Returns a stream containing only events where the given class is found in 
-	 * the stacktrace of the event
-	 * @param cls - class to filter on
-	 * @return stream containing events where given class is in the stacktrace
-	 */
-	public Stream<RecordedEvent> filterOnClass(Class cls)
-	{
-		synchronized(recordedEvents)
-		{
-			List<RecordedEvent> newList = new ArrayList<>();
-			for (RecordedEvent event : recordedEvents)
-			{
-				if(event.getStackTrace() != null)
-				{
-					List<RecordedFrame> frames = event.getStackTrace().getFrames();
-					for (RecordedFrame frame : frames)
-					{
-						RecordedClass recordedClass = frame.getMethod().getType();
-						if(recordedClass.getName().equals(cls.getName()))
-						{
-							newList.add(event);
-						}
-					}
-				}
-			}
-			return newList.stream();
-		}
-	}
+
 	
-	/***
-	 * Returns a stream containing only events where the given method is found in 
-	 * the stacktrace of the event
-	 * @param methodName - method to filter on
-	 * @return stream containing events where given method is in the stacktrace
-	 */
-	public Stream<RecordedEvent> filterOnMethod(String methodName)
-	{
-		synchronized(recordedEvents)
-		{
-			List<RecordedEvent> newList = new ArrayList<>();
-			for (RecordedEvent event : recordedEvents)
-			{
-				if(event.getStackTrace() != null)
-				{
-					List<RecordedFrame> frames = event.getStackTrace().getFrames();
-					for (RecordedFrame frame : frames)
-					{
-						RecordedMethod recordedMethod = frame.getMethod();
-						if(recordedMethod.getName().equals(methodName))
-						{
-							newList.add(event);
-						}
-					}
-				}
-			}
-			return newList.stream();
-		}
-	}
-	
-	public boolean isRecording()
+	protected boolean isRecording()
 	{
 		return isRecording;
 	}
@@ -356,7 +309,9 @@ public class EventRecorder
 		
 		remoteStream.setReuse(false); // Since we keep references to Events.
 		remoteStream.onEvent(e -> {
-				recordedEvents.add(e);
+			RecordedJfrEvent event = new RecordedJfrEvent(e);
+			event.setHost(url);
+			recordedEvents.add(new RecordedJfrEvent(e));
 		});
 		remoteStream.startAsync();
 		remoteStreams.add(remoteStream);
@@ -382,5 +337,7 @@ public class EventRecorder
 	{
 		rs.close();
 	}
+	
+	
 
 }

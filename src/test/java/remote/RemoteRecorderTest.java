@@ -11,7 +11,9 @@ import org.testng.annotations.Test;
 import jdk.jfr.consumer.RecordedEvent;
 import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.ThreadStart;
-import jfrng.recording.MetricProvider;
+import jfrng.recording.JfrController;
+import jfrng.recording.JfrResult;
+import jfrng.recording.RecordedJfrEvent;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordRemote;
@@ -21,7 +23,7 @@ import remote.IGreeter;
 
 public class RemoteRecorderTest
 {
-	public MetricProvider provider = new MetricProvider();
+	public JfrController provider = new JfrController();
 	
 	@RecordJfrEvents(ThreadStart.EVENT)
 	@RecordRemote(GreetServer.URL)
@@ -44,12 +46,13 @@ public class RemoteRecorderTest
 		{
 			e.printStackTrace();
 		}
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 
-		Predicate<RecordedEvent> pred = event -> event.hasField("parentThread") && 
+
+		Predicate<RecordedJfrEvent> pred = event -> event.hasField("parentThread") && 
 				event.getThread("parentThread").getJavaName().startsWith("RMI");
-		provider.getEventStream().forEach(System.out::println);
-		assertTrue(provider.getEventStream().filter(pred).count() > 0);
+		result.stream().forEach(System.out::println);
+		assertTrue(result.filter(pred).count() > 0);
 		
 		
 

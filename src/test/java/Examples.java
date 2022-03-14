@@ -11,7 +11,8 @@ import org.testng.annotations.Test;
 
 import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.ThreadStart;
-import jfrng.recording.MetricProvider;
+import jfrng.recording.JfrController;
+import jfrng.recording.JfrResult;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
@@ -20,7 +21,7 @@ import jfrng.recording.annotation.RecordWithProfile;
 public class Examples
 {
 	
-	public MetricProvider provider = new MetricProvider();
+	public JfrController provider = new JfrController();
 	
 	@RecordJfrEvents
 	@RecordWithProfile(RecordingProfile.MEMORY)
@@ -30,9 +31,10 @@ public class Examples
 		
 		Bar b = new Bar();
 		b.mem();
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
+
 		String currentThread = Thread.currentThread().getName();
-		long allocatedMb = provider.getTLABAllocationInThread(currentThread) / 1_000_000;	
+		long allocatedMb = result.getTLABAllocationInThread(currentThread) / 1_000_000;	
 		System.out.println("Allocated: " + allocatedMb);
 		assertTrue(allocatedMb < 500);
 	}
@@ -64,10 +66,10 @@ public class Examples
 			e.printStackTrace();
 		}
 
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 		
-		assertTrue(provider.getFileIOWrite("filename.txt") == 11);
-		assertTrue(provider.getFileIORead("filename.txt") == 11);
+		assertTrue(result.getFileIOWrite("filename.txt") == 11);
+		assertTrue(result.getFileIORead("filename.txt") == 11);
 	}
 	
 	@RecordJfrEvents(GarbageCollection.EVENT)
@@ -75,10 +77,10 @@ public class Examples
 	public void GarbageCollection() 
 	{
 		System.gc();
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 		
-		long SystemGcCount = provider.filterOnField(GarbageCollection.CAUSE, "System.gc()").count();
-		long pauseDuration = provider.getGCPauseSum(TimeUnit.MILLISECONDS);
+		long SystemGcCount = result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count();
+		long pauseDuration = result.getGCPauseSum(TimeUnit.MILLISECONDS);
 		
 		assertTrue(pauseDuration < 20);
 		assertTrue(SystemGcCount == 1);
@@ -104,11 +106,12 @@ public class Examples
 			thread[i].start();
 		}
 		//cool();
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
+
 		
 		String thisThread = Thread.currentThread().getName();
 
-		long threadsStarted = provider.getThreadsStarted(thisThread);
+		long threadsStarted = result.getThreadsStarted(thisThread);
 		//provider.filterOnMethod("cool").forEach(System.out::println);;
 		//provider.filterOnClass(this.getClass()).forEach(System.out::println);;
 		
@@ -121,9 +124,9 @@ public class Examples
 	{
 		Bar b = new Bar();
 		b.foo(); //foo() commits the custom FooEvent event to JFR
-		provider.stopRecording();
+		JfrResult result = provider.stopRecording();
 		
-		long customEventCount = provider.filterOnEvent(FooEvent.EVENT).count();
+		long customEventCount = result.filterOnEvent(FooEvent.EVENT).count();
 		
 		assertTrue(customEventCount == 1);
 	}

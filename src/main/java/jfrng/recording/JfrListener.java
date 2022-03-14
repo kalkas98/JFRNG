@@ -1,4 +1,4 @@
-package jfrng.listener;
+package jfrng.recording;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,10 +9,6 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 
-import jfrng.recording.EventRecorder;
-import jfrng.recording.MetricProvider;
-import jfrng.recording.RecordingConfig;
-import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordRemote;
@@ -68,7 +64,7 @@ public class JfrListener implements IInvokedMethodListener
 				}
 				
 				
-				MetricProvider provider = getRecorderInstance(method);
+				JfrController provider = getRecorderInstance(method);
 				EventRecorder recorder = new EventRecorder(rc);
 				provider.setRecorder(recorder);
 				recorder.startRecording();
@@ -89,7 +85,7 @@ public class JfrListener implements IInvokedMethodListener
 		Method m = method.getTestMethod().getConstructorOrMethod().getMethod();
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
-			MetricProvider provider = getRecorderInstance(method);
+			JfrController provider = getRecorderInstance(method);
 			if(provider.isRecording())
 			{
 				provider.stopRecording();				
@@ -98,13 +94,13 @@ public class JfrListener implements IInvokedMethodListener
 		IInvokedMethodListener.super.afterInvocation(method, testResult);
 	}
 
-	private MetricProvider getRecorderInstance(IInvokedMethod m)
+	private JfrController getRecorderInstance(IInvokedMethod m)
 	{
 		Object obj = m.getTestMethod().getInstance();
 		try
 		{
 			Field f = obj.getClass().getField("provider");
-			return (MetricProvider) f.get(obj);
+			return (JfrController) f.get(obj);
 		}
 		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
 		{
