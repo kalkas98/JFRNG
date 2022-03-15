@@ -117,9 +117,6 @@ public class Examples
 		String thisThread = Thread.currentThread().getName();
 
 		long threadsStarted = result.getThreadsStarted(thisThread);
-		//provider.filterOnMethod("cool").forEach(System.out::println);;
-		//provider.filterOnClass(this.getClass()).forEach(System.out::println);;
-		
 		assertTrue(threadsStarted == NR_THREADS);
 	}
 	
