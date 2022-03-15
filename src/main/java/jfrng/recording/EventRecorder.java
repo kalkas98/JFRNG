@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.management.MBeanServerConnection;
@@ -90,6 +91,7 @@ public class EventRecorder
 	{
 		
 		synch();
+		stopRecordingStream();
 		if(config.recordToDisk())
 		{
 			stopDiskRecording();
@@ -101,9 +103,8 @@ public class EventRecorder
 				stopRemoteRecordingStream(stream);
 			}
 		}
-		
-		stopRecordingStream();
-		RemoveRecordingOverheadEvents();
+
+		removeRecordingOverheadEvents();
 		isRecording = false;
 	}
 	
@@ -250,29 +251,28 @@ public class EventRecorder
 
 	}
 	
-	//TODO: Check that this works
-	private void RemoveRecordingOverheadEvents()
+	/**
+	 * Removes recorded events that were caused by JFR or the EventRecorder class
+	 */
+	private void removeRecordingOverheadEvents()
 	{
-		synchronized(recordedEvents)
-		{
-			List<RecordedJfrEvent> toBeRemoved = new ArrayList<>();
-			for (RecordedJfrEvent event : recordedEvents)
-			{
-				if(event.getStackTrace() != null)
-				{
-					List<RecordedFrame> frames = event.getStackTrace().getFrames();
-					for (RecordedFrame frame : frames)
-					{
-						RecordedClass cls = frame.getMethod().getType();
-						if(cls.getName().equals(EventRecorder.class.getName()))
-						{
-							toBeRemoved.add(event);
-						}
-					}
-				}
-			}
-			recordedEvents.removeAll(toBeRemoved);
-		}
+		//Remove all events where the thread name starts with JFR
+		Predicate<RecordedJfrEvent> pred = event -> 
+			(event.getThread() != null && event.getThread().getJavaName().startsWith("JFR"));
+		recordedEvents.removeIf(pred);
+		
+		//Remove all events where the EventRecorder class is found in the stack trace
+		Predicate<RecordedFrame> framePred = frame -> frame.getMethod()
+														   .getType()
+														   .getName()
+														   .equals(EventRecorder.class.getName());
+		
+		Predicate<RecordedJfrEvent> stackTracePred = event ->   event.getStackTrace() != null && 
+																event.getStackTrace()
+																     .getFrames()
+																     .stream()
+															    	 .anyMatch(framePred);
+		recordedEvents.removeIf(stackTracePred);
 	}
 	
 

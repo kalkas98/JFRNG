@@ -343,6 +343,8 @@ public class JfrResult
 	{
 		return new JfrResult(stream().filter(pred).toList());
 	}
+	
+
 
 
 }

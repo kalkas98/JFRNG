@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import jdk.jfr.consumer.RecordedThread;
 import jfrng.model.event.CPUInformation;
 import jfrng.model.event.FileWrite;
 import jfrng.model.event.GarbageCollection;
@@ -41,13 +43,11 @@ public class MetricProviderTest
 		b.foo();
 		System.gc();
 		JfrResult result = controller.stopRecording();
-		
+
 		String currentThread  = Thread.currentThread().getName();
 		
 		assertTrue(result.getTLABAllocationInThread(currentThread) > 0);
 		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
-		//provider.getEventStream().forEach((e) -> System.out.println(e.getStackTrace().getFrames()));
-		//provider.getEventStream().forEach(System.out::println);
 	}
 
 	@RecordJfrEvents
@@ -89,6 +89,7 @@ public class MetricProviderTest
 		assertTrue(result.getFileIORead("filename.txt") > 0);
 		assertTrue(result.getFileIOWrite("filename.txt") > 0);
 		assertTrue(result.getTLABAllocationInThread(Thread.currentThread().getName()) > 0);
+		result.stream().filter(e -> e.getThread().getJavaName().startsWith("JFR")).forEach(System.out::println);
 		/*
 		System.out.println("Bytes read from filename.txt: " + provider.getFileIORead("filename.txt"));
 		System.out.println("Bytes written to filename.txt: " + provider.getFileIOWrite("filename.txt"));
