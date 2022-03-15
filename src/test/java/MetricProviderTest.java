@@ -138,7 +138,8 @@ public class MetricProviderTest
 		b.foo();
 		System.gc();
 		JfrResult result = provider.stopRecording();
-
+		System.out.println(result.getThreadsStarted());
+		result.stream().forEach(System.out::println);
 		assertTrue(result.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
 		assertTrue(result.getThreadsStarted() > 0);
 	}

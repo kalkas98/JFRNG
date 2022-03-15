@@ -76,7 +76,6 @@ public class JfrListener implements IInvokedMethodListener
 			}
 
 		}
-		IInvokedMethodListener.super.beforeInvocation(method, testResult);
 	}
 
 	@Override
@@ -91,7 +90,6 @@ public class JfrListener implements IInvokedMethodListener
 				provider.stopRecording();				
 			}
 		}
-		IInvokedMethodListener.super.afterInvocation(method, testResult);
 	}
 
 	private JfrController getRecorderInstance(IInvokedMethod m)

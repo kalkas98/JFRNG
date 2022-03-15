@@ -28,7 +28,7 @@ public class RemoteRecorderTest
 	@RecordJfrEvents(ThreadStart.EVENT)
 	@RecordRemote(GreetServer.URL)
 	@RecordRemote(WelcomeServer.URL)
-	@Test(enabled = true)
+	@Test(enabled = false)
 	public void testRemoteRecording()
 	{
 		try

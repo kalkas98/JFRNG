@@ -1,6 +1,3 @@
-
-
-
 import jdk.jfr.Event;
 import jdk.jfr.Name;
 import jdk.jfr.Enabled;

@@ -10,6 +10,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import jfrng.model.event.GarbageCollection;
+import jfrng.model.event.ThreadEnd;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
@@ -93,7 +94,11 @@ public class Examples
 		t.start();
 	}
 	
-	@RecordJfrEvents(ThreadStart.EVENT)
+	@RecordJfrEvents({
+		ThreadStart.EVENT,
+		ThreadEnd.EVENT
+		
+		})
 	@Test
 	public void ThreadsStarted() 
 	{
