@@ -29,7 +29,7 @@ import jfrng.recording.annotation.RecordWithProfile;
 public class MetricProviderTest
 {
 	
-	public JfrController provider = new JfrController();
+	public JfrController controller = new JfrController();
 
 	@RecordJfrEvents(GarbageCollection.EVENT)
 	@RecordWithProfile(RecordingProfile.MEMORY)
@@ -40,7 +40,7 @@ public class MetricProviderTest
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		
 		String currentThread  = Thread.currentThread().getName();
 		
@@ -84,7 +84,7 @@ public class MetricProviderTest
 			e.printStackTrace();
 		}
 
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		
 		assertTrue(result.getFileIORead("filename.txt") > 0);
 		assertTrue(result.getFileIOWrite("filename.txt") > 0);
@@ -115,7 +115,7 @@ public class MetricProviderTest
 		dout.close();
 		s.close();
 		
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 
 		
 		System.out.println(result.getSocketIOWrite());
@@ -137,7 +137,7 @@ public class MetricProviderTest
 		t.start();
 		b.foo();
 		System.gc();
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		System.out.println(result.getThreadsStarted());
 		result.stream().forEach(System.out::println);
 		assertTrue(result.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
@@ -157,7 +157,7 @@ public class MetricProviderTest
 		b.foo();
 		System.gc();
 		Thread.sleep(100);
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 
 		String currentThread  = Thread.currentThread().getName();
 

@@ -22,7 +22,7 @@ import jfrng.recording.annotation.RecordWithProfile;
 public class Examples
 {
 	
-	public JfrController provider = new JfrController();
+	public JfrController controller = new JfrController();
 	
 	@RecordJfrEvents
 	@RecordWithProfile(RecordingProfile.MEMORY)
@@ -32,7 +32,7 @@ public class Examples
 		
 		Bar b = new Bar();
 		b.mem();
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 
 		String currentThread = Thread.currentThread().getName();
 		long allocatedMb = result.getTLABAllocationInThread(currentThread) / 1_000_000;	
@@ -67,7 +67,7 @@ public class Examples
 			e.printStackTrace();
 		}
 
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		
 		assertTrue(result.getFileIOWrite("filename.txt") == 11);
 		assertTrue(result.getFileIORead("filename.txt") == 11);
@@ -78,7 +78,7 @@ public class Examples
 	public void GarbageCollection() 
 	{
 		System.gc();
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		
 		long SystemGcCount = result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count();
 		long pauseDuration = result.getGCPauseSum(TimeUnit.MILLISECONDS);
@@ -111,7 +111,7 @@ public class Examples
 			thread[i].start();
 		}
 		//cool();
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 
 		
 		String thisThread = Thread.currentThread().getName();
@@ -129,7 +129,7 @@ public class Examples
 	{
 		Bar b = new Bar();
 		b.foo(); //foo() commits the custom FooEvent event to JFR
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 		
 		long customEventCount = result.filterOnEvent(FooEvent.EVENT).count();
 		

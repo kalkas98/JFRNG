@@ -23,7 +23,7 @@ import remote.IGreeter;
 
 public class RemoteRecorderTest
 {
-	public JfrController provider = new JfrController();
+	public JfrController controller = new JfrController();
 	
 	@RecordJfrEvents(ThreadStart.EVENT)
 	@RecordRemote(GreetServer.URL)
@@ -46,7 +46,7 @@ public class RemoteRecorderTest
 		{
 			e.printStackTrace();
 		}
-		JfrResult result = provider.stopRecording();
+		JfrResult result = controller.stopRecording();
 
 
 		Predicate<RecordedJfrEvent> pred = event -> event.hasField("parentThread") && 

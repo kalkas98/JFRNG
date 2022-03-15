@@ -64,9 +64,9 @@ public class JfrListener implements IInvokedMethodListener
 				}
 				
 				
-				JfrController provider = getRecorderInstance(method);
+				JfrController controller = getRecorderInstance(method);
 				EventRecorder recorder = new EventRecorder(rc);
-				provider.setRecorder(recorder);
+				controller.setRecorder(recorder);
 				recorder.startRecording();
 				recorder.clear();//Clear events recorded during startup
 			}
@@ -97,7 +97,7 @@ public class JfrListener implements IInvokedMethodListener
 		Object obj = m.getTestMethod().getInstance();
 		try
 		{
-			Field f = obj.getClass().getField("provider");
+			Field f = obj.getClass().getField("controller");
 			return (JfrController) f.get(obj);
 		}
 		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
