@@ -89,11 +89,6 @@ public class MetricProviderTest
 		assertTrue(result.getFileIORead("filename.txt") > 0);
 		assertTrue(result.getFileIOWrite("filename.txt") > 0);
 		assertTrue(result.getTLABAllocationInThread(Thread.currentThread().getName()) > 0);
-		/*
-		System.out.println("Bytes read from filename.txt: " + provider.getFileIORead("filename.txt"));
-		System.out.println("Bytes written to filename.txt: " + provider.getFileIOWrite("filename.txt"));
-		System.out.println("Allocated) bytes in main: " + provider.getTLABAllocationInThread(Thread.currentThread().getName()));
-		*/
 	}
 
 	@RecordJfrEvents
