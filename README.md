@@ -1,5 +1,5 @@
 # JFRNG
-An extension to the TestNG framework that allows developers to collect data via Java flight recorder during testing.
+An extension to the TestNG framework that allows developers to collect data via Java Flight Recorder during testing.
 
 Tests can be configured to record any JFR event. JFR events in OpenJDK 17 are documented here: https://bestsolution-at.github.io/jfr-doc/openjdk-17.html.
 
