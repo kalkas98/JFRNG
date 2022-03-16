@@ -10,6 +10,7 @@ To start and stop JFR recordings, a JfrController is needed in the test class. *
 
 `public JfrController controller = new JfrController();`
 
+To stop the recording and get the result of the recording write `JfrResult result = controller.stopRecording()` in the test. To see documenation for the ways you can access the results via the JfrResult object view the JfrResult class.
 ### Annotations
 The following annotations can be used to configure a test and record JFR events in various ways:
 - `@RecordJfrEvents` - Enables JFRNG for the test. Takes an array of event names that specifies what events to record.
