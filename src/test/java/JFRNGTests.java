@@ -28,7 +28,7 @@ import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 
-public class MetricProviderTest
+public class JFRNGTests
 {
 	
 	public JfrController controller = new JfrController();
