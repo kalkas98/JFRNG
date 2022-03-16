@@ -13,7 +13,7 @@ import jdk.jfr.consumer.RecordedThread;
 
 /**
  * Wrapper class for the RecordedEvent class
- *
+ * Can't inherit from RecordedEvent since it is final so we do this instead
  */
 public class RecordedJfrEvent
 {

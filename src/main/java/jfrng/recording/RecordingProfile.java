@@ -1,7 +1,7 @@
 package jfrng.recording;
 
 /**
- * Enum for profiles supported by the RecordingConfig.EnableProfile method
+ * Profiles supported by the RecordingConfig.EnableProfile method
  */
 public enum RecordingProfile
 {

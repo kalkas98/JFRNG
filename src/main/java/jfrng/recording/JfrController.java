@@ -38,14 +38,20 @@ public class JfrController
 		this.recorder = recorder;
 	}
 
-	/*
-	 * Get the result of the recording in for of a JfrResult object
+	/**
+	 * 
+	 * @return the result of the recording in the form of a JfrResult object
 	 */
 	public JfrResult getResult()
 	{
 		return new JfrResult(recorder.getEventList());
 	}
 
+	
+	/**
+	 * Stops the recording and returns the result
+	 * @return The result of the recording in the form of a JfrResult object
+	 */
 	public JfrResult stopRecording()
 	{
 		recorder.stopRecording();
@@ -57,6 +63,9 @@ public class JfrController
 		return recorder.isRecording();
 	}
 
+	/**
+	 * Clear previously recorded events
+	 */
 	public void reset()
 	{
 		recorder.reset();

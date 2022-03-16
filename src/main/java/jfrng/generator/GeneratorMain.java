@@ -1,7 +1,10 @@
 package jfrng.generator;
 
 import java.io.FileNotFoundException;
-
+/**
+ * Main class for generating event and types classes from a JSON file
+ *
+ */
 public class GeneratorMain
 {
 	

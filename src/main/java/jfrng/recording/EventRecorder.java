@@ -7,10 +7,8 @@ import jfrng.recording.event.ClearEvent;
 import jfrng.recording.event.SynchronizationEvent;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -22,15 +20,10 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import com.sun.jdi.event.Event;
-
-import jdk.jfr.consumer.EventStream;
-import jdk.jfr.consumer.RecordedClass;
-import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordedFrame;
-import jdk.jfr.consumer.RecordedMethod;
 
 /**
+ * 
  * Class for starting, stopping and handling JFR recordings
  *
  */
@@ -56,11 +49,10 @@ public class EventRecorder
 		remoteStreams = new ArrayList<RemoteRecordingStream>();
 	}
 	
-	protected void setConfig(RecordingConfig rc)
-	{
-		config = rc;
-	}
-	
+	/**
+	 * Start recording via a JFR RecordingStream
+	 * Depending on the configuration, other recordings might also be started
+	 */
 	protected void startRecording()
 	{
 		if(config.recordToDisk())
@@ -87,6 +79,9 @@ public class EventRecorder
 		isRecording = true;
 	}
 	
+	/**
+	 * Stop all recordings
+	 */
 	protected void stopRecording()
 	{
 		
@@ -157,7 +152,9 @@ public class EventRecorder
 			}
 		}
 		localStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
+		localStream.enable(ClearEvent.CLEAR_EVENT_NAME);
 		localStream.setReuse(false); // Since we keep references to Events.
+		localStream.setOrdered(true);
 		localStream.onEvent(e -> {
 			
 			if (e.getEventType().getName().equals(SynchronizationEvent.SYNCH_EVENT_NAME))
@@ -192,7 +189,7 @@ public class EventRecorder
 	{
 		if (isRecording)
 		{
-			synch();
+			synch(); //Sync to ensure previously commited events are processed
 		}
 		return recordedEvents.stream();
 	}
@@ -227,7 +224,9 @@ public class EventRecorder
 		} 
 	}
 	
-	//Sends an event that clears the recorded event list
+	/**
+	 * Sends an event that clears the recorded event list
+	 */
 	protected void clear()
 	{
 		ClearEvent ce = new ClearEvent();

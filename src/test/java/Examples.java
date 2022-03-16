@@ -35,7 +35,7 @@ public class Examples
 		JfrResult result = controller.stopRecording();
 
 		String currentThread = Thread.currentThread().getName();
-		long allocatedMb = result.getTLABAllocationInThread(currentThread) / 1_000_000;	
+		long allocatedMb = result.getAllocatedMemoryInThread(currentThread) / 1_000_000;	
 		System.out.println("Allocated: " + allocatedMb);
 		assertTrue(allocatedMb < 500);
 	}
@@ -87,13 +87,6 @@ public class Examples
 		assertTrue(SystemGcCount == 1);
 	}
 	
-	
-	private void cool()
-	{
-		Thread t = new Thread();
-		t.start();
-	}
-	
 	@RecordJfrEvents({
 		ThreadStart.EVENT,
 		ThreadEnd.EVENT
@@ -110,7 +103,6 @@ public class Examples
 			thread[i] = new Thread();
 			thread[i].start();
 		}
-		//cool();
 		JfrResult result = controller.stopRecording();
 
 		

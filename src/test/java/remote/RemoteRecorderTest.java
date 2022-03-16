@@ -26,7 +26,7 @@ public class RemoteRecorderTest
 	public JfrController controller = new JfrController();
 	
 	@RecordJfrEvents(ThreadStart.EVENT)
-	@RecordRemote(GreetServer.URL)
+	//@RecordRemote(GreetServer.URL)
 	@RecordRemote(WelcomeServer.URL)
 	@Test(enabled = false)
 	public void testRemoteRecording()
@@ -35,12 +35,11 @@ public class RemoteRecorderTest
 		{
 			Registry registry = LocateRegistry.getRegistry();
 			IGreeter welcomeStub = (IGreeter) registry.lookup(WelcomeServer.BINDING_NAME);
-			IGreeter greetStub = (IGreeter) registry.lookup(GreetServer.BINDING_NAME);
+			//IGreeter greetStub = (IGreeter) registry.lookup(GreetServer.BINDING_NAME);
 			
 			System.out.println(welcomeStub.Greet());
-			System.out.println(greetStub.Greet());
+			//System.out.println(greetStub.Greet());
 			Thread.sleep(2000); //To ensure the remote events are processed before we stop recording
-								//Should find some way to sync if possible
 		}
 		catch (Exception e)
 		{
@@ -51,7 +50,7 @@ public class RemoteRecorderTest
 
 		Predicate<RecordedJfrEvent> pred = event -> event.hasField("parentThread") && 
 				event.getThread("parentThread").getJavaName().startsWith("RMI");
-		result.stream().forEach(System.out::println);
+		//result.stream().forEach(System.out::println);
 		assertTrue(result.filter(pred).count() > 0);
 		
 		

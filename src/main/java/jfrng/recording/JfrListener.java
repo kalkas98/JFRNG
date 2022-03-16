@@ -15,11 +15,18 @@ import jfrng.recording.annotation.RecordRemote;
 import jfrng.recording.annotation.RecordWithProfile;
 import jfrng.recording.annotation.RemoteRecorders;
 
+/**
+ * 
+ * TestNG Listener that invokes methods before and after tests
+ *
+ */
 public class JfrListener implements IInvokedMethodListener
 {
 
 
-
+	/**
+	 * Invoked before every TestNG test
+	 */
 	@Override
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult)
 	{
@@ -78,6 +85,9 @@ public class JfrListener implements IInvokedMethodListener
 		}
 	}
 
+	/**
+	 * Invoked after each TestNG test
+	 */
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult)
 	{
@@ -92,12 +102,20 @@ public class JfrListener implements IInvokedMethodListener
 		}
 	}
 
-	private JfrController getRecorderInstance(IInvokedMethod m)
+	
+	public static final String JFR_CONTROLLER_NAME = "controller";
+	
+	/**
+	 * Gets the JfrController instance in the test class
+	 * @param method - TestNG test method
+	 * @return JfrController instance of the test class
+	 */
+	private JfrController getRecorderInstance(IInvokedMethod method)
 	{
-		Object obj = m.getTestMethod().getInstance();
+		Object obj = method.getTestMethod().getInstance();
 		try
 		{
-			Field f = obj.getClass().getField("controller");
+			Field f = obj.getClass().getField(JFR_CONTROLLER_NAME);
 			return (JfrController) f.get(obj);
 		}
 		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)

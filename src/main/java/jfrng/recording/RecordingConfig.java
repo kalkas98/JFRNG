@@ -13,15 +13,22 @@ import jfrng.model.event.ObjectAllocationOutsideTLAB;
 import jfrng.model.event.SocketRead;
 import jfrng.model.event.SocketWrite;
 
+/**
+ * Class that contains the configuration for a recording
+ *
+ */
 public class RecordingConfig
 {
 	private List<String> enabledEvents;
 	private List<RecordingProfile> profiles;
+	
+	// A predefined JFR configuration https://docs.oracle.com/en/java/javase/14/jfapi/flight-recorder-configurations.html
 	private Configuration jfrConfig;
-	private boolean shouldRecordToDisk;
+	
+	private boolean recordToDiskEnabled;
 	private boolean remoteRecordingEnabled;
 	private Path diskRecordingPath;
-	private List<String> remoteUrls;
+	private List<String> remoteUrls; //List containing URLs of the remote hosts that RemoteRecordingStreams are connected to
 
 	public RecordingConfig() throws Exception
 	{
@@ -34,6 +41,9 @@ public class RecordingConfig
 		this.remoteUrls = new ArrayList<String>();
 	}
 
+	/**
+	 * Enable a profile that enables a set of events for the recording
+	 */
 	public void EnableProfile(RecordingProfile profile) throws Exception
 	{
 		switch (profile)
@@ -81,12 +91,12 @@ public class RecordingConfig
 	
 	public boolean recordToDisk()
 	{
-		return shouldRecordToDisk;
+		return recordToDiskEnabled;
 	}
 	
 	public void setRecordToDisk(boolean shouldRecordToDisk)
 	{
-		this.shouldRecordToDisk = shouldRecordToDisk;
+		this.recordToDiskEnabled = shouldRecordToDisk;
 	}
 	
 	public void setPath(String path)

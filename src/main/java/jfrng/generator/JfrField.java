@@ -1,7 +1,7 @@
 package jfrng.generator;
 
 /**
- *	Make sure this file exists in the model.type when you generate the types
+ *	Make sure this file exists in the model.type package when you generate the types
  *
  */
 public abstract class JfrField

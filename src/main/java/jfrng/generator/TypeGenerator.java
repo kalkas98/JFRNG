@@ -21,6 +21,10 @@ import com.sun.codemodel.JVar;
 
 import jfrng.model.type.JfrField;
 
+/**
+ * Class for generating classes that represent the types that JFR event fields can have
+ *
+ */
 public class TypeGenerator
 {
 	public static final String DIR_PATH = "target/generatedTypes";

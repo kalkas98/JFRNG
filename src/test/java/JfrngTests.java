@@ -28,7 +28,7 @@ import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 
-public class JFRNGTests
+public class JfrngTests
 {
 	
 	public JfrController controller = new JfrController();
@@ -46,7 +46,7 @@ public class JFRNGTests
 
 		String currentThread  = Thread.currentThread().getName();
 		
-		assertTrue(result.getTLABAllocationInThread(currentThread) > 0);
+		assertTrue(result.getAllocatedMemoryInThread(currentThread) > 0);
 		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
 	}
 
@@ -88,7 +88,7 @@ public class JFRNGTests
 		
 		assertTrue(result.getFileIORead("filename.txt") > 0);
 		assertTrue(result.getFileIOWrite("filename.txt") > 0);
-		assertTrue(result.getTLABAllocationInThread(Thread.currentThread().getName()) > 0);
+		assertTrue(result.getAllocatedMemoryInThread(Thread.currentThread().getName()) > 0);
 	}
 
 	@RecordJfrEvents

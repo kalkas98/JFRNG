@@ -20,6 +20,10 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 
+/**
+ * Class for generating classes that represent JFR events
+ *
+ */
 public class EventModelGenerator
 {
 
@@ -108,6 +112,7 @@ public class EventModelGenerator
 	/**
 	 * 
 	 * e.g: definingClassLoader --> DEFINING_CLASS_LOADER
+	 * @param str - the string to convert
 	 */
 	private String camelCaseToMacroCase(String str)
 	{
