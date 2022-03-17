@@ -12,7 +12,7 @@ Run `mvn install` to install the package into the local repository, then add it 
 <dependency>
 	<groupId>jfrng</groupId>
 	<artifactId>JFRNG</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 </dependency>
 ```
 

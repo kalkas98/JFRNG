@@ -19,6 +19,7 @@ import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
+import testUtil.Bar;
 
 public class JfrngTest
 {
@@ -30,12 +31,11 @@ public class JfrngTest
 	@Test
 	public void TestBasicRecordingWithSingleEventAndProfile()
 	{
-
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
+		
 		JfrResult result = controller.stopRecording();
-
 		String currentThread  = Thread.currentThread().getName();
 		
 		assertTrue(result.getAllocatedMemoryInThread(currentThread) > 0);
@@ -51,7 +51,6 @@ public class JfrngTest
 	@Test
 	public void testMultipleProfilesAndNoEventWithDiskRecording() throws InterruptedException
 	{
-
 		Bar b = new Bar();
 		b.foo();
 		try
@@ -103,10 +102,8 @@ public class JfrngTest
 		
 		JfrResult result = controller.stopRecording();
 
-		
 		System.out.println(result.getSocketIOWrite());
 		System.out.println(result.getSocketIORead());
-
 	}
 
 
@@ -136,23 +133,18 @@ public class JfrngTest
 	@Test
 	public void TestFilterMethods() throws InterruptedException
 	{
-
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
 		Thread.sleep(100);
 		JfrResult result = controller.stopRecording();
-
 		String currentThread  = Thread.currentThread().getName();
 
-		
 		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.DURATION, val -> val > 0 ).count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
 		assertTrue(result.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
-
-
 	}
 	
 	

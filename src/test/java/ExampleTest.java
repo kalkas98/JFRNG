@@ -16,6 +16,8 @@ import jfrng.recording.JfrResult;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
+import testUtil.Bar;
+import testUtil.FooEvent;
 
 public class ExampleTest
 {
