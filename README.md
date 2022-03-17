@@ -6,6 +6,17 @@ Tests can be configured to record any JFR event. JFR events available in OpenJDK
 JFRNG requires at least Java 16 and TestNG.
 
 ## Usage
+Run `mvn install` to install the package into the local repository, then add it as a dependency to your pom file
+
+```xml
+<dependency>
+	<groupId>jfrng</groupId>
+	<artifactId>JFRNG</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+</dependency>
+```
+
+
 To start and stop JFR recordings, a JfrController is needed in the test class. **It must be named "controller" and be declared in the class exactly like this:**
 
 `public JfrController controller = new JfrController();`
