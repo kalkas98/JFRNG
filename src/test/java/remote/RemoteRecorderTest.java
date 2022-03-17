@@ -5,21 +5,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.function.Predicate;
 
-import org.testng.TestNG;
 import org.testng.annotations.Test;
 
-import jdk.jfr.consumer.RecordedEvent;
-import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
 import jfrng.recording.RecordedJfrEvent;
-import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordRemote;
-import jfrng.recording.annotation.RecordWithProfile;
-
-import remote.IGreeter;
 
 public class RemoteRecorderTest
 {

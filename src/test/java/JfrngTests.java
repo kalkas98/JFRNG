@@ -5,22 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
-
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import jdk.jfr.consumer.RecordedThread;
 import jfrng.model.event.CPUInformation;
-import jfrng.model.event.FileWrite;
 import jfrng.model.event.GarbageCollection;
-import jfrng.model.event.ObjectAllocationInNewTLAB;
-import jfrng.model.event.ObjectAllocationOutsideTLAB;
-import jfrng.model.event.SystemGC;
 import jfrng.model.event.ThreadSleep;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;

@@ -1,23 +1,14 @@
 package remote;
 
-import jdk.management.jfr.RemoteRecordingStream;
-
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
-
-import jdk.management.jfr.FlightRecorderMXBean;
 
 public class WelcomeServer implements IGreeter
 {

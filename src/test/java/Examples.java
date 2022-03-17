@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import jfrng.model.event.GarbageCollection;
@@ -15,7 +14,6 @@ import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
 import jfrng.recording.RecordingProfile;
-import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 
