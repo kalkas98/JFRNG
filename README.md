@@ -31,13 +31,11 @@ public class ExampleTest
 	public void ThreadExample() 
 	{		
 		Thread[] thread = new Thread[NR_THREADS];
-
 		for (int i = 0; i < NR_THREADS; i++)
 		{
 			thread[i] = new Thread();
 			thread[i].start();
 		}
-  
 		JfrResult result = controller.stopRecording();		
 		String thisThread = Thread.currentThread().getName();
 		long threadsStarted = result.getThreadsStarted(thisThread);
@@ -74,7 +72,7 @@ public class TestClass
 		
 		JfrResult result = controller.stopRecording();
 		
-		result.stream().forEach(System.out::println);
+		result.stream().forEach(System.out::println); // Print all recorded events
 		
 		assertTrue(result.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
 		assertTrue(result.getThreadsStarted() > 0);
@@ -107,8 +105,8 @@ public class RemoteRecorderTest
 		}
 		
 		JfrResult result = controller.stopRecording();
-		Predicate<RecordedJfrEvent> pred = event -> event.hasField("parentThread") && 
-				event.getThread("parentThread").getJavaName().startsWith("RMI");
+		Predicate<RecordedJfrEvent> pred = event -> event.hasField(ThreadStart.PARENT_THREAD) && 
+				event.getThread(ThreadStart.PARENT_THREAD).getJavaName().startsWith("RMI");
 		assertTrue(result.filter(pred).count() > 0);
 	}
 }

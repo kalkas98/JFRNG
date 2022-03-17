@@ -39,7 +39,7 @@ public class JfrController
 	}
 
 	/**
-	 * 
+	 * Returns the result of the recording with out stopping the recording
 	 * @return the result of the recording in the form of a JfrResult object
 	 */
 	public JfrResult getResult()
@@ -64,7 +64,7 @@ public class JfrController
 	}
 
 	/**
-	 * Clear previously recorded events
+	 * Clears previously recorded events and continues recording
 	 */
 	public void reset()
 	{

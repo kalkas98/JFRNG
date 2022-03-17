@@ -341,8 +341,8 @@ public class JfrResult
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type String
-	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
+	 * @param str - A string value that the string field should be equal to
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and the value of that field is equal to the given string value
 	 */
 	public JfrResult filterOnField(StringJfrType field, String str)
 	{
@@ -357,8 +357,8 @@ public class JfrResult
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type thread
-	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
+	 * @param threadName - A thread name that the the thread field should have
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given thread field and threads have the given thread name
 	 */
 	public JfrResult filterOnField(ThreadJfrType field, String threadName)
 	{
@@ -418,7 +418,7 @@ public class JfrResult
 	/**
 	 * Returns a copy of this JfrResult containing only events where the given method is found in 
 	 * the stacktrace
-	 * @param methodName - method to filter on
+	 * @param methodName - name of the method to filter on
 	 * @return JfrResult containing events where given method is in the stacktrace
 	 */
 	public JfrResult filterOnMethod(String methodName)
