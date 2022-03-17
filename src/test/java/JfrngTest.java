@@ -20,7 +20,7 @@ import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 
-public class JfrngTests
+public class JfrngTest
 {
 	
 	public JfrController controller = new JfrController();
@@ -66,7 +66,6 @@ public class JfrngTests
 			while (myReader.hasNextLine())
 			{
 				String data = myReader.nextLine();
-				System.out.println(data);
 			}
 			myReader.close();
 		}
@@ -125,8 +124,6 @@ public class JfrngTests
 		b.foo();
 		System.gc();
 		JfrResult result = controller.stopRecording();
-		System.out.println(result.getThreadsStarted());
-		result.stream().forEach(System.out::println);
 		assertTrue(result.getGCPauseSum(TimeUnit.NANOSECONDS) > 0);
 		assertTrue(result.getThreadsStarted() > 0);
 	}

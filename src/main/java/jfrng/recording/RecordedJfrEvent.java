@@ -24,23 +24,22 @@ import jfrng.model.type.longJfrType;
 import jfrng.model.type.shortJfrType;
 
 /**
- * Wrapper class for the RecordedEvent class
- * Can't inherit from RecordedEvent since it is final so we do this instead
+ * Wrapper class for the RecordedEvent class Can't inherit from RecordedEvent
+ * since it is final so we do this instead
  */
 public class RecordedJfrEvent
 {
 	private RecordedEvent re;
 	private String host;
-	
-	
+
 	public RecordedJfrEvent(RecordedEvent re)
 	{
 		this.re = re;
 	}
 
-
 	/**
 	 * Returns the boolean value for a given field of the event
+	 * 
 	 * @param field - field with the type boolean
 	 * @return the value of the field, true or false
 	 */
@@ -51,6 +50,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the byte value for a given field of the event
+	 * 
 	 * @param field - field with the type byte
 	 * @return the value of the given field for the event
 	 */
@@ -61,6 +61,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the char value for a given field of the event
+	 * 
 	 * @param field - field with the char type
 	 * @return the char value of the given field for the event
 	 */
@@ -71,8 +72,10 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the RecordedClass value for a given field of a event
+	 * 
 	 * @param field - field with the class type
-	 * @return the class value of the given field for the event, returned as a RecordedClass object
+	 * @return the class value of the given field for the event, returned as a
+	 *         RecordedClass object
 	 */
 	public RecordedClass getClass(ClassJfrType field)
 	{
@@ -81,6 +84,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the char value for a given field of the event
+	 * 
 	 * @param field - field with the char type
 	 * @return the char value of the given field for the event
 	 */
@@ -91,6 +95,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the duration of the event, measured in nanoseconds.
+	 * 
 	 * @return the duration of the event, measured in nanoseconds.
 	 */
 	public Duration getDuration()
@@ -100,7 +105,10 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the value for a duration-field of an event
-	 * @param field - A long-type field that has a Timespan, See here if a field has a Timespan:  https://bestsolution-at.github.io/jfr-doc/openjdk-17.html
+	 * 
+	 * @param field - A long-type field that has a Timespan, See here if a field has
+	 *              a Timespan:
+	 *              https://bestsolution-at.github.io/jfr-doc/openjdk-17.html
 	 * @return The duration value
 	 */
 	public Duration getDuration(longJfrType field)
@@ -110,6 +118,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the end time of the event
+	 * 
 	 * @return end time of the event as a Instant object
 	 */
 	public Instant getEndTime()
@@ -119,6 +128,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the event type
+	 * 
 	 * @return the EventType object representing the event
 	 */
 	public EventType getEventType()
@@ -128,7 +138,9 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the fields that the recorded has
-	 * @return A list containing ValueDescriptors that describe the fields of this event
+	 * 
+	 * @return A list containing ValueDescriptors that describe the fields of this
+	 *         event
 	 */
 	public List<ValueDescriptor> getFields()
 	{
@@ -137,6 +149,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the value for a float-field
+	 * 
 	 * @param field - an event field with the type float
 	 * @return The value of the field
 	 */
@@ -146,8 +159,10 @@ public class RecordedJfrEvent
 	}
 
 	/**
-	 * Returns a timestamp in the form of an Instant object for a long type field with the content type "Timestamp".
-	 * Look here to see if a field has a Timestamp: https://bestsolution-at.github.io/jfr-doc/openjdk-17.html
+	 * Returns a timestamp in the form of an Instant object for a long type field
+	 * with the content type "Timestamp". Look here to see if a field has a
+	 * Timestamp: https://bestsolution-at.github.io/jfr-doc/openjdk-17.html
+	 * 
 	 * @param field - long type event field with a timestamp
 	 * @return An Instant object representing a timestamp for a point in time
 	 */
@@ -158,6 +173,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the value for a int field
+	 * 
 	 * @param field - field with an int type
 	 * @return The value of the int field
 	 */
@@ -168,6 +184,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the value for a long field
+	 * 
 	 * @param field - field with an long type
 	 * @return The value of the long field
 	 */
@@ -178,6 +195,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the value for a short field
+	 * 
 	 * @param field - field with an short type
 	 * @return The value of the short field
 	 */
@@ -188,6 +206,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the stack trace of the event
+	 * 
 	 * @return the stack trace that was recorded by JFR
 	 */
 	public RecordedStackTrace getStackTrace()
@@ -197,6 +216,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the start time of the event
+	 * 
 	 * @return start time of the event as an Instant object
 	 */
 	public Instant getStartTime()
@@ -206,6 +226,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the value for a string field
+	 * 
 	 * @param field - field with an String type
 	 * @return The value of the String field
 	 */
@@ -216,6 +237,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Returns the thread that commited this event
+	 * 
 	 * @return the thread that commited this event
 	 */
 	public RecordedThread getThread()
@@ -225,6 +247,7 @@ public class RecordedJfrEvent
 
 	/**
 	 * Get the value for a thread field
+	 * 
 	 * @param field - field with an thread type
 	 * @return The value of the thread field
 	 */
@@ -232,9 +255,10 @@ public class RecordedJfrEvent
 	{
 		return re.getThread(field.name());
 	}
-	
+
 	/**
 	 * Returns true if the event has the given field
+	 * 
 	 * @param field - A JFR event field object
 	 * @return true if the event has the field, false otherwise
 	 */
@@ -242,26 +266,26 @@ public class RecordedJfrEvent
 	{
 		return this.getEventType().getName().equals(field.getEvent()) && re.hasField(field.name());
 	}
-	
+
 	public boolean equals(Object obj)
 	{
 		return re.equals(obj);
 	}
-	
+
 	public int hashCode()
 	{
 		return re.hashCode();
 	}
-	
+
 	public String toString()
 	{
 		return re.toString();
 	}
 
 	/**
-	 * Get the JMX service URL the event was recorded on
-	 * If the event was recorded on the JVM the test run in
-	 * "local" is returned
+	 * Get the JMX service URL the event was recorded on If the event was recorded
+	 * on the JVM the test run in "local" is returned
+	 * 
 	 * @return
 	 */
 	public String getHost()
@@ -271,11 +295,12 @@ public class RecordedJfrEvent
 
 	/**
 	 * Specify what host recorded this event
+	 * 
 	 * @param host JMX service url of the host that this event was recorded on
 	 */
 	public void setHost(String host)
 	{
 		this.host = host;
 	}
-	
+
 }

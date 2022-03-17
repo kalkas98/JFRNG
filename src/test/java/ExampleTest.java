@@ -17,7 +17,7 @@ import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 
-public class Examples
+public class ExampleTest
 {
 	
 	public JfrController controller = new JfrController();

@@ -20,9 +20,9 @@ public class Bar {
 	}
 	
 	public void foo() {
-		FooEvent fe = new FooEvent();
+		FooEvent event = new FooEvent();
 		
-		fe.begin();
+		event.begin();
 		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -38,8 +38,8 @@ public class Bar {
 			Collections.sort(lst);
 		}
 		
-		fe.end();
-		fe.commit();
+		event.end();
+		event.commit();
 	}
 	
 	private class mem

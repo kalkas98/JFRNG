@@ -3,6 +3,7 @@ package jfrng.recording;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.testng.IInvokedMethod;
@@ -23,6 +24,8 @@ import jfrng.recording.annotation.RemoteRecorders;
 public class JfrListener implements IInvokedMethodListener
 {
 
+	//Name of the JfrController object that must be present in test files using TestNG
+	public static final String JFR_CONTROLLER_NAME = "controller";
 
 	/**
 	 * Invoked before every TestNG test
@@ -44,7 +47,7 @@ public class JfrListener implements IInvokedMethodListener
 			{
 				rc = new RecordingConfig(enabledEvents);
 				
-				//Enable recording profile if annotaion is present
+				//Enable recording profile if annotation is present
 				if (m.isAnnotationPresent(RecordWithProfile.class))
 				{
 					List<RecordingProfile> profiles = Arrays.asList(m.getAnnotation(RecordWithProfile.class).value());
@@ -70,8 +73,7 @@ public class JfrListener implements IInvokedMethodListener
 					}
 				}
 				
-				
-				JfrController controller = getRecorderInstance(method);
+				JfrController controller = getControllerInstance(method);
 				EventRecorder recorder = new EventRecorder(rc);
 				controller.setRecorder(recorder);
 				recorder.startRecording();
@@ -94,31 +96,49 @@ public class JfrListener implements IInvokedMethodListener
 		Method m = method.getTestMethod().getConstructorOrMethod().getMethod();
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
-			JfrController provider = getRecorderInstance(method);
+			JfrController provider = getControllerInstance(method);
 			if(provider.isRecording())
 			{
 				provider.stopRecording();				
 			}
 		}
 	}
-
-	
-	public static final String JFR_CONTROLLER_NAME = "controller";
 	
 	/**
 	 * Gets the JfrController instance in the test class
 	 * @param method - TestNG test method
 	 * @return JfrController instance of the test class
 	 */
-	private JfrController getRecorderInstance(IInvokedMethod method)
+	private JfrController getControllerInstance(IInvokedMethod method)
 	{
 		Object obj = method.getTestMethod().getInstance();
+		JfrController controller = null;
+		boolean controllerFound = false;
 		try
 		{
-			Field f = obj.getClass().getField(JFR_CONTROLLER_NAME);
-			return (JfrController) f.get(obj);
+			Field[] fields = obj.getClass().getDeclaredFields();
+			String controllerTypeName = JfrController.class.getTypeName();
+			for (Field field : fields)
+			{
+				String fieldTypeName = field.getGenericType().getTypeName();
+				if(fieldTypeName.equals(controllerTypeName))
+				{
+					if(controllerFound)
+						throw new Exception("Multiple JfrControllers found");
+					controller = (JfrController) field.get(obj);
+					controllerFound = true;
+				}
+			}
+			if(controller != null)
+			{
+				return controller;
+			}
+			else
+			{
+				throw new Exception("No JfrController found");
+			}
 		}
-		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException(e);

@@ -17,11 +17,13 @@ Run `mvn install` to install the package into the local repository, then add it 
 ```
 
 
-To start and stop JFR recordings, a JfrController is needed in the test class. **It must be named "controller" and be declared in the class exactly like this:**
+To start and stop JFR recordings, a JfrController object is needed in the test class. It must be declared to be public and instantiated like this in the class scope:
 
 `public JfrController controller = new JfrController();`
 
-To stop the recording and get the result of the recording write `JfrResult result = controller.stopRecording()` in the test. To see documenation for the ways you can access the results via the JfrResult object view the JfrResult class.
+Also, dont create more than one controller.
+
+To stop the recording and get the result of the recording, write `JfrResult result = controller.stopRecording()` in a test. To see documenation for the ways you can access the results via the `JfrResult` object, see the `JfrResult` class.
 ### Annotations
 The following annotations can be used to configure a test and record JFR events in various ways:
 - `@RecordJfrEvents` - Enables JFRNG for the test. Takes an array of event names that specifies what events to record.
@@ -34,7 +36,6 @@ Let's take a look at an example to illustrate usage of the framework. In the fol
 ```java
 public class ExampleTest
 {
-	
 	public JfrController controller = new JfrController();
 	
 	@RecordJfrEvents(ThreadStart.EVENT)
