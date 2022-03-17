@@ -240,7 +240,7 @@ public class RecordedJfrEvent
 	 */
 	public boolean hasField(JfrField field)
 	{
-		return re.hasField(field.name());
+		return this.getEventType().getName().equals(field.getEvent()) && re.hasField(field.name());
 	}
 	
 	public boolean equals(Object obj)

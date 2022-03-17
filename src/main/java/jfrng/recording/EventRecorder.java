@@ -39,7 +39,6 @@ public class EventRecorder
 	private Recording recording;
 	private RecordingConfig config;
 
-
 	protected EventRecorder(RecordingConfig rc)
 	{
 		List<RecordedJfrEvent> tmpList = new ArrayList<RecordedJfrEvent>();
@@ -274,8 +273,6 @@ public class EventRecorder
 		recordedEvents.removeIf(stackTracePred);
 	}
 	
-
-	
 	protected boolean isRecording()
 	{
 		return isRecording;
@@ -316,6 +313,11 @@ public class EventRecorder
 		remoteStreams.add(remoteStream);
 	}
 	
+	/**
+	 * Sets up a remote recording stream from a JMX service url
+	 * @param url - A string url that can be parsed to a JMX service url
+	 * @return a RemoteRecordingStream that can record JFR events on a remote host
+	 */
 	private RemoteRecordingStream getRemoteRecordingStream(String url)
 	{
 		try
@@ -337,6 +339,4 @@ public class EventRecorder
 		rs.close();
 	}
 	
-	
-
 }

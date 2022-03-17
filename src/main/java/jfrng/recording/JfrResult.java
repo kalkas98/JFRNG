@@ -18,6 +18,7 @@ import jfrng.model.event.ObjectAllocationOutsideTLAB;
 import jfrng.model.event.SocketRead;
 import jfrng.model.event.SocketWrite;
 import jfrng.model.event.ThreadStart;
+import jfrng.model.type.JfrField;
 import jfrng.model.type.StringJfrType;
 import jfrng.model.type.ThreadJfrType;
 import jfrng.model.type.doubleJfrType;
@@ -301,7 +302,6 @@ public class JfrResult
 	{
 		Stream<RecordedJfrEvent> filteredStream = recordedEvents.stream()
 				.filter(e -> e.hasField(field) &&
-						e.getEventType().getName().equals(field.getEvent()) &&
 						pred.test(e.getLong(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
@@ -317,7 +317,6 @@ public class JfrResult
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
 				.filter(e -> e.hasField(field) &&
-						e.getEventType().getName().equals(field.getEvent()) &&
 						pred.test(e.getInt(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
@@ -333,7 +332,6 @@ public class JfrResult
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
 				.filter(e -> e.hasField(field) &&
-						e.getEventType().getName().equals(field.getEvent()) &&
 						pred.test(e.getDouble(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
@@ -349,7 +347,6 @@ public class JfrResult
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
 				.filter(e -> e.hasField(field) &&
-						e.getEventType().getName().equals(field.getEvent()) &&
 						e.getString(field).equals(str) );
 		return new JfrResult(filteredStream.toList());
 	}
@@ -366,8 +363,7 @@ public class JfrResult
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
 				.filter(e -> e.hasField(field) && 
-						e.getThread(field).getJavaName().equals(threadName) &&
-						e.getEventType().getName().equals(field.getEvent()));
+						e.getThread(field).getJavaName().equals(threadName));
 		return new JfrResult(filteredStream.toList());
 	}
 
@@ -469,6 +465,10 @@ public class JfrResult
 		return new JfrResult(stream().filter(pred).toList());
 	}
 	
+	public JfrResult filterOnField(JfrField field)
+	{
+		return new JfrResult(stream().filter(e -> e.hasField(field)).toList());
+	}
 
 
 
