@@ -48,8 +48,8 @@ public class RemoteRecorderTest
 		JfrResult result = controller.stopRecording();
 
 
-		Predicate<RecordedJfrEvent> pred = event -> event.hasField("parentThread") && 
-				event.getThread("parentThread").getJavaName().startsWith("RMI");
+		Predicate<RecordedJfrEvent> pred = event -> event.hasField(ThreadStart.PARENT_THREAD) && 
+				event.getThread(ThreadStart.PARENT_THREAD).getJavaName().startsWith("RMI");
 		//result.stream().forEach(System.out::println);
 		assertTrue(result.filter(pred).count() > 0);
 		

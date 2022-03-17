@@ -18,6 +18,8 @@ import jdk.jfr.consumer.RecordedThread;
 import jfrng.model.event.CPUInformation;
 import jfrng.model.event.FileWrite;
 import jfrng.model.event.GarbageCollection;
+import jfrng.model.event.ObjectAllocationInNewTLAB;
+import jfrng.model.event.ObjectAllocationOutsideTLAB;
 import jfrng.model.event.SystemGC;
 import jfrng.model.event.ThreadSleep;
 import jfrng.model.event.ThreadStart;

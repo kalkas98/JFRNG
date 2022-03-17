@@ -26,31 +26,30 @@ import jfrng.model.type.longJfrType;
 
 
 /**
- * Class that exposes methods that can be used in order to access JFR metrics 
- * that were recorded during the executed unit test
+ * Class that exposes methods that can be used in order to access the JFR events
+ * that were recorded during the executed test
  */
 public class JfrResult
 {
 	List<RecordedJfrEvent> recordedEvents;
 	public JfrResult(List<RecordedJfrEvent> recordedEvents)
 	{
-		
 		this.recordedEvents = recordedEvents;
 	}
 	
 	/**
-	 * Get the total sum of the recorded values belonging to the given field
-	 * where the recorded events also fulfill the given predicate
+	 * Get the total sum of the recorded values belonging to the given field, 
+	 * where the event of the field also fulfill the given predicate.
 	 * @param jfrField - an event field with the type long
-	 * @param pred - a predicate that RecordedEvents have to fullfill
+	 * @param pred - a predicate that RecordedEvents have to fulfill
 	 * @return the aggregated value for the given field
 	 */
 	public long getLongAggregate(longJfrType jfrField, Predicate<RecordedJfrEvent> pred)
 	{
 		long aggregate = recordedEvents.stream()
-				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()))
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField))
 				.filter(pred)
-				.map(e -> e.getLong(jfrField.name()))
+				.map(e -> e.getLong(jfrField))
 				.reduce(0L, Long::sum);
 		return aggregate;
 	}
@@ -66,8 +65,8 @@ public class JfrResult
 	}
 
 	/**
-	 * Get the total sum of the recorded values belonging to the given field
-	 * where the recorded events also fulfill the given predicate
+	 * Get the total sum of the recorded values belonging to the given field, 
+	 * where the event of the field also fulfill the given predicate.
 	 * @param jfrField - an event field with the type double
 	 * @param pred - a predicate that RecordedEvents have to fulfill
 	 * @return the aggregated value for the given field
@@ -75,9 +74,9 @@ public class JfrResult
 	public double getDoubleAggregate(doubleJfrType jfrField, Predicate<RecordedJfrEvent> pred)
 	{
 		Double aggregate = recordedEvents.stream()
-				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField))
 				.filter(pred)
-				.map(e -> e.getDouble(jfrField.name()))
+				.map(e -> e.getDouble(jfrField))
 				.reduce(0.0, Double::sum);
 		return aggregate;
 	}
@@ -93,8 +92,8 @@ public class JfrResult
 	}
 
 	/**
-	 * Get the total sum of the recorded values belonging to the given field
-	 * where the recorded events also fulfill the given predicate
+	 * Get the total sum of the recorded values belonging to the given field, 
+	 * where the event of the field also fulfill the given predicate.
 	 * @param jfrField - an event field with the type int
 	 * @param pred - a predicate that RecordedEvents have to fulfill
 	 * @return the aggregated value for the given field
@@ -103,8 +102,8 @@ public class JfrResult
 	{
 
 		int aggregate = recordedEvents.stream()
-				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
-				.filter(pred).map(e -> e.getInt(jfrField.name()))
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField))
+				.filter(pred).map(e -> e.getInt(jfrField))
 				.reduce(0, (res, val) -> res + val);
 		return aggregate;
 	}
@@ -120,8 +119,8 @@ public class JfrResult
 	}
 
 	/**
-	 * Get the total sum of the recorded values belonging to the given field
-	 * where the recorded events also fulfill the given predicate
+	 * Get the total sum of the recorded values belonging to the given field, 
+	 * where the event of the field also fulfill the given predicate.
 	 * @param jfrField -  an event field with the type Duration
 	 * @param timeunit - The time unit for the returned value
 	 * @param pred - a predicate that RecordedEvents have to fulfill
@@ -130,16 +129,15 @@ public class JfrResult
 	public long getDurationAggregate(longJfrType jfrField, TimeUnit timeunit, Predicate<RecordedJfrEvent> pred)
 	{
 		Duration durationSum = recordedEvents.stream()
-				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField.name()))
+				.filter(e -> e.getEventType().getName().equals(jfrField.getEvent()) && e.hasField(jfrField))
 				.filter(pred)
-				.map(e -> e.getDuration(jfrField.name()))
+				.map(e -> e.getDuration(jfrField))
 				.reduce(Duration.ZERO, (res, d) -> res.plus(d));
 		return timeunit.convert(durationSum);
 	}
 
 	/**
 	 * Get the total sum of the recorded values belonging to the given field
-	 * where the recorded events also fulfill the given predicate
 	 * @param jfrField -  an event field with the type Duration
 	 * @param timeunit - The time unit for the returned value
 	 * @return Sum of durations in the given time unit.
@@ -150,7 +148,7 @@ public class JfrResult
 	}
 
 	/**
-	 * Get the total number of bytes allocated
+	 * Get the total number of bytes allocated.
 	 * 
 	 * The calculation is done by adding the size of the Thread Local Allocation Buffers (TLAB) created
 	 * and the allocation sizes for objects allocated outside of TLABs
@@ -167,7 +165,7 @@ public class JfrResult
 	 * 
 	 * The calculation is done by adding the size of the Thread Local Allocation Buffers (TLAB) created
 	 * and the allocation sizes for objects allocated outside of TLABs
-	 * @param threadName - thread name
+	 * @param threadName - name of thread that allocates memory
 	 * @return allocated memory in bytes by given thread
 	 */
 	public long getAllocatedMemoryInThread(String threadName)
@@ -193,8 +191,8 @@ public class JfrResult
 	 */
 	public long getFileIORead(String path)
 	{
-		String pathFieldName = FileRead.PATH.name();
-		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(pathFieldName) && e.getString(pathFieldName).equals(path);
+		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(FileRead.PATH) && 
+				e.getString(FileRead.PATH) != null && e.getString(FileRead.PATH).equals(path);
 		return getLongAggregate(FileRead.BYTES_READ, pred);
 	}
 
@@ -214,9 +212,8 @@ public class JfrResult
 	 */
 	public long getFileIOWrite(String path)
 	{
-		String pathFieldName = FileWrite.PATH.name();
-		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(pathFieldName) && e.getString(pathFieldName) != null
-				&& e.getString(pathFieldName).equals(path);
+		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(FileWrite.PATH) &&  
+				e.getString(FileWrite.PATH) != null && e.getString(FileWrite.PATH).equals(path);
 		return getLongAggregate(FileWrite.BYTES_WRITTEN, pred);
 	}
 
@@ -236,9 +233,7 @@ public class JfrResult
 	 */
 	public long getSocketIORead(int port)
 	{
-		String portFieldName = SocketRead.PORT.name();
-		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(portFieldName) && e.getString(portFieldName) != null
-				&& e.getString(portFieldName).equals(port);
+		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(SocketRead.PORT) && e.getInt(SocketRead.PORT) == port;
 		return getLongAggregate(SocketRead.BYTES_READ, pred);
 	}
 
@@ -258,9 +253,7 @@ public class JfrResult
 	 */
 	public long getSocketIOWrite(int port)
 	{
-		String portFieldName = SocketWrite.PORT.name();
-		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(portFieldName) && e.getString(portFieldName) != null
-				&& e.getString(portFieldName).equals(port);
+		Predicate<RecordedJfrEvent> pred = (e) -> e.hasField(SocketWrite.PORT) && e.getInt(SocketWrite.PORT) == (port);
 		return getLongAggregate(SocketWrite.BYTES_WRITTEN, pred);
 	}
 
@@ -284,12 +277,12 @@ public class JfrResult
 	{
 		return recordedEvents.stream()
 				.filter(e -> e.getEventType().getName().equals(ThreadStart.EVENT))
-				.filter(e -> e.getThread(ThreadStart.PARENT_THREAD.name()).getJavaName().equals(parent))
+				.filter(e -> e.getThread(ThreadStart.PARENT_THREAD).getJavaName().equals(parent))
 				.count();
 	}
 
 	/**
-	 * @param timeunit time unit
+	 * @param timeunit time unit to get the duration of GC pauses in
 	 * @return the sum of the garbage collection pauses in the given timeunit
 	 */
 	public long getGCPauseSum(TimeUnit timeunit)
@@ -299,87 +292,87 @@ public class JfrResult
 	}
 	
 	/**
-	 * Get a JfrResult only containing events from this result that fulfill the given predicate for the given field
-	 * @param field - An jfr event field with the type long
-	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events only contain events from the recording that has the given field and fulfills the predicate
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * @param field - A JFR event field with the type long
+	 * @param pred - A predicate to filter values for the given field
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
 	public JfrResult filterOnField(longJfrType field, Predicate<Long> pred)
 	{
 		Stream<RecordedJfrEvent> filteredStream = recordedEvents.stream()
-				.filter(e -> e.hasField(field.name()) &&
+				.filter(e -> e.hasField(field) &&
 						e.getEventType().getName().equals(field.getEvent()) &&
-						pred.test(e.getLong(field.name())) );
+						pred.test(e.getLong(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
 	
 	/**
-	 * Get a JfrResult only containing events from this result that fulfill the given predicate for the given field
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type int
 	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events only contain events from the recording that has the given field and fulfills the predicate
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
 	public JfrResult filterOnField(intJfrType field, Predicate<Integer> pred)
 	{
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
-				.filter(e -> e.hasField(field.name()) &&
+				.filter(e -> e.hasField(field) &&
 						e.getEventType().getName().equals(field.getEvent()) &&
-						pred.test(e.getInt(field.name())) );
+						pred.test(e.getInt(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
 
 	/**
-	 * Get a JfrResult only containing events from this result that fulfill the given predicate for the given field
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type double
 	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events only contain events from the recording that has the given field and fulfills the predicate
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
 	public JfrResult filterOnField(doubleJfrType field, Predicate<Double> pred)
 	{
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
-				.filter(e -> e.hasField(field.name()) &&
+				.filter(e -> e.hasField(field) &&
 						e.getEventType().getName().equals(field.getEvent()) &&
-						pred.test(e.getDouble(field.name())) );
+						pred.test(e.getDouble(field)) );
 		return new JfrResult(filteredStream.toList());
 	}
 
 	/**
-	 * Get a JfrResult only containing events from this result that fulfill the given predicate for the given field
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type String
 	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events only contain events from the recording that has the given field and fulfills the predicate
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
 	public JfrResult filterOnField(StringJfrType field, String str)
 	{
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
-				.filter(e -> e.hasField(field.name()) &&
+				.filter(e -> e.hasField(field) &&
 						e.getEventType().getName().equals(field.getEvent()) &&
-						e.getString(field.name()).equals(str) );
+						e.getString(field).equals(str) );
 		return new JfrResult(filteredStream.toList());
 	}
 
 	/**
-	 * Get a JfrResult only containing events from this result that fulfill the given predicate for the given field
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * @param field - An jfr event field with the type thread
 	 * @param pred - A predicate that the value for the given field should fulfill
-	 * @return A new JfrResult where the list of events only contain events from the recording that has the given field and fulfills the predicate
+	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
 	public JfrResult filterOnField(ThreadJfrType field, String threadName)
 	{
 
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
-				.filter(e -> e.hasField(field.name()) && 
-						e.getThread(field.name()).getJavaName().equals(threadName) &&
+				.filter(e -> e.hasField(field) && 
+						e.getThread(field).getJavaName().equals(threadName) &&
 						e.getEventType().getName().equals(field.getEvent()));
 		return new JfrResult(filteredStream.toList());
 	}
 
 	/**
-	 * Returns a new JfrResult only containing the given event type
+	 * Get this JfrResult with only events of a certain type
 	 * @param event - name of a JFR event
 	 * @return a new JfrResult only containing recorded events with the given event type
 	 */
@@ -394,10 +387,10 @@ public class JfrResult
 
 	
 	/**
-	 * Returns a JfrResult containing only events where the given class is found in 
+	 * Returns this JfrResult with only events where the given class is found in 
 	 * the stacktrace of the recorded event
 	 * @param cls - class to filter on
-	 * @return JfrResult containing events where given class is in the stacktrace
+	 * @return JfrResult only containing events where given class is in the stacktrace
 	 */
 	public JfrResult filterOnClass(Class<?>  cls)
 	{
@@ -423,7 +416,7 @@ public class JfrResult
 	}
 	
 	/**
-	 * Returns a JfrResult containing only events where the given method is found in 
+	 * Returns a copy of this JfrResult containing only events where the given method is found in 
 	 * the stacktrace
 	 * @param methodName - method to filter on
 	 * @return JfrResult containing events where given method is in the stacktrace
@@ -451,6 +444,10 @@ public class JfrResult
 		
 	}
 	
+	/**
+	 * 
+	 * @return a Stream containing the recorded events
+	 */
 	public Stream<RecordedJfrEvent> stream()
 	{
 		return recordedEvents.stream();
