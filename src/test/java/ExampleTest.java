@@ -50,11 +50,9 @@ public class ExampleTest
 		try
 		{
 			File file = new File("filename.txt");
-
 			FileWriter writer = new FileWriter("filename.txt");
 			writer.write("Lorem Ipsum");
 			writer.close();
-
 			Scanner reader = new Scanner(file);
 			while (reader.hasNextLine())
 			{
@@ -66,9 +64,7 @@ public class ExampleTest
 		{
 			e.printStackTrace();
 		}
-
 		JfrResult result = controller.stopRecording();
-		
 		assertTrue(result.getFileIOWrite("filename.txt") == 11);
 		assertTrue(result.getFileIORead("filename.txt") == 11);
 	}
@@ -79,7 +75,6 @@ public class ExampleTest
 	{
 		System.gc();
 		JfrResult result = controller.stopRecording();
-		
 		long SystemGcCount = result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count();
 		long pauseDuration = result.getGCPauseSum(TimeUnit.MILLISECONDS);
 		
@@ -104,7 +99,6 @@ public class ExampleTest
 			thread[i].start();
 		}
 		JfrResult result = controller.stopRecording();
-
 		
 		String thisThread = Thread.currentThread().getName();
 
@@ -124,8 +118,5 @@ public class ExampleTest
 		
 		assertTrue(customEventCount == 1);
 	}
-	
-	
-	
 
 }
