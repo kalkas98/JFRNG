@@ -145,7 +145,5 @@ public class JfrngTest
 		assertTrue(result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
 		assertTrue(result.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
-	}
-	
-	
+	}	
 }

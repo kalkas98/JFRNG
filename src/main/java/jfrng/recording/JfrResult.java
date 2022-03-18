@@ -293,7 +293,8 @@ public class JfrResult
 	}
 	
 	/**
-	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field.
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param field - A JFR event field with the type long
 	 * @param pred - A predicate to filter values for the given field
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
@@ -308,6 +309,7 @@ public class JfrResult
 	
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param field - An jfr event field with the type int
 	 * @param pred - A predicate that the value for the given field should fulfill
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
@@ -323,6 +325,7 @@ public class JfrResult
 
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param field - An jfr event field with the type double
 	 * @param pred - A predicate that the value for the given field should fulfill
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
@@ -338,6 +341,7 @@ public class JfrResult
 
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param field - An jfr event field with the type String
 	 * @param str - A string value that the string field should be equal to
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and the value of that field is equal to the given string value
@@ -353,6 +357,7 @@ public class JfrResult
 
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.	 
 	 * @param field - An jfr event field with the type thread
 	 * @param threadName - A thread name that the the thread field should have
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given thread field and threads have the given thread name
@@ -368,7 +373,8 @@ public class JfrResult
 	}
 
 	/**
-	 * Get this JfrResult with only events of a certain type
+	 * Filter a JfrResult to only contain events with the given event name
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param event - name of a JFR event
 	 * @return a new JfrResult only containing recorded events with the given event type
 	 */
@@ -385,6 +391,7 @@ public class JfrResult
 	/**
 	 * Returns this JfrResult with only events where the given class is found in 
 	 * the stacktrace of the recorded event
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param cls - class to filter on
 	 * @return JfrResult only containing events where given class is in the stacktrace
 	 */
@@ -449,14 +456,18 @@ public class JfrResult
 		return recordedEvents.stream();
 	}
 	
+	/**
+	 * Returns the number of recorded events
+	 * @return number of recorded events
+	 */
 	public long count()
 	{
 		return recordedEvents.size();
 	}
 	
 	/**
-	 * Returns a new JfrResult with only recorded events that fulfill the
-	 * given predicate
+	 * Returns a JfrResult with only recorded events that fulfill the given predicate
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param pred predicate for RecordedJfrEvents
 	 * @return a new JfrResult with only recorded events that fulfill the given predicate
 	 */
@@ -465,6 +476,12 @@ public class JfrResult
 		return new JfrResult(stream().filter(pred).toList());
 	}
 	
+	/**
+	 * Filter this JfrResult to only contain events with the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
+	 * @param field - JFR event field to filter on
+	 * @return a new JfrResult object only containing recorded events with the given field
+	 */
 	public JfrResult filterOnField(JfrField field)
 	{
 		return new JfrResult(stream().filter(e -> e.hasField(field)).toList());
