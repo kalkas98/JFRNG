@@ -448,7 +448,7 @@ public class JfrResult
 	}
 	
 	/**
-	 * 
+	 * Returns a stream containing the events that were recorded.
 	 * @return a Stream containing the recorded events
 	 */
 	public Stream<RecordedJfrEvent> stream()
