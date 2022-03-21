@@ -173,6 +173,8 @@ public class EventRecorder
 
 		});
 		
+		
+		
 		localStream.startAsync();
 
 		synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent

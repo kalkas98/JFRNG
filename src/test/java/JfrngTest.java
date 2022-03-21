@@ -126,24 +126,25 @@ public class JfrngTest
 	}
 	
 	@RecordJfrEvents({
-		GarbageCollection.EVENT,
 		ThreadSleep.EVENT,
-		CPUInformation.EVENT
+		GarbageCollection.EVENT
 	})
+	@DumpJfrToDisk("gc.jfr")
 	@Test
 	public void TestFilterMethods() throws InterruptedException
 	{
+
 		Bar b = new Bar();
 		b.foo();
 		System.gc();
 		Thread.sleep(100);
 		JfrResult result = controller.stopRecording();
-		String currentThread  = Thread.currentThread().getName();
 
+		String currentThread  = Thread.currentThread().getName();
 		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
-		assertTrue(result.filterOnField(GarbageCollection.DURATION, val -> val > 0 ).count() > 0);
+		assertTrue(result.filterOnField(GarbageCollection.DURATION, duration -> duration > 10 ).count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
 		assertTrue(result.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
 		assertTrue(result.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
-	}	
+	}
 }
