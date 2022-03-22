@@ -10,6 +10,7 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 
+import jfrng.recording.annotation.DisableStacktrace;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordRemote;
@@ -71,6 +72,11 @@ public class JfrListener implements IInvokedMethodListener
 					{
 						rc.addRemoteUrl(annotation.value());
 					}
+				}
+				
+				if(m.isAnnotationPresent(DisableStacktrace.class))
+				{
+					rc.setStacktraceDisabled(true);
 				}
 				
 				JfrController controller = getControllerInstance(method);

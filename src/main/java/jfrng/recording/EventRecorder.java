@@ -1,5 +1,6 @@
 package jfrng.recording;
 
+import jdk.jfr.EventSettings;
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
 import jdk.management.jfr.RemoteRecordingStream;
@@ -114,7 +115,11 @@ public class EventRecorder
 			List<String> enabledEvents = config.getEnabledEvents();
 			for (String e : enabledEvents)
 			{
-				recording.enable(e);
+				EventSettings setting = recording.enable(e);
+				if(config.isStacktraceDisabled())
+				{
+					setting.withoutStackTrace();
+				}
 			}
 		}
 		recording.start();
@@ -147,7 +152,11 @@ public class EventRecorder
 			List<String> enabledEvents = config.getEnabledEvents();
 			for (String e : enabledEvents)
 			{
-				localStream.enable(e);
+				EventSettings setting = localStream.enable(e);
+				if(config.isStacktraceDisabled())
+				{
+					setting.withoutStackTrace();
+				}
 			}
 		}
 		localStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
@@ -173,7 +182,7 @@ public class EventRecorder
 
 		});
 		
-		
+
 		
 		localStream.startAsync();
 
@@ -302,7 +311,11 @@ public class EventRecorder
 		List<String> enabledEvents = config.getEnabledEvents();
 		for (String e : enabledEvents)
 		{
-			remoteStream.enable(e);
+			EventSettings setting = remoteStream.enable(e);
+			if(config.isStacktraceDisabled())
+			{
+				setting.withoutStackTrace();
+			}
 		}
 		
 		remoteStream.setReuse(false); // Since we keep references to Events.

@@ -486,6 +486,126 @@ public class JfrResult
 	{
 		return new JfrResult(stream().filter(e -> e.hasField(field)).toList());
 	}
+	
+	/**
+	 * Returns true if the result contains an event with the given event name
+	 * @param event
+	 * @return
+	 */
+	public boolean hasEvent(String event)
+	{
+		return stream().anyMatch(e -> e.getEventType().getName().equals(event));
+	}
+	
+	/**
+	 * Returns true if the result contains an event with the given field that satisfies the given predicate for the value of the field
+	 * @param field - a event field with the long type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return
+	 */
+	public boolean anyMatchPredicate(longJfrType field, Predicate<Long> pred)
+	{
+		return this.filterOnField(field, pred).count() > 0;
+	}
+	
+	/**
+	 * Returns true if the result contains an event with the given field that satisfies the given predicate for the value of the field
+	 * @param field - a event field with the int type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return 
+	 */
+	public boolean anyMatchPredicate(intJfrType field, Predicate<Integer> pred)
+	{
+		return this.filterOnField(field, pred).count() > 0;
+	}
+	
+	/**
+	 * Returns true if the JfrResult contains an event with the given field that satisfies the given predicate for the value of the field
+	 * @param field - a event field with the double type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return
+	 */
+	public boolean anyMatchPredicate(doubleJfrType field, Predicate<Double> pred)
+	{
+		return this.filterOnField(field, pred).count() > 0;
+	}
+	
+	/**
+	 * Returns true if the given predicate is satisfies for all fields of the given field type
+	 * @param field - a event field with the long type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return
+	 */
+	public boolean allMatchPredicate(longJfrType field, Predicate<Long> pred)
+	{
+		return this.filterOnField(field).stream().allMatch(e -> pred.test(e.getLong(field)));
+	}
+	
+	/**
+	 * Returns true if the given predicate is satisfies for all fields of the given field type
+	 * @param field - a event field with the int type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return 
+	 */
+	public boolean allMatchPredicate(intJfrType field, Predicate<Integer> pred)
+	{
+		return this.filterOnField(field).stream().allMatch(e -> pred.test(e.getInt(field)));
+	}
+	
+	/**
+	 * Returns true if the given predicate is satisfies for all fields of the given field type
+	 * @param field - a event field with the double type
+	 * @param pred - A predicate that the value of the event field should fulfill
+	 * @return
+	 */
+	public boolean allMatchPredicate(doubleJfrType field, Predicate<Double> pred)
+	{
+		return this.filterOnField(field).stream().allMatch(e -> pred.test(e.getDouble(field)));
+	}
+	
+	public boolean containsFieldWithValue(longJfrType field, long value)
+	{
+		return stream().anyMatch(event -> event.getLong(field) == value);
+	}
+
+	public boolean containsFieldWithValue(intJfrType field, int value)
+	{
+		return stream().anyMatch(event -> event.getInt(field) == value);
+	}
+	
+	public boolean containsFieldWithValue(doubleJfrType field, double value)
+	{
+		return stream().anyMatch(event -> event.getDouble(field) == value);
+	}
+	
+	public boolean containsFieldWithValue(StringJfrType field, String value)
+	{
+		return filterOnField(field).stream().anyMatch(event -> event.getString(field).equals(value));
+	}
+	
+	public JfrResult filterByThread(String threadName)
+	{
+		return this.filter(event -> event.getThread() != null && event.getThread().getJavaName().equals(threadName));
+	}
+	
+	public Stream<Long> getValues(longJfrType field)
+	{
+		return filterOnField(field).stream().map(e -> e.getLong(field));
+	}
+	public Stream<String> getValues(StringJfrType field)
+	{
+		return filterOnField(field).stream().map(e -> e.getString(field));
+	}
+
+	public Stream<Double> getValues(doubleJfrType field)
+	{
+		return filterOnField(field).stream().map(e -> e.getDouble(field));
+	}
+
+	public Stream<Integer> getValues(intJfrType field)
+	{
+		return filterOnField(field).stream().map(e -> e.getInt(field));
+	}
 
 
 

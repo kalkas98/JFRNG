@@ -16,10 +16,12 @@ import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
 import jfrng.recording.RecordingProfile;
+import jfrng.recording.annotation.DisableStacktrace;
 import jfrng.recording.annotation.DumpJfrToDisk;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
 import testUtil.Bar;
+import testUtil.FooEvent;
 
 public class JfrngTest
 {
@@ -127,8 +129,10 @@ public class JfrngTest
 	
 	@RecordJfrEvents({
 		ThreadSleep.EVENT,
-		GarbageCollection.EVENT
+		GarbageCollection.EVENT,
+		testUtil.FooEvent.EVENT
 	})
+	@DisableStacktrace
 	@DumpJfrToDisk("gc.jfr")
 	@Test
 	public void TestFilterMethods() throws InterruptedException
@@ -139,12 +143,42 @@ public class JfrngTest
 		System.gc();
 		Thread.sleep(100);
 		JfrResult result = controller.stopRecording();
-
+		
 		String currentThread  = Thread.currentThread().getName();
-		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
-		assertTrue(result.filterOnField(GarbageCollection.DURATION, duration -> duration > 10 ).count() > 0);
-		assertTrue(result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count() > 0);
-		assertTrue(result.filterOnField(GarbageCollection.GC_ID, id -> id > 0).count() > 0);
-		assertTrue(result.filterOnField(ThreadSleep.EVENT_THREAD, currentThread).count() > 0);
+		assertTrue(result.hasEvent(GarbageCollection.EVENT));
+		assertTrue(result.anyMatchPredicate(GarbageCollection.DURATION, duration -> duration > 10 ));
+		assertTrue(result.containsFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
+		
+		assertTrue(result.anyMatchPredicate(GarbageCollection.GC_ID, id -> id > 0));
+		assertTrue(result.filterByThread(currentThread).hasEvent(ThreadSleep.EVENT));
+	}
+	
+	@RecordJfrEvents({
+		FooEvent.EVENT
+	})
+	@DisableStacktrace
+	@Test
+	public void TestDisableStacktraceAndFilterOnClass()
+	{
+		Bar b = new Bar();
+		b.foo();
+		JfrResult result = controller.stopRecording();
+		
+		long barEventCount = result.filterOnClass(Bar.class).count();
+		assertTrue(barEventCount == 0);
+	}
+	
+	@RecordJfrEvents({
+		FooEvent.EVENT
+	})
+	@Test
+	public void TestEnableStacktraceAndFilterOnClass()
+	{
+		Bar b = new Bar();
+		b.foo();
+		JfrResult result = controller.stopRecording();
+		
+		long barEventCount = result.filterOnClass(Bar.class).count();
+		assertTrue(barEventCount == 1);
 	}
 }

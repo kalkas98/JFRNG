@@ -5,7 +5,7 @@ import jdk.jfr.Enabled;
 
 
 /**
- *	Event for synching the JFR recording stream thread with the calling thread
+ *	Custom JFR event used for testing purposes
  */
 @Name(FooEvent.EVENT)
 @Enabled(false)

@@ -27,18 +27,19 @@ public class RecordingConfig
 	
 	private boolean recordToDiskEnabled;
 	private boolean remoteRecordingEnabled;
+	private boolean disableStacktrace;
 	private Path diskRecordingPath;
 	private List<String> remoteUrls; //List containing URLs of the remote hosts that RemoteRecordingStreams are connected to
+		
 
-	public RecordingConfig() throws Exception
-	{
-
-	}
 
 	public RecordingConfig(String[] enabledEvents) throws Exception
 	{
 		this.enabledEvents = new ArrayList<String>(Arrays.asList(enabledEvents));
 		this.remoteUrls = new ArrayList<String>();
+		this.recordToDiskEnabled = false;
+		this.remoteRecordingEnabled = false;
+		this.disableStacktrace = false;
 	}
 
 	/**
@@ -127,6 +128,16 @@ public class RecordingConfig
 	public void addRemoteUrl(String remoteUrl)
 	{
 		this.remoteUrls.add(remoteUrl);
+	}
+
+	public boolean isStacktraceDisabled()
+	{
+		return disableStacktrace;
+	}
+
+	public void setStacktraceDisabled(boolean disableStacktrace)
+	{
+		this.disableStacktrace = disableStacktrace;
 	}
 
 }
