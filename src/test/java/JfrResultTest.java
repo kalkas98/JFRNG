@@ -78,7 +78,6 @@ public class JfrResultTest
 		b.foo();
 		System.gc();
 		JfrResult result = controller.stopRecording();
-		result.stream().forEach(System.out::println);
-		assertTrue(result.containsFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
+		assertTrue(result.hasFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
 	}
 }

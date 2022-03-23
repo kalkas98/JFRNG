@@ -105,23 +105,22 @@ public class EventRecorder
 	
 	private void startDiskRecording()
 	{
+		recording = new Recording();
 		if (config.getJfrConfig() != null)
 		{
-			recording = new Recording(config.getJfrConfig());
+			recording.setSettings(config.getJfrConfig().getSettings());
 		}
-		else
+
+		List<String> enabledEvents = config.getEnabledEvents();
+		for (String e : enabledEvents)
 		{
-			recording = new Recording();
-			List<String> enabledEvents = config.getEnabledEvents();
-			for (String e : enabledEvents)
+			EventSettings setting = recording.enable(e);
+			if(config.isStacktraceDisabled())
 			{
-				EventSettings setting = recording.enable(e);
-				if(config.isStacktraceDisabled())
-				{
-					setting.withoutStackTrace();
-				}
+				setting.withoutStackTrace();
 			}
 		}
+		
 		recording.start();
 	}
 	
@@ -141,24 +140,25 @@ public class EventRecorder
 
 	private void startRecordingStream() throws Exception
 	{
+		localStream = new RecordingStream();
 		if (config.getJfrConfig() != null)
 		{
 			//Use a predifined JFR configuration if one is assigned to this recording config
-			localStream = new RecordingStream(config.getJfrConfig());
+			localStream.setSettings(config.getJfrConfig().getSettings());
 		}
-		else
+		
+		List<String> enabledEvents = config.getEnabledEvents();
+		for (String e : enabledEvents)
 		{
-			localStream = new RecordingStream();
-			List<String> enabledEvents = config.getEnabledEvents();
-			for (String e : enabledEvents)
+			EventSettings setting = localStream.enable(e);
+			
+			if(config.isStacktraceDisabled())
 			{
-				EventSettings setting = localStream.enable(e);
-				if(config.isStacktraceDisabled())
-				{
-					setting.withoutStackTrace();
-				}
+				setting.withoutStackTrace();
 			}
 		}
+		
+		
 		localStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
 		localStream.enable(ClearEvent.CLEAR_EVENT_NAME);
 		localStream.setReuse(false); // Since we keep references to Events.
@@ -193,15 +193,6 @@ public class EventRecorder
 	private void stopRecordingStream()
 	{
 		localStream.close();
-	}
-
-	protected Stream<RecordedJfrEvent> getEventStream()
-	{
-		if (isRecording)
-		{
-			synch(); //Sync to ensure previously commited events are processed
-		}
-		return recordedEvents.stream();
 	}
 	
 	protected List<RecordedJfrEvent> getEventList()
@@ -265,6 +256,8 @@ public class EventRecorder
 	 */
 	private void removeRecordingOverheadEvents()
 	{
+		if(config.isStacktraceDisabled())
+			return;
 		//Remove all events where the thread name starts with JFR
 		Predicate<RecordedJfrEvent> pred = event -> 
 			(event.getThread() != null && event.getThread().getJavaName().startsWith("JFR"));
@@ -304,8 +297,7 @@ public class EventRecorder
 		RemoteRecordingStream remoteStream = getRemoteRecordingStream(url);
 		if (config.getJfrConfig() != null)
 		{
-			Map<String,String> settings = config.getJfrConfig().getSettings();
-			remoteStream.setSettings(settings);
+			remoteStream.setSettings(config.getJfrConfig().getSettings());
 		}
 	
 		List<String> enabledEvents = config.getEnabledEvents();

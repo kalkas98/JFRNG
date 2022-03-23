@@ -47,6 +47,7 @@ public class WelcomeServer implements IGreeter
 	{
 		LocateRegistry.createRegistry(JMX_PORT);
 		MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+		
 		JMXServiceURL jmxUrl = new JMXServiceURL(URL);
 		JMXConnectorServer connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(jmxUrl, null, beanServer);
 

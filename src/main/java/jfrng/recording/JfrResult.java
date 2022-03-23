@@ -386,8 +386,6 @@ public class JfrResult
 		return new JfrResult(filteredStream.toList());
 	}
 	
-
-	
 	/**
 	 * Returns this JfrResult with only events where the given class is found in 
 	 * the stacktrace of the recorded event
@@ -563,45 +561,98 @@ public class JfrResult
 		return this.filterOnField(field).stream().allMatch(e -> pred.test(e.getDouble(field)));
 	}
 	
-	public boolean containsFieldWithValue(longJfrType field, long value)
+	/**
+	 * Returns true if the result contains a field with the given type that is equal to the given value
+	 * @param field - a field with the long type
+	 * @param value - a long value
+	 * @return true or false
+	 */
+	public boolean hasFieldWithValue(longJfrType field, long value)
 	{
 		return stream().anyMatch(event -> event.getLong(field) == value);
 	}
 
-	public boolean containsFieldWithValue(intJfrType field, int value)
+	/**
+	 * Returns true if the result contains a field with the given type that is equal to the given value
+	 * @param field - a field with the int type
+	 * @param value - a int value
+	 * @return true or false
+	 */
+	public boolean hasFieldWithValue(intJfrType field, int value)
 	{
 		return stream().anyMatch(event -> event.getInt(field) == value);
 	}
-	
-	public boolean containsFieldWithValue(doubleJfrType field, double value)
+
+	/**
+	 * Returns true if the result contains a field with the given type that is equal to the given value
+	 * @param field - a field with the double type
+	 * @param value - a double value
+	 * @return true or false
+	 */
+	public boolean hasFieldWithValue(doubleJfrType field, double value)
 	{
 		return stream().anyMatch(event -> event.getDouble(field) == value);
 	}
-	
-	public boolean containsFieldWithValue(StringJfrType field, String value)
+
+	/**
+	 * Returns true if the result contains a field with the given type that is equal to the given value
+	 * @param field - a field with the String type
+	 * @param value - a String value
+	 * @return true or false
+	 */
+	public boolean hasFieldWithValue(StringJfrType field, String value)
 	{
 		return filterOnField(field).stream().anyMatch(event -> event.getString(field).equals(value));
 	}
 	
+	
+
+	/**
+	 * Returns a a JfrResult only containing recorded events that were caused in a thread with the given thread name
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
+	 * @param threadName - name of a thread to filter on
+	 * @return a new filtered JfrResult
+	 */
 	public JfrResult filterByThread(String threadName)
 	{
 		return this.filter(event -> event.getThread() != null && event.getThread().getJavaName().equals(threadName));
 	}
-	
+
+	/**
+	 * Returns a stream containing the recorded values for a given field
+	 * @param field - a field with long values
+	 * @return a stream containing the values of the given field
+	 */
 	public Stream<Long> getValues(longJfrType field)
 	{
 		return filterOnField(field).stream().map(e -> e.getLong(field));
 	}
+	
+	/**
+	 * Returns a stream containing the recorded values for a given field
+	 * @param field - a field with String values
+	 * @return a stream containing the values of the given field
+	 */
 	public Stream<String> getValues(StringJfrType field)
 	{
 		return filterOnField(field).stream().map(e -> e.getString(field));
 	}
 
+	/**
+	 * Returns a stream containing the recorded values for a given field
+	 * @param field - a field with double values
+	 * @return a stream containing the values of the given field
+	 */
 	public Stream<Double> getValues(doubleJfrType field)
 	{
 		return filterOnField(field).stream().map(e -> e.getDouble(field));
 	}
 
+	/**
+	 * Returns a stream containing the recorded values for a given field
+	 * @param field - a field with int values
+	 * @return a stream containing the values of the given field
+	 */
 	public Stream<Integer> getValues(intJfrType field)
 	{
 		return filterOnField(field).stream().map(e -> e.getInt(field));

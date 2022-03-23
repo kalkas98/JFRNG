@@ -56,7 +56,6 @@ public class JfrListener implements IInvokedMethodListener
 						rc.EnableProfile(profile);
 					}
 				}
-				
 				//Enable jfr disk recording if annotation is present
 				if(m.isAnnotationPresent(DumpJfrToDisk.class))
 				{

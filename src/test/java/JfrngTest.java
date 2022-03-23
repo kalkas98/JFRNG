@@ -147,7 +147,7 @@ public class JfrngTest
 		String currentThread  = Thread.currentThread().getName();
 		assertTrue(result.hasEvent(GarbageCollection.EVENT));
 		assertTrue(result.anyMatchPredicate(GarbageCollection.DURATION, duration -> duration > 10 ));
-		assertTrue(result.containsFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
+		assertTrue(result.hasFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
 		
 		assertTrue(result.anyMatchPredicate(GarbageCollection.GC_ID, id -> id > 0));
 		assertTrue(result.filterByThread(currentThread).hasEvent(ThreadSleep.EVENT));
