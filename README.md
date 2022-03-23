@@ -30,7 +30,7 @@ The following annotations can be used to configure a test and record JFR events 
 - `@RecordWithProfile` - Enables a profile for the recording. A profile enables a predefined set of events. The profile name is given as an argument. One can enable the events individually in `@RecordJfrEvents` just as well, `@RecordWithProfile` is exists to make it more convenient.
 - `@DumpJfrToDisk` - Record and save a .jfr file to the disk. Takes a filepath as an argument.
 - `@RecordRemote` - Record JFR events on a remote JVM that has a platform MBeanServer attached to the a JMX service URL. Takes the JMX service url as argument. 
-
+- `@DisableStacktrace` - Disables the recording of stacktraces for events. Might reduce overhead.
 ### Example
 Let's take a look at an example to illustrate usage of the framework. In the following example JFRNG is used to record the ThreadStart event emmited when a new thread is started. 
 ```java
