@@ -1,5 +1,6 @@
 package jfrng.recording;
 
+import jdk.jfr.consumer.RecordedThread;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -326,7 +327,7 @@ public class JfrResult
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
-	 * @param field - An jfr event field with the type double
+	 * @param field - A jfr event field with the type double
 	 * @param pred - A predicate that the value for the given field should fulfill
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and fulfills the predicate
 	 */
@@ -342,7 +343,7 @@ public class JfrResult
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
-	 * @param field - An jfr event field with the type String
+	 * @param field - A jfr event field with the type String
 	 * @param str - A string value that the string field should be equal to
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given field and the value of that field is equal to the given string value
 	 */
@@ -358,18 +359,40 @@ public class JfrResult
 	/**
 	 * Get a JfrResult object only containing events from this result that fulfill the given predicate for the given field
 	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.	 
-	 * @param field - An jfr event field with the type thread
-	 * @param threadName - A thread name that the the thread field should have
+	 * @param field - A jfr event field with the type thread
+	 * @param pred - A predicate that the thread field should fulfill
 	 * @return A new JfrResult where the list of events contain events from the recording that has the given thread field and threads have the given thread name
 	 */
-	public JfrResult filterOnField(ThreadJfrType field, String threadName)
+	public JfrResult filterOnField(ThreadJfrType field, Predicate<RecordedThread> pred)
 	{
 
 		Stream<RecordedJfrEvent> filteredStream = 
 				recordedEvents.stream()
 				.filter(e -> e.hasField(field) && 
-						e.getThread(field).getJavaName().equals(threadName));
+						pred.test(e.getThread(field)));
 		return new JfrResult(filteredStream.toList());
+	}
+	
+	/**
+	 * Filter this JfrResult to only contain events with the given field
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
+	 * @param field - JFR event field to filter on
+	 * @return a new JfrResult object only containing recorded events with the given field
+	 */
+	public JfrResult filterOnField(JfrField field)
+	{
+		return new JfrResult(stream().filter(e -> e.hasField(field)).toList());
+	}
+
+	/**
+	 * Returns a a JfrResult only containing recorded events that were caused in a thread with the given thread name
+	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
+	 * @param threadName - name of a thread to filter on
+	 * @return a new filtered JfrResult
+	 */
+	public JfrResult filterByThread(String threadName)
+	{
+		return this.filter(event -> event.getThread() != null && event.getThread().getJavaName().equals(threadName));
 	}
 
 	/**
@@ -473,17 +496,7 @@ public class JfrResult
 	{
 		return new JfrResult(stream().filter(pred).toList());
 	}
-	
-	/**
-	 * Filter this JfrResult to only contain events with the given field
-	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
-	 * @param field - JFR event field to filter on
-	 * @return a new JfrResult object only containing recorded events with the given field
-	 */
-	public JfrResult filterOnField(JfrField field)
-	{
-		return new JfrResult(stream().filter(e -> e.hasField(field)).toList());
-	}
+
 	
 	/**
 	 * Returns true if the result contains an event with the given event name
@@ -607,16 +620,7 @@ public class JfrResult
 	
 	
 
-	/**
-	 * Returns a a JfrResult only containing recorded events that were caused in a thread with the given thread name
-	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
-	 * @param threadName - name of a thread to filter on
-	 * @return a new filtered JfrResult
-	 */
-	public JfrResult filterByThread(String threadName)
-	{
-		return this.filter(event -> event.getThread() != null && event.getThread().getJavaName().equals(threadName));
-	}
+
 
 	/**
 	 * Returns a stream containing the recorded values for a given field

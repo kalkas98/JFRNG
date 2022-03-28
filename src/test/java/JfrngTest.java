@@ -39,9 +39,11 @@ public class JfrngTest
 		
 		JfrResult result = controller.stopRecording();
 		String currentThread  = Thread.currentThread().getName();
+		long allocatedMB  = result.getAllocatedMemoryInThread(currentThread) / 1_000_000;
 		
-		assertTrue(result.getAllocatedMemoryInThread(currentThread) > 0);
-		assertTrue(result.filterOnEvent(GarbageCollection.EVENT).count() > 0);
+		assertTrue(allocatedMB < 150);
+		assertTrue(result.hasEvent(GarbageCollection.EVENT));
+		assertTrue(result.hasFieldWithValue(GarbageCollection.CAUSE, "System.gc()"));
 	}
 
 	@RecordJfrEvents
@@ -151,7 +153,9 @@ public class JfrngTest
 		
 		assertTrue(result.anyMatchPredicate(GarbageCollection.GC_ID, id -> id > 0));
 		assertTrue(result.filterByThread(currentThread).hasEvent(ThreadSleep.EVENT));
+		result.filterByThread(currentThread).stream().forEach(System.out::println);
 	}
+
 	
 	@RecordJfrEvents({
 		FooEvent.EVENT
@@ -180,5 +184,28 @@ public class JfrngTest
 		
 		long barEventCount = result.filterOnClass(Bar.class).count();
 		assertTrue(barEventCount == 1);
+	}
+	
+	@RecordJfrEvents
+	@RecordWithProfile(RecordingProfile.DEFAULT)
+	@Test
+	public void filterByThreadAndClassShouldReturnOneFooEvent()
+	{
+		Bar b = new Bar();
+		b.foo();
+		Thread t = new Thread(() -> b.foo());
+		t.start();
+		try
+		{
+			t.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+
+		JfrResult result = controller.stopRecording();
+
+
 	}
 }

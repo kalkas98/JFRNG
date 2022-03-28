@@ -260,16 +260,24 @@ public class EventRecorder
 			return;
 		//Remove all events where the thread name starts with JFR
 		Predicate<RecordedJfrEvent> pred = event -> 
-			(event.getThread() != null && event.getThread().getJavaName().startsWith("JFR"));
+			(event.getThread() != null && event.getThread().getJavaName() != null && event.getThread().getJavaName().startsWith("JFR"));
 		recordedEvents.removeIf(pred);
-		
 		//Remove all events where the EventRecorder class is found in the stack trace
 		Predicate<RecordedFrame> framePred = frame -> frame.getMethod()
 														   .getType()
 														   .getName()
 														   .equals(EventRecorder.class.getName());
 		
-		Predicate<RecordedJfrEvent> stackTracePred = event ->   event.getStackTrace() != null && 
+		//Filter out null values since those seem too cause the program execution to get stuck
+		Predicate<RecordedJfrEvent> frameNotNullFilter = e -> e.getStackTrace() != null && 
+				e
+				.getStackTrace()
+				.getFrames()
+				.stream()
+				.allMatch(frame -> frame.getMethod() != null && frame.getMethod().getType() != null &&
+						  frame.getMethod().getType().getName() != null);
+		
+		Predicate<RecordedJfrEvent> stackTracePred = event ->  	frameNotNullFilter.test(event) &&
 																event.getStackTrace()
 																     .getFrames()
 																     .stream()
