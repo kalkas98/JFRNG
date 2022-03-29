@@ -468,6 +468,11 @@ public class JfrResult
 		
 	}
 	
+	public JfrResult filterOnHost(String host)
+	{
+		return filter(e -> e.getHost().equals(host));
+	}
+	
 	/**
 	 * Returns a stream containing the events that were recorded.
 	 * @return a Stream containing the recorded events
@@ -662,6 +667,6 @@ public class JfrResult
 		return filterOnField(field).stream().map(e -> e.getInt(field));
 	}
 
-
+	
 
 }
