@@ -6,6 +6,14 @@ package jfrng.recording;
 public class JfrController
 {
 	private EventRecorder recorder;
+	public String lol; //TODO: REMOVE THIS
+
+	public JfrController(String lol)
+	{
+		this.lol = lol;
+	}
+	
+	public JfrController() {};
 
 	public void setRecorder(EventRecorder recorder)
 	{
