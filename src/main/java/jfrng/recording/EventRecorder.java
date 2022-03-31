@@ -4,6 +4,7 @@ import jdk.jfr.EventSettings;
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordingStream;
 import jdk.management.jfr.RemoteRecordingStream;
+import jfrng.model.event.ThreadStart;
 import jfrng.recording.event.ClearEvent;
 import jfrng.recording.event.SynchronizationEvent;
 
@@ -63,22 +64,15 @@ public class EventRecorder
 	
 	private void resetEventRecorder()
 	{
-		syncSemaphore.drainPermits();
-		recordedEvents.clear();
 		Map<String,String> noSettings = new HashMap<String, String>();
-		localStream.setSettings(noSettings);
-		remoteStreams.clear();
-		
+		localStream.setSettings(noSettings);		
 	}
 	
 	protected void startTestRecording(RecordingConfig config)
 	{
 		this.config = config;
 		resetEventRecorder();
-		System.out.println("Reset event recorder");
 		configureRecording();
-		System.out.println("Configured recording");
-		
 	}
 	
 	/**
@@ -93,9 +87,7 @@ public class EventRecorder
 		}
 		try
 		{
-			System.out.println("Starting recording stream");
 			startRecordingStream();
-			System.out.println("Started recording stream");
 			if(config.isRemoteRecordingEnabled())
 			{
 				List<String> urls = config.getRemoteUrls();
@@ -201,7 +193,6 @@ public class EventRecorder
 			
 			if (e.getEventType().getName().equals(SynchronizationEvent.SYNCH_EVENT_NAME))
 			{
-				System.out.println("Releasing semaphore");
 				syncSemaphore.release();
 			}
 			else if(e.getEventType().getName().equals(ClearEvent.CLEAR_EVENT_NAME))
@@ -212,11 +203,13 @@ public class EventRecorder
 			{
 				RecordedJfrEvent event = new RecordedJfrEvent(e);
 				event.setHost(LOCAL_HOST_NAME);
+				System.out.println(event.getEventType().getName());
 				recordedEvents.add(new RecordedJfrEvent(e));
 			}
 
 		});
 		localStream.onError(e -> System.out.println(e));
+		
 		//System.out.println("Synching...");
 		//synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
 		//System.out.println("Synch complete");
@@ -273,14 +266,14 @@ public class EventRecorder
 	 */
 	protected void reset() 
 	{
-		synch();
+		//TODO: Maybe ignore disk recording in reset
 		if(config.recordToDisk())
 		{
 			recording.stop();
 			startDiskRecording();
 		}
-		recordedEvents.clear();		
-
+		clear();		
+		synch();
 	}
 	
 	/**

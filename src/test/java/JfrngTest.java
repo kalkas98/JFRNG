@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import jfrng.model.event.CPUInformation;
@@ -15,6 +17,7 @@ import jfrng.model.event.ThreadSleep;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
+import jfrng.recording.JfrTestClassListener;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.DisableStacktrace;
 import jfrng.recording.annotation.DumpJfrToDisk;
@@ -23,6 +26,7 @@ import jfrng.recording.annotation.RecordWithProfile;
 import testUtil.Bar;
 import testUtil.FooEvent;
 
+@Listeners({ JfrTestClassListener.class })
 public class JfrngTest
 {
 	

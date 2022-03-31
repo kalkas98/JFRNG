@@ -77,7 +77,6 @@ public class JfrListener implements IInvokedMethodListener
 				}
 				
 				JfrController controller = getControllerInstance(method);
-				System.out.println("Starting test recording...");
 				controller.startTestRecording(rc);
 				
 				//controller.startTestRecording(config);
@@ -85,7 +84,6 @@ public class JfrListener implements IInvokedMethodListener
 				//controller.setRecorder(recorder);
 				//recorder.configureRecording();
 				
-				System.out.println("Got here");
 				//ONLY SYNCH AND CLEAR HERE
 				controller.reset();//Clear events recorded during startup
 			}

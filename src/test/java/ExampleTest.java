@@ -68,6 +68,7 @@ public class ExampleTest
 			e.printStackTrace();
 		}
 		JfrResult result = controller.stopRecording();
+		result.stream().forEach(System.out::println);
 		assertTrue(result.getFileIOWrite("filename.txt") == 11);
 		assertTrue(result.getFileIORead("filename.txt") == 11);
 	}
