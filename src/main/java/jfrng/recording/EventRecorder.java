@@ -10,6 +10,7 @@ import jfrng.recording.event.SynchronizationEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -40,6 +41,7 @@ public class EventRecorder
 	private Recording recording;
 	private RecordingConfig config;
 
+	//Old constructor
 	protected EventRecorder(RecordingConfig rc)
 	{
 		List<RecordedJfrEvent> tmpList = new ArrayList<RecordedJfrEvent>();
@@ -49,11 +51,41 @@ public class EventRecorder
 		remoteStreams = new ArrayList<RemoteRecordingStream>();
 	}
 	
+	protected EventRecorder()
+	{
+		List<RecordedJfrEvent> tmpList = new ArrayList<RecordedJfrEvent>();
+		recordedEvents =  Collections.synchronizedList(tmpList);
+		syncSemaphore = new Semaphore(0);
+		remoteStreams = new ArrayList<RemoteRecordingStream>();
+		localStream = new  RecordingStream();
+		localStream.startAsync();
+	}
+	
+	private void resetEventRecorder()
+	{
+		syncSemaphore.drainPermits();
+		recordedEvents.clear();
+		Map<String,String> noSettings = new HashMap<String, String>();
+		localStream.setSettings(noSettings);
+		remoteStreams.clear();
+		
+	}
+	
+	protected void startTestRecording(RecordingConfig config)
+	{
+		this.config = config;
+		resetEventRecorder();
+		System.out.println("Reset event recorder");
+		configureRecording();
+		System.out.println("Configured recording");
+		
+	}
+	
 	/**
 	 * Start recording via a JFR RecordingStream
 	 * Depending on the configuration, other recordings might also be started
 	 */
-	protected void startRecording()
+	protected void configureRecording()
 	{
 		if(config.recordToDisk())
 		{
@@ -61,7 +93,9 @@ public class EventRecorder
 		}
 		try
 		{
+			System.out.println("Starting recording stream");
 			startRecordingStream();
+			System.out.println("Started recording stream");
 			if(config.isRemoteRecordingEnabled())
 			{
 				List<String> urls = config.getRemoteUrls();
@@ -86,7 +120,7 @@ public class EventRecorder
 	{
 		
 		synch();
-		stopRecordingStream();
+		//stopRecordingStream();
 		if(config.recordToDisk())
 		{
 			stopDiskRecording();
@@ -99,13 +133,15 @@ public class EventRecorder
 			}
 		}
 
-		removeRecordingOverheadEvents();
+		//TODO: Test if this increases overhead
+		//(removeRecordingOverheadEvents();
 		isRecording = false;
 	}
 	
 	private void startDiskRecording()
 	{
 		recording = new Recording();
+
 		if (config.getJfrConfig() != null)
 		{
 			recording.setSettings(config.getJfrConfig().getSettings());
@@ -140,25 +176,23 @@ public class EventRecorder
 
 	private void startRecordingStream() throws Exception
 	{
-		localStream = new RecordingStream();
 		if (config.getJfrConfig() != null)
 		{
 			//Use a predifined JFR configuration if one is assigned to this recording config
 			localStream.setSettings(config.getJfrConfig().getSettings());
 		}
-		
-		List<String> enabledEvents = config.getEnabledEvents();
-		for (String e : enabledEvents)
+		else
 		{
-			EventSettings setting = localStream.enable(e);
-			
-			if(config.isStacktraceDisabled())
+			List<String> enabledEvents = config.getEnabledEvents();
+			for (String e : enabledEvents)
 			{
-				setting.withoutStackTrace();
+				EventSettings setting = localStream.enable(e);
+				if(config.isStacktraceDisabled())
+				{
+					setting.withoutStackTrace();
+				}
 			}
 		}
-		
-		
 		localStream.enable(SynchronizationEvent.SYNCH_EVENT_NAME);
 		localStream.enable(ClearEvent.CLEAR_EVENT_NAME);
 		localStream.setReuse(false); // Since we keep references to Events.
@@ -167,6 +201,7 @@ public class EventRecorder
 			
 			if (e.getEventType().getName().equals(SynchronizationEvent.SYNCH_EVENT_NAME))
 			{
+				System.out.println("Releasing semaphore");
 				syncSemaphore.release();
 			}
 			else if(e.getEventType().getName().equals(ClearEvent.CLEAR_EVENT_NAME))
@@ -181,13 +216,10 @@ public class EventRecorder
 			}
 
 		});
-		
-
-		
-		localStream.startAsync();
-
-		synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
-
+		localStream.onError(e -> System.out.println(e));
+		//System.out.println("Synching...");
+		//synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
+		//System.out.println("Synch complete");
 	}
 
 	private void stopRecordingStream()

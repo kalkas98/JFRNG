@@ -25,8 +25,6 @@ import jfrng.recording.annotation.RemoteRecorders;
 public class JfrListener implements IInvokedMethodListener
 {
 
-	//Name of the JfrController object that must be present in test files using TestNG
-	public static final String JFR_CONTROLLER_NAME = "controller";
 
 	/**
 	 * Invoked before every TestNG test
@@ -79,10 +77,17 @@ public class JfrListener implements IInvokedMethodListener
 				}
 				
 				JfrController controller = getControllerInstance(method);
-				EventRecorder recorder = new EventRecorder(rc);
-				controller.setRecorder(recorder);
-				recorder.startRecording();
-				recorder.clear();//Clear events recorded during startup
+				System.out.println("Starting test recording...");
+				controller.startTestRecording(rc);
+				
+				//controller.startTestRecording(config);
+				//EventRecorder recorder = new EventRecorder(rc);
+				//controller.setRecorder(recorder);
+				//recorder.configureRecording();
+				
+				System.out.println("Got here");
+				//ONLY SYNCH AND CLEAR HERE
+				controller.reset();//Clear events recorded during startup
 			}
 			catch (Exception e)
 			{

@@ -15,9 +15,14 @@ public class JfrController
 	
 	public JfrController() {};
 
-	public void setRecorder(EventRecorder recorder)
+	protected void setRecorder(EventRecorder recorder)
 	{
 		this.recorder = recorder;
+	}
+	
+	protected void startTestRecording(RecordingConfig config)
+	{
+		recorder.startTestRecording(config);
 	}
 
 	/**
@@ -52,5 +57,7 @@ public class JfrController
 	{
 		recorder.reset();
 	}
+	
+
 
 }

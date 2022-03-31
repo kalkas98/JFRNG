@@ -4,6 +4,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import jfrng.model.event.GarbageCollection;
+import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
 import jfrng.recording.JfrTestClassListener;
@@ -18,14 +19,13 @@ public class OneTest
 
 
 	@RecordJfrEvents({
-		FooEvent.EVENT
+		ThreadStart.EVENT
 	})
 	@Test
-	public void filterByThreadAndClassShouldReturnOneFooEvent()
+	public void Test1()
 	{
-		Bar b = new Bar();
-		b.foo();
-		Thread t = new Thread(() -> b.foo());
+
+		Thread t = new Thread();
 		t.start();
 
 		try
@@ -36,12 +36,28 @@ public class OneTest
 		{
 			e.printStackTrace();
 		}
-		JfrResult result = controller.stopRecording();
-		String thisThread = Thread.currentThread().getName();
-		
-		
-		long barEventCountInMainThread = result.filterByThread(thisThread).filterOnClass(Bar.class).count();
-		assertTrue(barEventCountInMainThread == 1);
+
+	}
+	
+	@RecordJfrEvents({
+		ThreadStart.EVENT
+	})
+	@Test
+	public void Test2()
+	{
+
+		Thread t = new Thread();
+		t.start();
+
+		try
+		{
+			t.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 }
