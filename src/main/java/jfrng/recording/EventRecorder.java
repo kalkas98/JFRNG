@@ -58,28 +58,19 @@ public class EventRecorder
 		recordedEvents =  Collections.synchronizedList(tmpList);
 		syncSemaphore = new Semaphore(0);
 		remoteStreams = new ArrayList<RemoteRecordingStream>();
-		localStream = new  RecordingStream();
-		localStream.startAsync();
-	}
-	
-	private void resetEventRecorder()
-	{
-		Map<String,String> noSettings = new HashMap<String, String>();
-		localStream.setSettings(noSettings);		
 	}
 	
 	protected void startTestRecording(RecordingConfig config)
 	{
 		this.config = config;
-		resetEventRecorder();
-		configureRecording();
+		startRecording();
 	}
 	
 	/**
 	 * Start recording via a JFR RecordingStream
 	 * Depending on the configuration, other recordings might also be started
 	 */
-	protected void configureRecording()
+	protected void startRecording()
 	{
 		if(config.recordToDisk())
 		{
@@ -112,7 +103,7 @@ public class EventRecorder
 	{
 		
 		synch();
-		//stopRecordingStream();
+		stopRecordingStream();
 		if(config.recordToDisk())
 		{
 			stopDiskRecording();
@@ -126,7 +117,7 @@ public class EventRecorder
 		}
 
 		//TODO: Test if this increases overhead
-		//(removeRecordingOverheadEvents();
+		removeRecordingOverheadEvents();
 		isRecording = false;
 	}
 	
@@ -168,6 +159,7 @@ public class EventRecorder
 
 	private void startRecordingStream() throws Exception
 	{
+		localStream = new RecordingStream();
 		if (config.getJfrConfig() != null)
 		{
 			//Use a predifined JFR configuration if one is assigned to this recording config
@@ -203,7 +195,6 @@ public class EventRecorder
 			{
 				RecordedJfrEvent event = new RecordedJfrEvent(e);
 				event.setHost(LOCAL_HOST_NAME);
-				System.out.println(event.getEventType().getName());
 				recordedEvents.add(new RecordedJfrEvent(e));
 			}
 
@@ -213,6 +204,8 @@ public class EventRecorder
 		//System.out.println("Synching...");
 		//synch(); // wait for recorder stream thread to start and consume a SynchronizationEvent
 		//System.out.println("Synch complete");
+		localStream.startAsync();
+		clear();//Clear events that might have been recorded for previous tests
 	}
 
 	private void stopRecordingStream()

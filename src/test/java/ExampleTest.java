@@ -1,3 +1,4 @@
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
@@ -21,7 +22,6 @@ import jfrng.recording.annotation.RecordWithProfile;
 import testUtil.Bar;
 import testUtil.FooEvent;
 
-@Listeners({ JfrTestClassListener.class })
 public class ExampleTest
 {
 	
@@ -68,7 +68,7 @@ public class ExampleTest
 			e.printStackTrace();
 		}
 		JfrResult result = controller.stopRecording();
-		result.stream().forEach(System.out::println);
+		//result.stream().forEach(System.out::println);
 		assertTrue(result.getFileIOWrite("filename.txt") == 11);
 		assertTrue(result.getFileIORead("filename.txt") == 11);
 	}
@@ -87,9 +87,7 @@ public class ExampleTest
 	}
 	
 	@RecordJfrEvents({
-		ThreadStart.EVENT,
-		ThreadEnd.EVENT
-		
+		ThreadStart.EVENT,		
 		})
 	@Test
 	public void ThreadsStarted() 
@@ -105,8 +103,9 @@ public class ExampleTest
 		JfrResult result = controller.stopRecording();
 		
 		String thisThread = Thread.currentThread().getName();
-
+		result.stream().forEach(System.out::println);
 		long threadsStarted = result.getThreadsStarted(thisThread);
+		assertEquals(threadsStarted, NR_THREADS);
 		assertTrue(threadsStarted == NR_THREADS);
 	}
 	

@@ -76,16 +76,17 @@ public class JfrListener implements IInvokedMethodListener
 					rc.setStacktraceDisabled(true);
 				}
 				
+				EventRecorder recorder =  (EventRecorder) testResult.getTestContext().getAttribute("recorder");
 				JfrController controller = getControllerInstance(method);
+				controller.setRecorder(recorder);
 				controller.startTestRecording(rc);
-				
 				//controller.startTestRecording(config);
 				//EventRecorder recorder = new EventRecorder(rc);
 				//controller.setRecorder(recorder);
 				//recorder.configureRecording();
 				
 				//ONLY SYNCH AND CLEAR HERE
-				controller.reset();//Clear events recorded during startup
+				//Clear events recorded during startup
 			}
 			catch (Exception e)
 			{
@@ -104,11 +105,12 @@ public class JfrListener implements IInvokedMethodListener
 		Method m = method.getTestMethod().getConstructorOrMethod().getMethod();
 		if (m.isAnnotationPresent(RecordJfrEvents.class))
 		{
-			JfrController provider = getControllerInstance(method);
-			if(provider.isRecording())
+			JfrController controller = getControllerInstance(method);
+			if(controller.isRecording())
 			{
-				provider.stopRecording();				
+				controller.stopRecording();				
 			}
+			
 		}
 	}
 	

@@ -1,3 +1,5 @@
+
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import jfrng.model.event.FileRead;
 import jfrng.model.event.GarbageCollection;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
@@ -19,7 +22,6 @@ import jfrng.recording.annotation.RecordWithProfile;
 import testUtil.Bar;
 import testUtil.FooEvent;
 
-@Listeners({ JfrTestClassListener.class })
 public class OneTest
 {
 	public JfrController controller = new JfrController("asdf");
@@ -38,7 +40,7 @@ public class OneTest
 
 		String currentThread = Thread.currentThread().getName();
 		long allocatedMb = result.getAllocatedMemoryInThread(currentThread) / 1_000_000;
-		result.stream().forEach(e -> System.out.println(e.getEventType().getName()));
+		//result.stream().forEach(e -> System.out.println(e.getEventType().getName()));
 
 		System.out.println("Allocated: " + allocatedMb);
 		assertTrue(allocatedMb < 500);
@@ -70,40 +72,20 @@ public class OneTest
 			e.printStackTrace();
 		}
 		JfrResult result = controller.stopRecording();
-		result.stream().forEach(e -> System.out.println(e.getEventType().getName()));
+		//result.stream().forEach(e -> System.out.println(e.getEventType().getName()));
 
 		assertTrue(result.getFileIOWrite("filename.txt") == 11);
 		assertTrue(result.getFileIORead("filename.txt") == 11);
 	}
 	
-	@RecordJfrEvents(ThreadStart.EVENT)
-	//@RecordWithProfile()
+	@RecordJfrEvents
+	@RecordWithProfile(RecordingProfile.PROFILE)
 	@Test
 	public void FileIO2() throws InterruptedException
 	{
 		System.out.println("3");
-
-		try
-		{
-			File file = new File("filename.txt");
-			FileWriter writer = new FileWriter("filename.txt");
-			writer.write("Lorem Ipsum");
-			writer.close();
-			Scanner reader = new Scanner(file);
-			while (reader.hasNextLine())
-			{
-				String data = reader.nextLine();
-			}
-			reader.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 		JfrResult result = controller.stopRecording();
-		result.stream().forEach(e -> System.out.println(e.getEventType().getName()));
-		assertTrue(result.getFileIOWrite("filename.txt") == 11);
-		assertTrue(result.getFileIORead("filename.txt") == 11);
+
 	}
 
 }

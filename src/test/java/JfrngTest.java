@@ -26,7 +26,6 @@ import jfrng.recording.annotation.RecordWithProfile;
 import testUtil.Bar;
 import testUtil.FooEvent;
 
-@Listeners({ JfrTestClassListener.class })
 public class JfrngTest
 {
 	

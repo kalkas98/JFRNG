@@ -385,7 +385,7 @@ public class JfrResult
 	}
 
 	/**
-	 * Returns a a JfrResult only containing recorded events that were caused in a thread with the given thread name
+	 * Returns a a JfrResult only containing recorded events that were commited by a thread with the given thread name
 	 * Returns a new JfrResult object. Does not modify the object the method is invoked upon.
 	 * @param threadName - name of a thread to filter on
 	 * @return a new filtered JfrResult
@@ -419,24 +419,24 @@ public class JfrResult
 	public JfrResult filterOnClass(Class<?>  cls)
 	{
 
-			List<RecordedJfrEvent> newList = new ArrayList<>();
-			for (RecordedJfrEvent event : recordedEvents)
+		List<RecordedJfrEvent> newList = new ArrayList<>();
+		for (RecordedJfrEvent event : recordedEvents)
+		{
+			if(event.getStackTrace() != null)
 			{
-				if(event.getStackTrace() != null)
+				List<RecordedFrame> frames = event.getStackTrace().getFrames();
+				for (RecordedFrame frame : frames)
 				{
-					List<RecordedFrame> frames = event.getStackTrace().getFrames();
-					for (RecordedFrame frame : frames)
+					RecordedClass recordedClass = frame.getMethod().getType();
+					if(recordedClass.getName().equals(cls.getName()))
 					{
-						RecordedClass recordedClass = frame.getMethod().getType();
-						if(recordedClass.getName().equals(cls.getName()))
-						{
-							newList.add(event);
-						}
+						newList.add(event);
 					}
 				}
 			}
-			return new JfrResult(newList);
-		
+		}
+		return new JfrResult(newList);
+	
 	}
 	
 	/**

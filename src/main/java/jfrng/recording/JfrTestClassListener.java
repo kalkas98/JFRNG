@@ -15,11 +15,9 @@ public class JfrTestClassListener implements ITestListener
 	public void onStart(ITestContext context)
 	{
 		//A bit weird, but it's the only way to access the controller instance that I could find.
-		ITestNGMethod[] methods = context.getAllTestMethods();
-		JfrController controller = getControllerInstance(methods[0].getInstance());
-		controller.setRecorder(new EventRecorder());
-		
-		ITestListener.super.onStart(context);
+		EventRecorder recorder = new EventRecorder();
+		context.setAttribute("recorder", recorder);
+		//ITestListener.super.onStart(context);
 	}
 	
 	/**
