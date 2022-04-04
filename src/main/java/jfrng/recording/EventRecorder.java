@@ -10,8 +10,10 @@ import jfrng.recording.event.SynchronizationEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -34,7 +36,7 @@ public class EventRecorder
 	
 	private RecordingStream localStream;
 	private List<RemoteRecordingStream> remoteStreams;
-	private List<RecordedJfrEvent> recordedEvents;
+	private Deque<RecordedJfrEvent> recordedEvents;
 	private Semaphore syncSemaphore;
 	private boolean isRecording;
 	private Recording recording;
@@ -43,7 +45,7 @@ public class EventRecorder
 	protected EventRecorder(RecordingConfig rc)
 	{
 		List<RecordedJfrEvent> tmpList = new ArrayList<RecordedJfrEvent>();
-		recordedEvents =  Collections.synchronizedList(tmpList);
+		recordedEvents =  new ConcurrentLinkedDeque();
 		syncSemaphore = new Semaphore(0);
 		config = rc;
 		remoteStreams = new ArrayList<RemoteRecordingStream>();
@@ -195,7 +197,7 @@ public class EventRecorder
 		localStream.close();
 	}
 	
-	protected List<RecordedJfrEvent> getEventList()
+	protected Deque<RecordedJfrEvent> getEventList()
 	{
 		return recordedEvents;
 	}

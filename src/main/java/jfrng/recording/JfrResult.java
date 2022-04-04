@@ -3,6 +3,7 @@ package jfrng.recording;
 import jdk.jfr.consumer.RecordedThread;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -34,9 +35,14 @@ import jfrng.model.type.longJfrType;
 public class JfrResult
 {
 	List<RecordedJfrEvent> recordedEvents;
+	public JfrResult(Deque<RecordedJfrEvent> recordedEvents)
+	{
+		this.recordedEvents = new ArrayList<RecordedJfrEvent>(recordedEvents);
+	}
+	
 	public JfrResult(List<RecordedJfrEvent> recordedEvents)
 	{
-		this.recordedEvents = recordedEvents;
+		this.recordedEvents = new ArrayList<RecordedJfrEvent>(recordedEvents);
 	}
 	
 	/**
