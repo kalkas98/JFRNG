@@ -14,7 +14,6 @@ import jfrng.model.event.ThreadEnd;
 import jfrng.model.event.ThreadStart;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
-import jfrng.recording.JfrTestClassListener;
 import jfrng.recording.RecordingProfile;
 import jfrng.recording.annotation.RecordJfrEvents;
 import jfrng.recording.annotation.RecordWithProfile;
@@ -81,7 +80,7 @@ public class ExampleTest
 		long SystemGcCount = result.filterOnField(GarbageCollection.CAUSE, "System.gc()").count();
 		long pauseDuration = result.getGCPauseSum(TimeUnit.MILLISECONDS);
 		
-		assertTrue(pauseDuration < 20);
+		assertTrue(pauseDuration < 200);
 		assertTrue(SystemGcCount == 1);
 	}
 	

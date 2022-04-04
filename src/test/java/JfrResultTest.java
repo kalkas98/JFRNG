@@ -11,7 +11,7 @@ import testUtil.FooEvent;
 
 public class JfrResultTest
 {
-	public JfrController controller = new JfrController("asdf");
+	public JfrController controller = new JfrController();
 	
 
 	@RecordJfrEvents({

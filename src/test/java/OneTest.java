@@ -6,15 +6,13 @@ import org.testng.annotations.Test;
 import jfrng.model.event.GarbageCollection;
 import jfrng.recording.JfrController;
 import jfrng.recording.JfrResult;
-import jfrng.recording.JfrTestClassListener;
 import jfrng.recording.annotation.RecordJfrEvents;
 import testUtil.Bar;
 import testUtil.FooEvent;
 
-@Listeners({ JfrTestClassListener.class })
 public class OneTest
 {
-	public JfrController controller = new JfrController("asdf");
+	public JfrController controller = new JfrController();
 
 
 	@RecordJfrEvents({
